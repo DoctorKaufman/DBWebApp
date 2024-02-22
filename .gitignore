@@ -121,5 +121,5 @@ node_modules/
 npm-debug.log
 package-lock.json
 
-# TailwindCSS build output (if you don't want your build in VCS)
+# TailwindCSS build output 
 app/static/dist/
