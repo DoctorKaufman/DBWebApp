@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <title>Home Page</title>
 </head>
-<body class="flex flex-col h-full">
-    {% include '_header.html' %}
+<body class="flex flex-col min-h-screen">
+    {% include 'components/_header.html' %}
 
-    {% include '_login_form.html' %}
+    <div class="flex w-full pt-5 justify-center">
+        {% include 'components/_goods_table.html' %}
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
