@@ -20,8 +20,8 @@ def home():
 
 @main.route('/goods')
 def goods():
-    categories = ["Fruit", "Vegetable", "Snack", "Meat & Meat Products", "Beverage", "Dairy"]
-    products = [
+    active_tab = 'goods'
+    products_in_store = [
         {
             "name": f"Product {i}",
             "upc": generate_unique_upc(),
@@ -30,8 +30,29 @@ def goods():
             "price": f"${random.uniform(0.99, 50.99):.2f}"
         } for i in range(1, 26)
     ]
+    products = [
+        {
+            "name": f"Product {i}",
+            "upc": generate_unique_id(),
+            "producer": f"Producer {i}",
+            "characteristics": f"Characteristics {i}",
+        } for i in range(1, 16)
+    ]
+    categories = [
+        {
+            "name": f"Category {i}",
+            "category_id": generate_unique_id(),
+        } for i in range(1, 6)
+    ]
     user = {'username': 'John Doe'} 
-    return render_template('pages/goods.html', categories=categories, products=products, user=user)
+    return render_template(
+        'pages/goods.html',
+        active_tab=active_tab, 
+        products_in_store=products_in_store, 
+        products=products,
+        categories=categories, 
+        user=user
+        )
 
 @main.route('/workers')
 def workers():

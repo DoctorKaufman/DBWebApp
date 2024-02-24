@@ -11,7 +11,44 @@
     {% include 'components/_header.html' %}
 
     <div class="flex w-full pt-5 pb-8 justify-center">
-        {% include 'components/_goods_table.html' %}
+        <div class="relative w-3/4 overflow-x-auto bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="sm:hidden">
+                <label for="tabs" class="sr-only">Select tab</label>
+                <select id="tabs" class="bg-gray-50 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-cyan-600 focus:border-cyan-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Goods in store</option>
+                    <option>Goods</option>
+                    <option>Categories</option>
+                </select>
+            </div>
+            <ul class="hidden text-lg font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg sm:flex dark:divide-gray-600 dark:text-gray-400 rtl:divide-x-reverse" id="fullWidthTab" data-tabs-toggle="#fullWidthTabContent" role="tablist">
+                <li class="w-full">
+                    <button id="goods-in-store-tab" data-tabs-target="#goods-in-store" type="button" role="tab" aria-controls="goods-in-store" 
+                    aria-selected="true" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-ss-lg bg-gray-50 
+                    hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Goods in store</button>
+                </li>
+                <li class="w-full">
+                    <button id="goods-tab" data-tabs-target="#goods" type="button" role="tab" aria-controls="goods" aria-selected="false"
+                     class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 bg-gray-50 
+                     hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Goods</button>
+                </li>
+                <li class="w-full">
+                    <button id="categories-tab" data-tabs-target="#categories" type="button" role="tab" aria-controls="categories" 
+                    aria-selected="false" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-se-lg 
+                    bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Categories</button>
+                </li>
+            </ul>
+            <div id="fullWidthTabContent" class="border-t border-gray-200 dark:border-gray-600">
+                <div class="hidden p-4 bg-white rounded-lg dark:bg-gray-800" id="goods-in-store" role="tabpanel" aria-labelledby="goods-in-store-tab">                    
+                    {% include 'components/_goods_in_shop_table.html' %}
+                </div>
+                <div class="hidden p-4 bg-white rounded-lg dark:bg-gray-800" id="goods" role="tabpanel" aria-labelledby="goods-tab">
+                    
+                </div>
+                <div class="hidden p-4 bg-white rounded-lg dark:bg-gray-800" id="categories" role="tabpanel" aria-labelledby="categories-tab">
+                    
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

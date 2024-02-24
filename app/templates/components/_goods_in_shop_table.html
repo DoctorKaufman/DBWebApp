@@ -1,6 +1,5 @@
 
 
-<div class="relative w-3/4 overflow-x-auto shadow-md sm:rounded-lg">
     <table class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
@@ -76,22 +75,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for product in products %}
+            {% for product_in_store in products_in_store %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ product.name }}
+                    {{ product_in_store.name }}
                 </th>
                 <td class="px-6 py-4">
-                    {{ product.upc }}
+                    {{ product_in_store.upc }}
                 </td>
                 <td class="px-6 py-4">
-                    {{ product.amount }}
+                    {{ product_in_store.amount }}
                 </td>
                 <td class="px-6 py-4">
-                    {{ product.category }}
+                    {{ product_in_store.category }}
                 </td>
                 <td class="px-6 py-4">
-                    {{ product.price }}
+                    {{ product_in_store.price }}
                 </td>
                 <td class="px-6 py-4 text-right">
                     <a href="#" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -100,4 +99,3 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
