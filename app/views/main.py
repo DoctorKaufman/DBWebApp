@@ -40,8 +40,11 @@ def workers():
             "id": generate_unique_id(),
             "position": random.choice(["Manager", "Cashier", "Cleaner", "Consultant", "Security"]),
             "salary": f"${random.uniform(500, 900):.0f}",
-            "phone_number": generate_phone_number()
-        } for i in range(1, 11)
+            "employment_date": f"2021-{random.randint(10, 12)}-{random.randint(10, 28)}",
+            "birth_date": f"{random.randint(1980, 2005)}-{random.randint(10, 12)}-{random.randint(10, 28)}",
+            "phone_number": generate_phone_number(),
+            "address": f"City, Street, {random.randint(1, 100)}",
+        } for i in range(1, 13)
     ]
     user = {'username': 'John Doe'} 
     return render_template('pages/workers.html', workers=workers, user=user)

@@ -10,9 +10,11 @@
 <body class="flex flex-col min-h-screen">
     {% include 'components/_header.html' %}
 
-    <section class="my-9 mx-4 flex flex-wrap gap-4">
-        {% include 'components/_worker_card.html' %}
-    </section>
+    <div class="flex w-full pt-5 pb-8 justify-center">
+        <section class="my-9 w-4/5 flex flex-wrap gap-4">
+            {% include 'components/_worker_card.html' %}
+        </section>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
