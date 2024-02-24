@@ -16,7 +16,9 @@ def create_app(config_filename=None):
 
     # Import and register Blueprints (for Controllers/Views)
     from .views.main import main as main_blueprint
+    from .views.goods_and_categories import goods_and_categories as goods_and_categories_blueprint
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
 
     # Optionally, initialize Flask extensions like Flask-Login, Flask-Migrate, etc.
 

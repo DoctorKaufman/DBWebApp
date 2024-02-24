@@ -18,9 +18,9 @@ def home():
     user = {'username': 'John Doe'} 
     return render_template('pages/home.html', user=user)
 
-@main.route('/goods')
-def goods():
-    active_tab = 'goods'
+@main.route('/goods-and-categories')
+def goods_and_categories():
+    active_tab = 'goods_and_categories'
     products_in_store = [
         {
             "name": f"Product {i}",
@@ -46,7 +46,7 @@ def goods():
     ]
     user = {'username': 'John Doe'} 
     return render_template(
-        'pages/goods.html',
+        'pages/goods_and_categories.html',
         active_tab=active_tab, 
         products_in_store=products_in_store, 
         products=products,
