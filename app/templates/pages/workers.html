@@ -10,8 +10,11 @@
 <body class="flex flex-col min-h-screen">
     {% include 'components/_header.html' %}
 
-    <div class="flex w-full pt-5 pb-8 justify-center">
-        <section class="my-9 w-4/5 flex flex-wrap gap-4">
+    
+    <div class="flex flex-col w-full pt-5 pb-8 items-center justify-center">
+        {% include 'components/_workers_topbar.html' %}
+
+        <section class="my-9 w-4/5 flex flex-wrap gap-4 justify-center">
             {% include 'components/_worker_card.html' %}
         </section>
     </div>

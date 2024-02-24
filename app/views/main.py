@@ -20,6 +20,7 @@ def home():
 
 @main.route('/goods')
 def goods():
+    categories = ["Fruit", "Vegetable", "Snack", "Meat & Meat Products", "Beverage", "Dairy"]
     products = [
         {
             "name": f"Product {i}",
@@ -30,10 +31,11 @@ def goods():
         } for i in range(1, 26)
     ]
     user = {'username': 'John Doe'} 
-    return render_template('pages/goods.html', products=products, user=user)
+    return render_template('pages/goods.html', categories=categories, products=products, user=user)
 
 @main.route('/workers')
 def workers():
+    positions = ["Manager", "Cashier", "Cleaner", "Consultant", "Security"]
     workers = [
         {
             "name": f"Worker {i}",
@@ -47,7 +49,7 @@ def workers():
         } for i in range(1, 13)
     ]
     user = {'username': 'John Doe'} 
-    return render_template('pages/workers.html', workers=workers, user=user)
+    return render_template('pages/workers.html', positions=positions, workers=workers, user=user)
 
 
 @main.route('/login')
