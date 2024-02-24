@@ -5,8 +5,13 @@ import random
 main = Blueprint('main', __name__)
 
 def generate_unique_upc():
-    """Generate a unique UPC code consisting of # followed by 10 random digits."""
     return "#" + "".join([str(random.randint(0, 9)) for _ in range(10)])
+
+def generate_unique_id():
+    return "#" + "".join([str(random.randint(0, 9)) for _ in range(10)])
+
+def generate_phone_number():
+    return "+380 " + " ".join(["".join([str(random.randint(0, 9)) for _ in range(3)]) for _ in range(3)])
 
 @main.route('/')
 def home():
@@ -26,6 +31,21 @@ def goods():
     ]
     user = {'username': 'John Doe'} 
     return render_template('pages/goods.html', products=products, user=user)
+
+@main.route('/workers')
+def workers():
+    workers = [
+        {
+            "name": f"Worker {i}",
+            "id": generate_unique_id(),
+            "position": random.choice(["Manager", "Cashier", "Cleaner", "Consultant", "Security"]),
+            "salary": f"${random.uniform(500, 900):.0f}",
+            "phone_number": generate_phone_number()
+        } for i in range(1, 11)
+    ]
+    user = {'username': 'John Doe'} 
+    return render_template('pages/workers.html', workers=workers, user=user)
+
 
 @main.route('/login')
 def login():

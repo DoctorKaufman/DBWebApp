@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet"  href="{{ url_for('static', filename='css/dist/styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <title>Goods</title>
+    <title>Our staff</title>
 </head>
 <body class="flex flex-col min-h-screen">
     {% include 'components/_header.html' %}
 
-    <div class="flex w-full pt-5 pb-8 justify-center">
-        {% include 'components/_goods_table.html' %}
-    </div>
+    <section class="my-9 mx-4 flex flex-wrap gap-4">
+        {% include 'components/_worker_card.html' %}
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
