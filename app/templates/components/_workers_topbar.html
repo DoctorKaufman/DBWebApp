@@ -1,5 +1,24 @@
-<div class="w-4/5 mt-5 p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-    <div class="flex flex-col">
+<div class="w-4/5 mt-5 text-center bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select tab</label>
+        <select id="tabs" class="bg-gray-50 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-cyan-600 focus:border-cyan-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option>Workers</option>
+            <option>Customers</option>
+        </select>
+    </div>
+    <ul class="hidden text-lg font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg sm:flex dark:divide-gray-600 dark:text-gray-400 rtl:divide-x-reverse" id="fullWidthTab" data-tabs-toggle="#fullWidthTabContent" role="tablist">
+        <li class="w-full">
+            <a id="workers" href="{{ url_for('staff_and_clients.workers') }}" data-tabs-target="#workers" aria-controls="workers" 
+            aria-selected="{{ 'true' if active_tab == 'workers' else 'false' }}" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-ss-lg bg-gray-50 
+            hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Workers</a>
+        </li>
+        <li class="w-full">
+            <a id="clients-tab" href="{{ url_for('staff_and_clients.clients') }}" data-tabs-target="#clients" aria-controls="clients" aria-selected="{{ 'true' if active_tab == 'clients' else 'false' }}"
+             class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 bg-gray-50 
+             hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Customers</a>
+        </li>
+    </ul>
+    <div class="flex flex-col my-4 mx-8">
         <div class="flex flex-row">
             <div class="text-xl w-3/4">
                 Our workers
