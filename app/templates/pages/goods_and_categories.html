@@ -10,12 +10,12 @@
 <body class="flex flex-col min-h-screen">
     {% include 'components/_header.html' %}
 
-    <div class="absolute inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
+    <div class="fixed inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
         <div class="relative left-1/6 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
     </div>
     
     <div class="flex w-full pt-5 pb-8 justify-center">
-        <div class="relative w-3/4 overflow-x-auto bg-white bg-opacity-75 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div class="relative w-3/4 overflow-x-auto bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <div class="sm:hidden">
                 <label for="tabs" class="sr-only">Select tab</label>
                 <select id="tabs" class="bg-gray-50 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-cyan-600 focus:border-cyan-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -47,12 +47,12 @@
         </div>
     </div>
 
-    <div class="absolute inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
+    <div class="fixed inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
         <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
     </div>
-    <div class="absolute inset-x-0 bottom-[-50rem] -z-10 transform-gpu overflow-hidden blur-3xl" aria-hidden="true">
+    <!-- <div class="absolute inset-x-0 bottom-[-50rem] -z-10 transform-gpu overflow-hidden blur-3xl" aria-hidden="true">
         <div class="relative left-0 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-    </div>
+    </div> -->
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
