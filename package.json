@@ -1,0 +1,22 @@
+{
+  "name": "dbwebapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "tailwindcss -i app/static/css/styles.css -o app/static/css/dist/styles.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.17",
+    "flowbite": "^2.3.0",
+    "postcss": "^8.4.35"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
