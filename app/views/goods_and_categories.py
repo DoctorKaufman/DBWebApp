@@ -29,7 +29,7 @@ def goods():
     items = [
         {
             "name": f"Product {i}",
-            "upc": generate_unique_id(),
+            "ID": generate_unique_id(),
             "producer": f"Producer {i}",
             "characteristics": f"Characteristics {i}",
         } for i in range(1, 16)

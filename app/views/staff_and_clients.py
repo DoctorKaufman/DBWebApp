@@ -28,6 +28,15 @@ def workers():
 
 @staff_and_clients.route('/customers')
 def clients():
+    clients = [
+        {
+            "name": f"Customer {i}",
+            "card number": generate_unique_id(),
+            "percent": f"{random.randint(1, 100)}%",
+            "phone_number": generate_phone_number(),
+            "address": f"City, Street, {random.randint(1, 100)}",
+        } for i in range(1, 21)
+    ]
     active_tab = 'clients'
     user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html',active_tab=active_tab, user=user)
+    return render_template('pages/staff_and_clients.html', clients=clients, active_tab=active_tab, user=user)

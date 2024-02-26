@@ -5,27 +5,48 @@
             <div class="flex flex-col">
                 <div class="flex flex-row">
                     <div class="text-xl w-3/4">
+                        {% if active_tab == 'categories'%}
+                        Our categories
+                        <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
+                            The variety and fullness of our categories cater to every taste and need. From organic fruits and vegetables to artisanal cheeses, 
+                            from gluten-free products to international delicacies, our range is meticulously curated to cater to every palate and dietary requirement.
+                        </p>
+                        {% else %}
                         Our products
                         <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
                             Our supermarket offers a wide range of products. Explore our selection, where the finest goods are curated with care, 
                             ensuring that every choice is a step towards unparalleled culinary experiences. 
                             Discover the difference with us, where quality isn't just a promise—it's our guarantee.
                         </p>
+                        {% endif %}
                         <div class="py-5 bg-white dark:bg-gray-900">
-                            {% include 'components/_search_input.html' %}
+                            {% if (active_tab != 'goods' and active_tab != 'categories')%}
+                                {% include 'components/_dropdown_search_input.html' %}
+                            {% else %}
+                                {% include 'components/_default_search_input.html' %}
+                            {% endif %}
+
                         </div>
                     </div>
                     <div class="w-1/4 flex flex-col justify-center items-center">
                         <button class="text-white w-3/4 h-1/3 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-4 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none
                         dark:focus:ring-blue-800">
-                            Add product
+                            {% if active_tab == 'categories'%}
+                                Add category
+                            {% else %}
+                                Add product
+                            {% endif %}
                         </button>
                         <button class=" w-3/4 h-1/3 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
                         border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
                         dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
                         dark:hover:bg-gray-700">
-                            Remove product
+                            {% if active_tab == 'categories'%}
+                                Remove category
+                            {% else %}
+                                Remove product
+                            {% endif %}
                         </button>
                     </div>
                 </div>  
