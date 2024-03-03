@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="{{ url_for('static', filename='css/dist/styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <title>Goods</title>
+</head>
+<body class="flex flex-col min-h-screen">
+    {% include 'components/_header.html' %}
+
+    <div class="fixed inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
+        <div class="relative left-1/6 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+    
+    <div class="flex w-full pt-5 pb-8 justify-center">
+        <div class="relative w-3/4 overflow-x-auto bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="sm:hidden">
+                <label for="tabs" class="sr-only">Select tab</label>
+                <select id="tabs" class="bg-gray-50 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-cyan-600 focus:border-cyan-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Goods in store</option>
+                    <option>Goods</option>
+                    <option>Categories</option>
+                </select>
+            </div>
+            <ul class="hidden text-lg font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg sm:flex dark:divide-gray-600 dark:text-gray-400 rtl:divide-x-reverse" id="fullWidthTab" data-tabs-toggle="#fullWidthTabContent" role="tablist">
+                <li class="w-full">
+                    <a id="goods-in-store-tab" href="{{ url_for('goods_and_categories.goods_in_store') }}" data-tabs-target="#goods-in-store" aria-controls="goods-in-store" 
+                    aria-selected="{{ 'true' if active_tab == 'goods_in_store' else 'false' }}" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-ss-lg bg-gray-50 
+                    hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Goods in store</a>
+                </li>
+                <li class="w-full">
+                    <a id="goods-tab" href="{{ url_for('goods_and_categories.goods') }}" data-tabs-target="#goods" aria-controls="goods" aria-selected="{{ 'true' if active_tab == 'goods' else 'false' }}"
+                     class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 bg-gray-50 
+                     hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Goods</a>
+                </li>
+                <li class="w-full">
+                    <a id="categories-tab" href="{{ url_for('goods_and_categories.categories') }}" data-tabs-target="#categories" aria-controls="categories" 
+                    aria-selected="{{ 'true' if active_tab == 'categories' else 'false' }}" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-se-lg 
+                    bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600">Categories</a>
+                </li>
+            </ul>
+            <div id="fullWidthTabContent" class="border-t border-gray-200 dark:border-gray-600">
+                {% include 'components/_data_table.html' %}
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
+        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</body>
+</html>
