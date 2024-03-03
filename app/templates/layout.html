@@ -6,6 +6,19 @@
     <link rel="stylesheet"  href="{{ url_for('static', filename='css/dist/styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <title>{% block title %}Default Title{% endblock %}</title>
+
+    <script>
+        if (
+            localStorage.getItem('color-theme') === 'dark' ||
+            (!('color-theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
 </head>
 
 <body class="dark:bg-gray-800 -z-20">
