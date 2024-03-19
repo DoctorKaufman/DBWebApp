@@ -10,12 +10,13 @@ module.exports = {
     extend: {
       animation: {
         'gradient': 'gradient 8s linear infinite',
+        'blobs': 'gradient 14s linear infinite',
       },
       keyframes: {
         'gradient': {
           to: { 'background-position': '300% center' },
         }
-      }                    
+      }
     },
   },
   plugins: [
