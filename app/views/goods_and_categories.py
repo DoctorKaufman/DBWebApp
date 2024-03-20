@@ -1,11 +1,11 @@
+from app.views.main import generate_unique_id, generate_unique_upc
 from flask import Blueprint, render_template
 import json
 import random
 
-from app.views.main import generate_unique_id, generate_unique_upc
-
 
 goods_and_categories = Blueprint('goods_and_categories', __name__)
+
 
 @goods_and_categories.route('/goods-in-store')
 def goods_in_store():
@@ -23,6 +23,7 @@ def goods_in_store():
     user = {'username': 'John Doe'} 
     return render_template('pages/goods_and_categories.html',categories=categories, active_tab=active_tab, items=items, user=user)
 
+
 @goods_and_categories.route('/goods')
 def goods():
     active_tab = 'goods'
@@ -36,6 +37,7 @@ def goods():
     ]
     user = {'username': 'John Doe'} 
     return render_template('pages/goods_and_categories.html',active_tab=active_tab, items=items, user=user)
+
 
 @goods_and_categories.route('/categories')
 def categories():
