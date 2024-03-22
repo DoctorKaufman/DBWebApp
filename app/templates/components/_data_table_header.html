@@ -1,4 +1,4 @@
-<div class="flex flex-row">
+<div x-data="AddOrDeleteItem()" class="flex flex-row">
     <div class="text-xl w-3/4">
         
         <span x-text="activeTab === 'categories' ? 'Our categories' : 'Our products'"></span>
@@ -13,13 +13,14 @@
         </div>
     </div>
     <div class="w-1/4 flex flex-col justify-center items-center">
-        <button class="text-white w-3/4 h-1/3 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
-        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-4 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none
-        dark:focus:ring-blue-800">
-
+        <button
+            :id="activeTab === 'categories' ? 'addCategory' : 'addProduct'"
+            @click="activeTab === 'categories' ? addCategory() : addProduct()"
+            class="text-white w-3/4 h-1/3 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-4 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
             <span x-text="activeTab === 'categories' ? 'Add category' : 'Add product'"></span>
-
         </button>
+
         <button class=" w-3/4 h-1/3 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
         border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
         dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
@@ -30,3 +31,4 @@
         </button>
     </div>
 </div>  
+
