@@ -37,7 +37,9 @@
                 </li>
             </ul>
             <div id="fullWidthTabContent" class="border-t border-gray-200 dark:border-gray-600">
+
                 {% include 'components/_data_table.html' %}
+
             </div>
         </div>
     </div>
@@ -47,4 +49,10 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/post-delete-buttons.js') }}"></script>
+
 {% endblock %}
