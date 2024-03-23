@@ -1,11 +1,10 @@
-from flask import Blueprint, render_template
-import json
-import random
-
 from app.views.main import generate_phone_number, generate_unique_id, generate_unique_upc
+from flask import Blueprint, render_template
+import random
 
 
 staff_and_clients = Blueprint('staff_and_clients', __name__)
+
 
 @staff_and_clients.route('/workers')
 def workers():
@@ -25,6 +24,7 @@ def workers():
     ]
     user = {'username': 'John Doe'} 
     return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, workers=workers, user=user)
+
 
 @staff_and_clients.route('/customers')
 def clients():

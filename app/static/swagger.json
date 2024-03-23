@@ -1,0 +1,399 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Zlagoda API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/employee": {
+      "post": {
+        "summary": "Add a new employee",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      },
+      "get": {
+        "summary": "Get all employees with pagination and sorting",
+        "parameters": [
+          {
+            "name": "sorting",
+            "in": "query",
+            "description": "Sorting order (asc or desc)",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "type": "integer"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      }
+    },
+    "/employee/{id}/": {
+      "put": {
+        "summary": "Update an employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Employee ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      },
+      "delete": {
+        "summary": "Delete an employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Employee ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      },
+      "get": {
+        "summary": "Get an employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Employee ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      }
+    },
+    "/employee/by-role/{employee_role}/": {
+      "get": {
+        "summary": "Get employees by role",
+        "parameters": [
+          {
+            "name": "employee_role",
+            "in": "path",
+            "description": "Employee role",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Employee"
+        ]
+      }
+    },
+    "/category": {
+      "post": {
+        "summary": "Create a new category",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      },
+      "get": {
+        "summary": "Get all categories",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      }
+    },
+    "/category/{category_id}/": {
+      "put": {
+        "summary": "Update a category by ID",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Category ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a category by ID",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Category ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      },
+      "get": {
+        "summary": "Get a category by ID",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Category ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      }
+    },
+    "/product": {
+      "post": {
+        "summary": "Create a new product",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Product"
+        ]
+      },
+      "get": {
+        "summary": "Get all products",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Product"
+        ]
+      }
+    },
+    "/product/{product_id}/": {
+      "put": {
+        "summary": "Update a product by ID",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "Product ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Product"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a product by ID",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "Product ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": [
+          "Product"
+        ]
+      }
+    },
+    "/customer": {
+      "post": {
+        "summary": "Create a new customer",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": ["Customer"]
+      },
+      "get": {
+        "summary": "Get all customers",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": ["Customer"]
+      }
+    },
+    "/customer/{id}/": {
+      "put": {
+        "summary": "Update a customer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": ["Customer"]
+      },
+      "delete": {
+        "summary": "Delete a customer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": ["Customer"]
+      },
+      "get": {
+        "summary": "Get a customer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "tags": ["Customer"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Employee",
+      "description": "Endpoints related to employee management"
+    },
+    {
+      "name": "Category",
+      "description": "Endpoints related to category management"
+    },
+    {
+      "name": "Product",
+      "description": "Endpoints related to product management"
+    },
+    {
+      "name": "Customer",
+      "description": "Endpoints related to customer management"
+    }
+  ],
+  "definitions": {
+    "User": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}
