@@ -2,7 +2,7 @@ import psycopg2
 
 # Connection params
 conn_params = {
-    "host": "localhost",
+    "host": "jdbc:postgresql://db-zlagoda.cf4hhnfg01ca.eu-central-1.rds.amazonaws.com:5432/zlagoda",
     "database": "Supermarket_Zlagoda",
     "user": "postgres",
     "password": "qawsed_Kli"
