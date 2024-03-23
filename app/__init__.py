@@ -8,6 +8,7 @@ API_URL = '/static/swagger.json'  # Our API url (can of course be a local resour
 
 def create_app(config_filename=None):
     app = Flask(__name__, instance_relative_config=True)
+    
     CORS(app)
 
     # Load configuration from 'config.py' file or parameter
