@@ -15,7 +15,7 @@ class CategoryRepository:
         for category_data in cursor.fetchall():
             categories.append(CategoryDTO(category_data[0], category_data[1]))
         cursor.close()
-        return categories
+        return tuple(categories)
 
     def select_category(self, category_number):
         cursor = self.conn.cursor()
