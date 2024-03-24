@@ -10,9 +10,6 @@ document.addEventListener('alpine:init', () => {
         selectedItems: [],
         selectAll: false,
 
-        globalEditingState: false,
-        // editing: false,
-
         addCategory() {
             const data = { name: 'New Category Name', description: 'Description of the new category' };
             axios.post('http://127.0.0.1:5000/category/', data)
