@@ -36,14 +36,14 @@
 
                 {% endfor %}
                 
-                <th scope="col" class="px-6 py-3">
+                <th x-show="!selecting" scope="col" class="px-6 py-3">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
-            <tr x-data="{ editing: false }" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr x-data="{editing: false}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <td x-cloak x-show="selecting" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
@@ -67,10 +67,13 @@
                         </td>
                     {% endif %}
                 {% endfor %}
-                <td class="px-6 py-4 text-right">
-                    <button @click="editing = !editing" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
-                        <span x-show="!editing">Edit</span>
-                        <span x-cloak x-show="editing">Save</span>
+                <td x-show="!selecting" class="px-6 py-4 text-right">
+                    <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                        <span >Edit</span>
+                    </button>
+
+                    <button x-show="editing" @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                        <span x-cloak >Save</span>
                     </button>
                 </td>
             </tr>

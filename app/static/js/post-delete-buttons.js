@@ -5,6 +5,7 @@ document.addEventListener('alpine:init', () => {
         selectedItems: [],
         selectAll: false,
 
+        globalEditingState: false,
 
         addCategory() {
             const data = { name: 'New Category Name', description: 'Description of the new category' };
@@ -71,5 +72,20 @@ document.addEventListener('alpine:init', () => {
                 }
             });
         },
+
+        toggleRowEdit() {
+            if (this.globalEditingState === false){
+                this.globalEditingState = true;
+                editing = true;
+            }
+            else {
+                return;
+            }
+        },
+
+        saveEditedRow() {
+            this.globalEditingState = false;
+            editing = false;
+        }
     }));
 });
