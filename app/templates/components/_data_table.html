@@ -1,6 +1,6 @@
 
 
-    <table x-data="AddOrDeleteItem()" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table x-data="headerManipulations()" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
                
@@ -36,15 +36,14 @@
 
                 {% endfor %}
                 
-                <th scope="col" class="px-6 py-3">
+                <th x-show="!selecting" scope="col" class="px-6 py-3">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
-            <tr x-data="{ editing: false }" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td x-cloak x-show="selecting" class="w-4 p-4">
+            <tr x-data="rowComponent()" x-init="init('{{ item.upc }}', '{{ item.ID }}', '{{ item.category_id }}', '{{ active_tab }}')" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                <td x-cloak x-show="selecting" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
                             id="checkbox-table-search-1"
@@ -67,10 +66,13 @@
                         </td>
                     {% endif %}
                 {% endfor %}
-                <td class="px-6 py-4 text-right">
-                    <button @click="editing = !editing" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
-                        <span x-show="!editing">Edit</span>
-                        <span x-cloak x-show="editing">Save</span>
+                <td x-show="!selecting" class="px-6 py-4 text-right">
+                    <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                        <span >Edit</span>
+                    </button>
+
+                    <button x-show="editing" @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                        <span x-cloak >Save</span>
                     </button>
                 </td>
             </tr>
