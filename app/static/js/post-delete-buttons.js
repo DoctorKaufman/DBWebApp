@@ -1,11 +1,12 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('AddOrDeleteItem', () => ({
-
+        
         selecting: false,
         selectedItems: [],
         selectAll: false,
 
         globalEditingState: false,
+        editing: false,
 
         addCategory() {
             const data = { name: 'New Category Name', description: 'Description of the new category' };
@@ -59,29 +60,31 @@ document.addEventListener('alpine:init', () => {
                 });
         },
 
-        init() {
-            // Watch for changes on selectAll
-            this.$watch('selectAll', (newVal) => {
-                // Assuming items is the array that holds all the items in your table
-                if (newVal) {
-                    // If selectAll is true, add all the items to the selectedItems array
-                    this.selectedItems = this.items.map(item => item.id); // Replace 'id' with the actual identifier of your items
-                } else {
-                    // If selectAll is false, clear the selectedItems array
-                    this.selectedItems = [];
-                }
-            });
-        },
+        // init() {
+        //     // Watch for changes on selectAll
+        //     this.$watch('selectAll', (newVal) => {
+        //         // Assuming items is the array that holds all the items in your table
+        //         if (newVal) {
+        //             // If selectAll is true, add all the items to the selectedItems array
+        //             this.selectedItems = this.items.map(item => item.id); // Replace 'id' with the actual identifier of your items
+        //         } else {
+        //             // If selectAll is false, clear the selectedItems array
+        //             this.selectedItems = [];
+        //         }
+        //     });
+        // },
 
         toggleRowEdit() {
-            if (this.globalEditingState === false){
-                this.globalEditingState = true;
-                editing = true;
-            }
-            else {
-                return;
-            }
+            console.log('Editing:', this.editing);
+            createToast("success");
+            // if (this.globalEditingState === false) {
+            //     this.globalEditingState = true;
+            //     this.editing = true;
+            // } else {
+            //     createToast("error");
+            // }
         },
+        
 
         saveEditedRow() {
             this.globalEditingState = false;
