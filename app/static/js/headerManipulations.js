@@ -1,12 +1,17 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('AddOrDeleteItem', () => ({
+
+    Alpine.store('editingState', {
+        globalEditingState: false,
+    });
+
+    Alpine.data('headerManipulations', () => ({
         
         selecting: false,
         selectedItems: [],
         selectAll: false,
 
         globalEditingState: false,
-        editing: false,
+        // editing: false,
 
         addCategory() {
             const data = { name: 'New Category Name', description: 'Description of the new category' };
@@ -60,35 +65,36 @@ document.addEventListener('alpine:init', () => {
                 });
         },
 
-        // init() {
-        //     // Watch for changes on selectAll
-        //     this.$watch('selectAll', (newVal) => {
-        //         // Assuming items is the array that holds all the items in your table
-        //         if (newVal) {
-        //             // If selectAll is true, add all the items to the selectedItems array
-        //             this.selectedItems = this.items.map(item => item.id); // Replace 'id' with the actual identifier of your items
-        //         } else {
-        //             // If selectAll is false, clear the selectedItems array
-        //             this.selectedItems = [];
-        //         }
-        //     });
-        // },
+        rowComponent() {
+            return {
+                editing: false,
+                id: null, // Initial state before setting the correct ID
+                init(upc, ID, categoryId, activeTab) {
+                    // Set the id based on active_tab's value
+                    this.id = activeTab === 'goods_in_store' ? upc :
+                              activeTab === 'goods' ? ID :
+                              activeTab === 'categories' ? categoryId : null;
+                    
+                    console.log("Initialized row with ID:", this.id); // For debugging
+                },
 
-        toggleRowEdit() {
-            console.log('Editing:', this.editing);
-            createToast("success");
-            // if (this.globalEditingState === false) {
-            //     this.globalEditingState = true;
-            //     this.editing = true;
-            // } else {
-            //     createToast("error");
-            // }
+                toggleRowEdit() {
+                    if (!Alpine.store('editingState').globalEditingState || this.editing) {
+                        this.editing = !this.editing;
+                        Alpine.store('editingState').globalEditingState = this.editing;
+                    } else {
+                        createToast("error", "You can only edit one row at a time");
+                    }
+                },
+
+                saveEditedRow() {
+                    this.editing = false;
+                    Alpine.store('editingState').globalEditingState = false;
+                    createToast("success", "Row saved successfully");
+                }
+            };
         },
-        
 
-        saveEditedRow() {
-            this.globalEditingState = false;
-            editing = false;
-        }
+        
     }));
 });
