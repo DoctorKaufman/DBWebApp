@@ -1,36 +1,47 @@
 document.addEventListener('alpine:init', () => {
 
-    Alpine.store('editingState', {
+    Alpine.store('tableState', {
         globalEditingState: false,
-    });
-
-    Alpine.data('headerManipulations', () => ({
-        
         selecting: false,
         selectedItems: [],
         selectAll: false,
+        toggleSelecting() {
+            this.selecting = !this.selecting;
+            if (this.selecting) {
+                // If entering selecting mode, ensure no rows are being edited
+                this.globalEditingState = false;
+                document.dispatchEvent(new CustomEvent('exit-edit-mode'));
+            }
+        },
+    });
 
+    Alpine.data('headerManipulations', () => ({
+
+        toggleSelecting() {
+            this.$store.tableState.toggleSelecting();
+        },
+        
         addCategory() {
             const data = { name: 'New Category Name', description: 'Description of the new category' };
             axios.post('http://127.0.0.1:5000/category/', data)
-                .then(function (response) {
-                    console.log('Category added successfully:' + response.data);
+                .then(response => {
+                    console.log('Category added successfully:', response.data);
                     // Handle success, e.g., show a success message
                 })
-                .catch(function (error) {
+                .catch(error => {
                     console.error('Error adding category:', error);
                     // Handle error, e.g., showing an error message
                 });
         },
 
         addProduct() {
-            const data = {/* product data */};
+            const data = {/* placeholder for product data */};
             axios.post('http://127.0.0.1:5000/product/', data)
-                .then(function (response) {
-                    console.log('Product added successfully:' + response.data);
+                .then(response => {
+                    console.log('Product added successfully:', response.data);
                     // Handle success
                 })
-                .catch(function (error) {
+                .catch(error => {
                     console.error('Error adding product:', error);
                     // Handle error
                 });
@@ -40,12 +51,10 @@ document.addEventListener('alpine:init', () => {
             const categoryId = event.target.getAttribute('data-id');
             axios.delete(`http://127.0.0.1:5000/category/${categoryId}/`)
                 .then(response => {
-                // Handle the success case - maybe refresh the list of categories or give user feedback
-                console.log('Category deleted:', response.data);
+                    console.log('Category deleted:', response.data);
                 })
                 .catch(error => {
-                // Handle the error case - show an error message to the user
-                console.error('Error deleting category:', error);
+                    console.error('Error deleting category:', error);
                 });
         },
 
@@ -53,12 +62,10 @@ document.addEventListener('alpine:init', () => {
             const productId = event.target.getAttribute('data-id');
             axios.delete(`http://127.0.0.1:5000/product/${productId}/`)
                 .then(response => {
-                // Handle the success case - maybe refresh the list of categories or give user feedback
-                console.log('Product deleted:', response.data);
+                    console.log('Product deleted:', response.data);
                 })
                 .catch(error => {
-                // Handle the error case - show an error message to the user
-                console.error('Error deleting product:', error);
+                    console.error('Error deleting product:', error);
                 });
         },
 
@@ -73,12 +80,19 @@ document.addEventListener('alpine:init', () => {
                               activeTab === 'categories' ? categoryId : null;
                     
                     console.log("Initialized row with ID:", this.id); // For debugging
+                    
+                    document.addEventListener('exit-edit-mode', () => {
+                        if (this.editing) {
+                            this.editing = false;
+                            // Optionally, reset any other state or perform cleanup
+                        }
+                    });
                 },
 
                 toggleRowEdit() {
-                    if (!Alpine.store('editingState').globalEditingState || this.editing) {
+                    if (!Alpine.store('tableState').globalEditingState || this.editing) {
                         this.editing = !this.editing;
-                        Alpine.store('editingState').globalEditingState = this.editing;
+                        Alpine.store('tableState').globalEditingState = this.editing;
                     } else {
                         createToast("error", "You can only edit one row at a time");
                     }
@@ -86,7 +100,7 @@ document.addEventListener('alpine:init', () => {
 
                 saveEditedRow() {
                     this.editing = false;
-                    Alpine.store('editingState').globalEditingState = false;
+                    Alpine.store('tableState').globalEditingState = false;
                     createToast("success", "Row saved successfully");
                 }
             };

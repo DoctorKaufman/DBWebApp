@@ -1,6 +1,5 @@
 const notifications = document.querySelector(".notifications")
 
-// Object containing details for different types of toasts
 const toastDetails = {
     timer: 5000,
     success: {
@@ -19,23 +18,20 @@ const toastDetails = {
 
 export const removeToast = (toast) => {
     toast.classList.add("hide");
-    if(toast.timeoutId) clearTimeout(toast.timeoutId); // Clearing the timeout for the toast
-    setTimeout(() => toast.remove(), 500); // Removing the toast after 500ms
+    if(toast.timeoutId) clearTimeout(toast.timeoutId);
+    setTimeout(() => toast.remove(), 500); 
 }
 
 export const createToast = (id, text) => {
-    // Getting the icon and text for the toast based on the id passed
     const { icon } = toastDetails[id];
-    const toast = document.createElement("li"); // Creating a new 'li' element for the toast
-    toast.className = `toast ${id} bg-gray-50 dark:bg-gray-600 dark:text-white`; // Setting the classes for the toast
-    // Setting the inner HTML for the toast
+    const toast = document.createElement("li"); 
+    toast.className = `toast ${id} bg-gray-50 dark:bg-gray-600 dark:text-white`; 
     toast.innerHTML = `<div class="column">
                          <i class="fa-solid ${icon}"></i>
                          <span>${text}</span>
                       </div>
                       <i class="fa-solid fa-xmark" onclick="removeToast(this.parentElement)"></i>`;
-    notifications.appendChild(toast); // Append the toast to the notification ul
-    // Setting a timeout to remove the toast after the specified duration
+    notifications.appendChild(toast); 
     toast.timeoutId = setTimeout(() => removeToast(toast), toastDetails.timer);
 }
 
