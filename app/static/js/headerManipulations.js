@@ -8,11 +8,38 @@ document.addEventListener('alpine:init', () => {
         toggleSelecting() {
             this.selecting = !this.selecting;
             if (this.selecting) {
-                // If entering selecting mode, ensure no rows are being edited
                 this.globalEditingState = false;
                 document.dispatchEvent(new CustomEvent('exit-edit-mode'));
             }
         },
+        toggleSelectAll(items, active_tab) {
+            this.selectAll = !this.selectAll;
+            if (this.selectAll) {
+                this.selectedItems = items.map(item => {
+                    if (active_tab === 'goods_in_store') {
+                        return item.upc; // Assuming 'upc' exists for items in 'goods_in_store'
+                    } else if (active_tab === 'goods') {
+                        return item.ID; // Assuming 'ID' exists for items in 'goods'
+                    } else if (active_tab === 'categories') {
+                        return item.category_id; // As per the given structure
+                    }
+                });
+            } else {
+                this.selectedItems = [];
+            }
+
+            console.log("Selected items:", this.selectedItems);
+        },
+        toggleItemSelection(itemId) {
+            const index = this.selectedItems.indexOf(itemId);
+            if (index > -1) {
+                this.selectedItems.splice(index, 1);
+            } else {
+                this.selectedItems.push(itemId);
+            }
+        },
+        
+        
     });
 
     Alpine.data('headerManipulations', () => ({
@@ -72,21 +99,27 @@ document.addEventListener('alpine:init', () => {
         rowComponent() {
             return {
                 editing: false,
-                id: null, // Initial state before setting the correct ID
+                id: null,
                 init(upc, ID, categoryId, activeTab) {
-                    // Set the id based on active_tab's value
                     this.id = activeTab === 'goods_in_store' ? upc :
                               activeTab === 'goods' ? ID :
                               activeTab === 'categories' ? categoryId : null;
                     
-                    console.log("Initialized row with ID:", this.id); // For debugging
-                    
+                    console.log("Initialized row with ID:", this.id); 
+
                     document.addEventListener('exit-edit-mode', () => {
                         if (this.editing) {
                             this.editing = false;
-                            // Optionally, reset any other state or perform cleanup
                         }
                     });
+                },
+
+                toggleSelection(){
+                    this.$store.tableState.toggleItemSelection(this.id);
+                },
+
+                isChecked(){
+                    return this.$store.tableState.selectedItems.includes(this.id);
                 },
 
                 toggleRowEdit() {
@@ -102,7 +135,7 @@ document.addEventListener('alpine:init', () => {
                     this.editing = false;
                     Alpine.store('tableState').globalEditingState = false;
                     createToast("success", "Row saved successfully");
-                }
+                },
             };
         },
 
