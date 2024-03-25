@@ -70,12 +70,18 @@
                 {% endfor %}
                 <td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right">
                     <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
-                        <span >Edit</span>
+                        <span>Edit</span>
                     </button>
 
-                    <button x-show="editing" @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
-                        <span x-cloak >Save</span>
-                    </button>
+                    <div x-show="editing" x-cloak class="flex flex-row gap-4 justify-center">
+                        <button  @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                            <span>Save</span>
+                        </button>
+
+                        <button @click="cancelEditingRow()" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
+                            <span>Cancel</span>
+                        </button>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

@@ -37,6 +37,12 @@ document.addEventListener('alpine:init', () => {
             this.editing = false;
             Alpine.store('tableState').globalEditingState = false;
             createToast("success", "Row saved successfully");
-        }
+        },
+
+        cancelEditingRow() {
+            this.editing = false;
+            Alpine.store('tableState').globalEditingState = false;
+            createToast("info", "Editing cancelled");
+        },
     }));
 });

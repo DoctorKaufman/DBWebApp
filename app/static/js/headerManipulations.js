@@ -32,25 +32,27 @@ document.addEventListener('alpine:init', () => {
                 });
         },
 
-        removeCategory(event) {
-            const categoryId = event.target.getAttribute('data-id');
+        removeCategory() {
+            const categoryId = 'abc';//event.target.getAttribute('data-id');
             axios.delete(`http://127.0.0.1:5000/category/${categoryId}/`)
                 .then(response => {
                     console.log('Category deleted:', response.data);
                 })
                 .catch(error => {
                     console.error('Error deleting category:', error);
+                    createToast("error", `Error deleting category: ${categoryId}`);
                 });
         },
 
-        removeProduct(event) {
-            const productId = event.target.getAttribute('data-id');
+        removeProduct() {
+            const productId = 'abc'; //event.target.getAttribute('data-id');
             axios.delete(`http://127.0.0.1:5000/product/${productId}/`)
                 .then(response => {
                     console.log('Product deleted:', response.data);
                 })
                 .catch(error => {
                     console.error('Error deleting product:', error);
+                    createToast("error", `Error deleting product: ${productId}`);
                 });
         },
     }));
