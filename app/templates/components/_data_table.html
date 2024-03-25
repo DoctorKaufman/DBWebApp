@@ -11,7 +11,7 @@
         <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
 
-                <th x-cloak x-show="Alpine.store('tableState').selecting" scope="col" class="p-4">
+                <th x-cloak x-show="Alpine.store('tableState').globalSelectingState" scope="col" class="p-4">
                     <div class="flex items-center">
                         <input
                             id="checkbox-all-search"
@@ -37,14 +37,14 @@
 
                 {% endfor %}
                 
-                <th x-show="!Alpine.store('tableState').selecting" scope="col" class="px-6 py-3">
+                <th x-show="!Alpine.store('tableState').globalSelectingState" scope="col" class="px-6 py-3">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
-            <tr x-data="rowComponent()" x-init="init('{{ item.upc }}', '{{ item.ID }}', '{{ item.category_id }}', '{{ active_tab }}')" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                <td x-cloak x-show="Alpine.store('tableState').selecting" class="w-4 p-4">
+            <tr x-data="rowComponent()" x-init="init('{{ item.upc }}', '{{ item.ID }}', '{{ item.category_id }}', '{{ active_tab }}')" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                <td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
                             type="checkbox"
@@ -68,7 +68,7 @@
                         </td>
                     {% endif %}
                 {% endfor %}
-                <td x-show="!Alpine.store('tableState').selecting" class="px-6 py-4 text-right">
+                <td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right">
                     <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
                         <span >Edit</span>
                     </button>
