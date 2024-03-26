@@ -26,6 +26,9 @@ document.addEventListener('alpine:init', () => {
 
         toggleRowEdit() {
             if (!Alpine.store('tableState').globalEditingState || this.editing) {
+                if (!this.editing) {
+                    this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
+                }
                 this.editing = !this.editing;
                 Alpine.store('tableState').globalEditingState = this.editing;
             } else {
@@ -34,7 +37,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveEditedRow() {
-            const inputs = document.querySelectorAll('input[type="text"]');
+            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
             let allFilled = true;
         
             inputs.forEach(input => {
@@ -55,6 +58,11 @@ document.addEventListener('alpine:init', () => {
         
 
         cancelEditingRow() {
+            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
+            inputs.forEach((input, index) => {
+                input.value = this.originalValues[index] ?? ''; // Use the saved value, or default to an empty string
+            });
+
             this.editing = false;
             Alpine.store('tableState').globalEditingState = false;
             createToast("info", "Editing cancelled");
