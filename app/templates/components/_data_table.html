@@ -37,14 +37,14 @@
 
                 {% endfor %}
                 
-                <th x-show="!Alpine.store('tableState').globalSelectingState" scope="col" class="px-6 py-3">
+                <th x-show="!Alpine.store('tableState').globalSelectingState" scope="col" class="px-6 py-3 max-w-16">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
         <tbody class="table-body">
             {% for item in items %}
-            <tr x-data="rowComponent({{item}})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
+            <tr x-data="rowComponent({{item}}, false)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
                 <td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
@@ -60,16 +60,16 @@
                     {% if key == 'name' %}
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <span x-show="!editing">{{ value }}</span>
-                            <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
+                            <input x-cloak x-show="editing" type="text" id="name-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
                         </th>
                     {% else %}
                         <td class="px-6 py-4">
                             <span x-show="!editing">{{ value }}</span>
-                            <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
+                            <input x-cloak x-show="editing" type="text" id="{{key}}-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
                         </td>
                     {% endif %}
                 {% endfor %}
-                <td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right">
+                <td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right max-w-16">
                     <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
                         <span>Edit</span>
                     </button>

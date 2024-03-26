@@ -1,6 +1,6 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('rowComponent', (item) => ({
-        editing: false,
+    Alpine.data('rowComponent', (item, editingState) => ({
+        editing: editingState,
         id: null,
         init() {
             activeTab = Alpine.store('tableState').currentTab;
@@ -34,10 +34,25 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveEditedRow() {
-            this.editing = false;
-            Alpine.store('tableState').globalEditingState = false;
-            createToast("success", "Row saved successfully");
+            const inputs = document.querySelectorAll('input[type="text"]');
+            let allFilled = true;
+        
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    allFilled = false;
+                }
+                console.log(input.value);
+            });
+        
+            if (allFilled) {
+                this.editing = false;
+                Alpine.store('tableState').globalEditingState = false;
+                createToast("success", "Row saved successfully");
+            } else {
+                createToast("error", "Please fill in all fields before saving.");
+            }
         },
+        
 
         cancelEditingRow() {
             this.editing = false;
