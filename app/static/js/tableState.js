@@ -6,6 +6,7 @@ document.addEventListener('alpine:init', () => {
         globalEditingState: false,
         globalSelectingState: false,
         selectedItems: [],
+        originalValues: [],
         selectAll: false,
 
         toggleSelecting() {

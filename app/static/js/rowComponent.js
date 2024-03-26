@@ -1,6 +1,6 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('rowComponent', (item) => ({
-        editing: false,
+    Alpine.data('rowComponent', (item, editingState) => ({
+        editing: editingState,
         id: null,
         init() {
             activeTab = Alpine.store('tableState').currentTab;
@@ -26,6 +26,9 @@ document.addEventListener('alpine:init', () => {
 
         toggleRowEdit() {
             if (!Alpine.store('tableState').globalEditingState || this.editing) {
+                if (!this.editing) {
+                    this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
+                }
                 this.editing = !this.editing;
                 Alpine.store('tableState').globalEditingState = this.editing;
             } else {
@@ -34,12 +37,32 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveEditedRow() {
-            this.editing = false;
-            Alpine.store('tableState').globalEditingState = false;
-            createToast("success", "Row saved successfully");
+            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
+            let allFilled = true;
+        
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    allFilled = false;
+                }
+                console.log(input.value);
+            });
+        
+            if (allFilled) {
+                this.editing = false;
+                Alpine.store('tableState').globalEditingState = false;
+                createToast("success", "Row saved successfully");
+            } else {
+                createToast("error", "Please fill in all fields before saving.");
+            }
         },
+        
 
         cancelEditingRow() {
+            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
+            inputs.forEach((input, index) => {
+                input.value = this.originalValues[index] ?? ''; // Use the saved value, or default to an empty string
+            });
+
             this.editing = false;
             Alpine.store('tableState').globalEditingState = false;
             createToast("info", "Editing cancelled");
