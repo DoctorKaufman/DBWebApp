@@ -1,6 +1,6 @@
 
 
-    <table x-data="headerManipulations()" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table x-data="headerManipulations()" x-init="init('{{ active_tab }}')" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
                
@@ -42,9 +42,10 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-body">
             {% for item in items %}
-            <tr x-data="rowComponent()" x-init="init('{{ item.upc }}', '{{ item.ID }}', '{{ item.category_id }}', '{{ active_tab }}')" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                <td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
+            <tr x-data="rowComponent({{item}})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
+                <td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
                             type="checkbox"

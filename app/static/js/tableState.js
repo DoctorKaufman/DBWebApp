@@ -1,6 +1,8 @@
 document.addEventListener('alpine:init', () => {
 
     Alpine.store('tableState', {
+
+        currentTab: null,
         globalEditingState: false,
         globalSelectingState: false,
         selectedItems: [],

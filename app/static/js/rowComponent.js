@@ -1,13 +1,13 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('rowComponent', () => ({
+    Alpine.data('rowComponent', (item) => ({
         editing: false,
         id: null,
-        init(upc, ID, categoryId, activeTab) {
-            this.id = activeTab === 'goods_in_store' ? upc :
-                      activeTab === 'goods' ? ID :
-                      activeTab === 'categories' ? categoryId : null;
-            
-            console.log("Initialized row with ID:", this.id); 
+        init() {
+            activeTab = Alpine.store('tableState').currentTab;
+            console.log(item)
+            this.id = activeTab === 'goods_in_store' ? item['upc'] :
+                      activeTab === 'goods' ? item['ID'] :
+                      activeTab === 'categories' ? item['category_id'] : null;
 
             document.addEventListener('exit-edit-mode', () => {
                 if (this.editing) {

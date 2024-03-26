@@ -2,6 +2,10 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.data('headerManipulations', () => ({
 
+        init(currentTab) {
+            this.$store.tableState.currentTab = currentTab;
+        },
+
         toggleSelecting() {
             this.$store.tableState.toggleSelecting();
         },
@@ -17,6 +21,8 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error adding category:', error);
                     // Handle error, e.g., showing an error message
                 });
+
+            // this.createRow(this.createEmptyItem)
         },
 
         addProduct() {
@@ -30,6 +36,70 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error adding product:', error);
                     // Handle error
                 });
+        },
+
+        createEmptyItem(){
+            currentTab = this.$store.tableState.currentTab;
+
+            if (currentTab === 'categories') {
+                return { "name": '', "category_id": '#123456'};
+            } else if (currentTab === 'goods') {
+                return { "name": '', "ID": '#123456', "producer": '', "characteristics": ''};
+            } else if (currentTab === 'goods_in_store') {
+                return { "name": '', "upc": '#123456', "amount": '', "category": '', "price": ''};
+            }
+            return null;
+        },
+
+        createRow(item) {
+            const table = document.querySelector(".table-body");
+            const row = document.createElement("tr"); 
+            row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
+            row.setAttribute('x-data', 'rowComponent()');
+            row.setAttribute('x-init', `init(${JSON.stringify(item)})`);
+            let innerHTML = `<td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
+                <div class="flex items-center">
+                    <input type="checkbox" :checked="isChecked()" @change="toggleSelection()"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                </div>
+            </td>`;
+
+            // Iterate over the item object to create cells
+            Object.entries(item).forEach(([key, value]) => {
+                if (key === 'name') {
+                    innerHTML += `<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <span x-show="!editing">${value}</span>
+                                    <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
+                                </th>`;
+                } else {
+                    innerHTML += `<td class="px-6 py-4">
+                                    <span x-show="!editing">${value}</span>
+                                    <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ value }}" />
+                                </td>`;
+                }
+            });
+
+            // Add the editing buttons HTML
+            innerHTML += `<td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right">
+                            <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                                <span>Edit</span>
+                            </button>
+                            <div x-show="editing" x-cloak class="flex flex-row gap-4 justify-center">
+                                <button @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+                                    <span>Save</span>
+                                </button>
+                                <button @click="cancelEditingRow()" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
+                                    <span>Cancel</span>
+                                </button>
+                            </div>
+                        </td>`;
+
+            // Set the innerHTML to the row
+            row.innerHTML = innerHTML;
+
+            // Append the row to the table
+            table.appendChild(row);
         },
 
         removeCategory() {
