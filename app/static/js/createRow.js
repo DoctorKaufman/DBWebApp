@@ -1,10 +1,7 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', () => ({
 
-        activeTab: null,
-
         init() {
-            this.activeTab = Alpine.store('tableState').currentTab;
             Alpine.store('tableState').globalState = GlobalStates.ADDING;
         },
 
@@ -22,6 +19,7 @@ document.addEventListener('alpine:init', () => {
             if (allFilled) {
                 Alpine.store('tableState').globalState = GlobalStates.NONE;
                 createToast("success", "Row added successfully");
+                this.selfDelete();
             } else {
                 createToast("error", "Please fill in all fields before saving.");
             }
@@ -32,7 +30,11 @@ document.addEventListener('alpine:init', () => {
 
             Alpine.store('tableState').globalState = GlobalStates.NONE;
             createToast("info", "Adding of the item cancelled");
+            this.selfDelete();
+        },
 
+        selfDelete(){
+            document.getElementById('row-creation-form').remove();
         },
     }));
 });
