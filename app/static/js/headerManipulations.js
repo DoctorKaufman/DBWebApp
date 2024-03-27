@@ -12,7 +12,7 @@ document.addEventListener('alpine:init', () => {
             this.$watch('Alpine.store("tableState").globalState', (newState) => {
                 this.tableState = newState;
 
-                console.log('Global state changed to:', newState);
+                console.log('Global state changed to:', this.tableState);
             });
         },
 
@@ -55,7 +55,6 @@ document.addEventListener('alpine:init', () => {
         },
 
         createEmptyItem(){
-            currentTab = this.$store.tableState.currentTab;
 
             if (currentTab === 'categories') {
                 return { "name": '', "category_id": '#123456'};

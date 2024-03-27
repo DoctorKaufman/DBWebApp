@@ -8,12 +8,6 @@ document.addEventListener('alpine:init', () => {
             this.id = activeTab === 'goods_in_store' ? item['upc'] :
                       activeTab === 'goods' ? item['ID'] :
                       activeTab === 'categories' ? item['category_id'] : null;
-
-            document.addEventListener('exit-edit-mode', () => {
-                if (this.editing) {
-                    this.editing = false;
-                }
-            });
         },
 
         toggleSelection() {

@@ -14,8 +14,6 @@ document.addEventListener('alpine:init', () => {
 
         currentTab: null,
         
-        globalAddingState: false,
-
         globalState: GlobalStates.NONE,
 
         selectedItems: [],
@@ -24,10 +22,6 @@ document.addEventListener('alpine:init', () => {
 
         startSelecting() {
             this.globalState = GlobalStates.SELECTING;
-            // if (this.globalSelectingState) {
-            //     this.globalEditingState = false;
-            //     document.dispatchEvent(new CustomEvent('exit-edit-mode'));
-            // }
         },
 
         stopSelecting() {

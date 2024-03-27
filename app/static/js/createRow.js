@@ -1,16 +1,11 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', () => ({
+
         activeTab: null,
 
         init() {
             this.activeTab = Alpine.store('tableState').currentTab;
-            Alpine.store('tableState').globalAddingState = true;
-
-            document.addEventListener('exit-edit-mode', () => {
-                if (this.editing) {
-                    this.editing = false;
-                }
-            });
+            Alpine.store('tableState').globalState = GlobalStates.ADDING;
         },
 
         saveCreatedRow() {
@@ -25,7 +20,7 @@ document.addEventListener('alpine:init', () => {
             });
         
             if (allFilled) {
-                Alpine.store('tableState').globalAddingState  = false;
+                Alpine.store('tableState').globalState = GlobalStates.NONE;
                 createToast("success", "Row added successfully");
             } else {
                 createToast("error", "Please fill in all fields before saving.");
@@ -35,8 +30,8 @@ document.addEventListener('alpine:init', () => {
 
         cancelCreatingRow() {
 
-            // Alpine.store('tableState').globalEditingState = false;
-            createToast("info", "Editing cancelled");
+            Alpine.store('tableState').globalState = GlobalStates.NONE;
+            createToast("info", "Adding of the item cancelled");
 
         },
     }));
