@@ -1,6 +1,6 @@
 
 
-    <table x-data="headerManipulations()" x-init="init('{{ active_tab }}')" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table x-data="headerManipulations('{{ active_tab }}')" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
                
@@ -11,7 +11,7 @@
         <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
 
-                <th x-cloak x-show="Alpine.store('tableState').globalSelectingState" scope="col" class="p-4">
+                <th x-cloak x-show="tableState === GlobalStates.SELECTING" scope="col" class="p-4">
                     <div class="flex items-center">
                         <input
                             id="checkbox-all-search"
@@ -37,15 +37,15 @@
 
                 {% endfor %}
                 
-                <th x-show="!Alpine.store('tableState').globalSelectingState" scope="col" class="px-6 py-3 max-w-16">
+                <th x-show="tableState != GlobalStates.SELECTING" scope="col" class="px-6 py-3 max-w-16">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
         <tbody class="table-body">
             {% for item in items %}
-            <tr x-data="rowComponent({{item}}, false)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
-                <td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
+            <tr x-data="rowComponent({{item}})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
+                <td x-cloak x-show="tableState === GlobalStates.SELECTING" class="w-4 p-4">
                     <div class="flex items-center">
                         <input
                             type="checkbox"
@@ -69,7 +69,7 @@
                         </td>
                     {% endif %}
                 {% endfor %}
-                <td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right max-w-16">
+                <td x-show="tableState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-16">
                     <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
                         <span>Edit</span>
                     </button>

@@ -1,13 +1,28 @@
 document.addEventListener('alpine:init', () => {
 
-    Alpine.data('headerManipulations', () => ({
+    Alpine.data('headerManipulations', (currentTab) => ({
 
-        init(currentTab) {
+        tableState: null,
+
+        init() {
             this.$store.tableState.currentTab = currentTab;
+
+            this.tableState = this.$store.tableState.globalState;
+
+            this.$watch('Alpine.store("tableState").globalState', (newState) => {
+                this.tableState = newState;
+
+                console.log('Global state changed to:', newState);
+            });
         },
 
-        toggleSelecting() {
-            this.$store.tableState.toggleSelecting();
+        startSelecting() {
+            this.$store.tableState.startSelecting();
+            console.log(this.$store.tableState.globalState)
+        },
+
+        stopSelecting() {
+            this.$store.tableState.stopSelecting();
         },
         
         addCategory() {
@@ -57,7 +72,7 @@ document.addEventListener('alpine:init', () => {
             const row = document.createElement("tr"); 
             row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
             row.setAttribute('x-data', `rowComponent(${JSON.stringify(item)}, true)`);
-            let innerHTML = `<td x-cloak x-show="Alpine.store('tableState').globalSelectingState" class="w-4 p-4">
+            let innerHTML = `<td x-cloak x-show="tableState == GlobalStates.SELECTING" class="w-4 p-4">
                 <div class="flex items-center">
                     <input type="checkbox" :checked="isChecked()" @change="toggleSelection()"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -79,7 +94,7 @@ document.addEventListener('alpine:init', () => {
                 }
             });
 
-            innerHTML += `<td x-show="!Alpine.store('tableState').globalSelectingState" class="px-6 py-4 text-right max-w-16">
+            innerHTML += `<td x-show="tableState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-16">
                             <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
                                 <span>Edit</span>
                             </button>

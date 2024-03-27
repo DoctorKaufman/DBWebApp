@@ -1,23 +1,41 @@
 document.addEventListener('alpine:init', () => {
 
+    const GlobalStates = {
+        NONE: 'NONE',
+        EDITING: 'EDITING',
+        SELECTING: 'SELECTING',
+        ADDING: 'ADDING',
+    };
+
+    window.GlobalStates = GlobalStates;
+    
+
     Alpine.store('tableState', {
 
         currentTab: null,
-        globalEditingState: false,
-        globalSelectingState: false,
+        
+        globalAddingState: false,
+
+        globalState: GlobalStates.NONE,
+
         selectedItems: [],
         originalValues: [],
         selectAll: false,
 
-        toggleSelecting() {
-            this.globalSelectingState = !this.globalSelectingState;
-            if (this.globalSelectingState) {
-                this.globalEditingState = false;
-                document.dispatchEvent(new CustomEvent('exit-edit-mode'));
-            }
+        startSelecting() {
+            this.globalState = GlobalStates.SELECTING;
+            // if (this.globalSelectingState) {
+            //     this.globalEditingState = false;
+            //     document.dispatchEvent(new CustomEvent('exit-edit-mode'));
+            // }
+        },
+
+        stopSelecting() {
+            this.globalState = GlobalStates.NONE;
             this.selectedItems = [];
             this.selectAll = false;
         },
+
         toggleSelectAll(items, active_tab) {
             this.selectAll = !this.selectAll;
             if (this.selectAll) {

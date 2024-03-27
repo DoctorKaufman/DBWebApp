@@ -1,6 +1,6 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('rowComponent', (item, editingState) => ({
-        editing: editingState,
+    Alpine.data('rowComponent', (item) => ({
+        editing: false,
         id: null,
         init() {
             activeTab = Alpine.store('tableState').currentTab;
@@ -25,12 +25,10 @@ document.addEventListener('alpine:init', () => {
         },
 
         toggleRowEdit() {
-            if (!Alpine.store('tableState').globalEditingState || this.editing) {
-                if (!this.editing) {
-                    this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
-                }
-                this.editing = !this.editing;
-                Alpine.store('tableState').globalEditingState = this.editing;
+            if (Alpine.store('tableState').globalState != GlobalStates.EDITING || this.editing) {
+                this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
+                this.editing = true;
+                Alpine.store('tableState').globalState = GlobalStates.EDITING;
             } else {
                 createToast("error", "You can only edit one row at a time");
             }
@@ -44,12 +42,11 @@ document.addEventListener('alpine:init', () => {
                 if (input.value.trim() === '') {
                     allFilled = false;
                 }
-                console.log(input.value);
             });
         
             if (allFilled) {
                 this.editing = false;
-                Alpine.store('tableState').globalEditingState = false;
+                Alpine.store('tableState').globalState = GlobalStates.NONE;
                 createToast("success", "Row saved successfully");
             } else {
                 createToast("error", "Please fill in all fields before saving.");
@@ -64,7 +61,7 @@ document.addEventListener('alpine:init', () => {
             });
 
             this.editing = false;
-            Alpine.store('tableState').globalEditingState = false;
+            Alpine.store('tableState').globalState = GlobalStates.NONE;
             createToast("info", "Editing cancelled");
         },
     }));
