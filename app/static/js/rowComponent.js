@@ -19,12 +19,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         toggleRowEdit() {
-            if (Alpine.store('tableState').globalState != GlobalStates.EDITING || this.editing) {
+            if (Alpine.store('tableState').globalState === GlobalStates.NONE) {
                 this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
                 this.editing = true;
                 Alpine.store('tableState').globalState = GlobalStates.EDITING;
             } else {
-                createToast("error", "You can only edit one row at a time");
+                createToast("error", "You can only fill information for one row at a time");
             }
         },
 

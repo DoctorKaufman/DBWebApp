@@ -26,6 +26,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         addCategory() {
+            console.log('Adding a new category');
             const data = { name: 'New Category Name', description: 'Description of the new category' };
             axios.post('http://127.0.0.1:5000/category/', data)
                 .then(response => {
@@ -36,12 +37,11 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error adding category:', error);
                     // Handle error, e.g., showing an error message
                 });
-
-            newItem = this.createEmptyItem();
-            this.createRow(newItem);
+            this.createRowForm();
         },
 
         addProduct() {
+            console.log('Adding a new product');
             const data = {/* placeholder for product data */};
             axios.post('http://127.0.0.1:5000/product/', data)
                 .then(response => {
@@ -52,56 +52,48 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error adding product:', error);
                     // Handle error
                 });
+            this.createRowForm();
         },
 
-        createEmptyItem(){
-
-            if (currentTab === 'categories') {
-                return { "name": '', "category_id": '#123456'};
-            } else if (currentTab === 'goods') {
-                return { "name": '', "ID": '#123456', "producer": '', "characteristics": ''};
-            } else if (currentTab === 'goods_in_store') {
-                return { "name": '', "upc": '#123456', "amount": '', "category": '', "price": ''};
-            }
-            return null;
-        },
-
-        createRow(item) {
+        createRowForm() {
             const table = document.querySelector(".table-body");
             const row = document.createElement("tr"); 
+            let fields = [];
             row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
-            row.setAttribute('x-data', `rowComponent(${JSON.stringify(item)}, true)`);
-            let innerHTML = `<td x-cloak x-show="tableState == GlobalStates.SELECTING" class="w-4 p-4">
-                <div class="flex items-center">
-                    <input type="checkbox" :checked="isChecked()" @change="toggleSelection()"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                </div>
-            </td>`;
+            row.id = 'row-creation-form';
+            row.setAttribute('x-data', `createRow()`);
+            if (currentTab === 'categories') { fields = [{'name' : true}, {'category_id' : false}]; }
+            else if (currentTab === 'goods') { fields = [{'name' : true}, {'ID' : false}, {'producer' : true}, {'characteristics' : true}]}
+            else if (currentTab === 'goods_in_store') { fields = [{'name' : true}, {'upc' : false}, {'amount' : true}, {'category' : true}, {'price' : true}] }
+            let innerHTML = '';
 
-            Object.entries(item).forEach(([key, value]) => {
-                if (key === 'name') {
-                    innerHTML += `<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <span x-show="!editing">${value}</span>
-                                    <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
-                                </th>`;
+            fields.forEach(fieldObject => {
+                const fieldName = Object.keys(fieldObject)[0]; 
+                const inputRequired = fieldObject[fieldName];
+        
+                if (inputRequired) {
+                    innerHTML += `<td class="px-6 py-4">
+                                    <input type="text" 
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 
+                                    text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 
+                                    block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white 
+                                    dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                    placeholder="${fieldName}"/>
+                                </td>`;
                 } else {
                     innerHTML += `<td class="px-6 py-4">
-                                    <span x-show="!editing">${value}</span>
-                                    <input x-cloak x-show="editing" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
+                                    <span>${fieldName} is autogenerated</span>
                                 </td>`;
                 }
             });
 
-            innerHTML += `<td x-show="tableState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-16">
-                            <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
-                                <span>Edit</span>
-                            </button>
-                            <div x-show="editing" x-cloak class="flex flex-row gap-4 justify-center">
-                                <button @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
+            innerHTML += `<td class="px-6 py-4 text-right max-w-16">
+                            <div class="flex flex-row gap-4 justify-center">
+                                <button @click="saveCreatedRow()" class="font-medium text-sky-600 dark:text-blue-500 hover:underline">
                                     <span>Save</span>
                                 </button>
-                                <button @click="cancelEditingRow()" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
+                                <button @click="cancelCreatingRow()" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
                                     <span>Cancel</span>
                                 </button>
                             </div>
