@@ -29,7 +29,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveEditedRow() {
-            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
+            const parentElement = this.$el.parentNode.parentNode.parentNode;
+            const inputs = parentElement.querySelectorAll('input[type="text"]');
             let allFilled = true;
         
             inputs.forEach(input => {
@@ -41,8 +42,7 @@ document.addEventListener('alpine:init', () => {
             if (allFilled) {
                 this.editing = false;
                 Alpine.store('tableState').globalState = GlobalStates.NONE;
-
-                let parentElement = this.$el.parentNode.parentNode.parentNode; 
+ 
                 const el = parentElement.querySelectorAll('.text-scramble');
                 for (let i = 0; i < el.length; i++) {
                     const fx = new TextScramble(el[i])
@@ -89,7 +89,7 @@ document.addEventListener('alpine:init', () => {
         const length = this.oldText.length;
         this.queue = [];
         for (let i = length; i >= 0; i--) {
-          this.queue.push({ text: this.oldText.slice(0, i), start: (length - i) * 3, end: (length - i + 1) * 3 });
+          this.queue.push({ text: this.oldText.slice(0, i), start: (length - i) * 4, end: (length - i + 1) * 4 });
         }
         this.frame = 0;
         this.update(this.typeText);
@@ -99,7 +99,7 @@ document.addEventListener('alpine:init', () => {
         const length = this.newText.length;
         this.queue = [];
         for (let i = 0; i <= length; i++) {
-          this.queue.push({ text: this.newText.slice(0, i), start: i * 3, end: (i + 1) * 3 });
+          this.queue.push({ text: this.newText.slice(0, i), start: i * 4, end: (i + 1) * 4 });
         }
         this.frame = 0;
         this.update();
