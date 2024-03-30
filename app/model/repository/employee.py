@@ -31,7 +31,7 @@ class EmployeeRepository:
                                employee_data[8], employee_data[9], employee_data[10], employee_data[11])
         return None
 
-    def insert_employee(self, employee):
+    """def insert_employee(self, employee):
         cursor = self.conn.cursor()
         query = sql.SQL("INSERT INTO Employee (id_employee, empl_surname, empl_name, empl_patronymic, empl_role, "
                         "salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) "
@@ -41,7 +41,24 @@ class EmployeeRepository:
                                employee.date_of_birth, employee.date_of_start, employee.phone_number,
                                employee.city, employee.street, employee.zip_code))
         self.conn.commit()
+        cursor.close()"""
+
+    def insert_employee(self, employee):
+        cursor = self.conn.cursor()
+        query = sql.SQL("INSERT INTO Employee (empl_surname, empl_name, empl_patronymic, empl_role, salary, "
+                        "date_of_birth, date_of_start, phone_number, city, street, zip_code) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_employee")
+        cursor.execute(query, (employee.empl_surname, employee.empl_name, employee.empl_patronymic,
+                               employee.empl_role, employee.salary, employee.date_of_birth, employee.date_of_start,
+                               employee.phone_number, employee.city, employee.street, employee.zip_code))
+        id_employee = cursor.fetchone()[0]
+        self.conn.commit()
         cursor.close()
+        if id_employee:
+            return EmployeeDTO(id_employee, employee.empl_surname, employee.empl_name, employee.empl_patronymic,
+                               employee.empl_role, employee.salary, employee.date_of_birth, employee.date_of_start,
+                               employee.phone_number, employee.city, employee.street, employee.zip_code)
+        return None
 
     def delete_employee(self, id_employee):
         cursor = self.conn.cursor()

@@ -27,12 +27,23 @@ class CategoryRepository:
             return CategoryDTO(category_data[0], category_data[1])
         return None
 
-    def insert_category(self, category):
+    """def insert_category(self, category):
         cursor = self.conn.cursor()
         query = sql.SQL("INSERT INTO category (category_number, category_name) VALUES (%s, %s)")
         cursor.execute(query, (category.category_number, category.category_name))
         self.conn.commit()
+        cursor.close()"""
+
+    def insert_category(self, category):
+        cursor = self.conn.cursor()
+        query = sql.SQL("INSERT INTO Category (category_name) VALUES (%s) RETURNING category_number")
+        cursor.execute(query, (category.category_name,))
+        category_number = cursor.fetchone()[0]
+        self.conn.commit()
         cursor.close()
+        if category_number:
+            return CategoryDTO(category_number, category.category_name)
+        return None
 
     def update_category(self, category):
         cursor = self.conn.cursor()

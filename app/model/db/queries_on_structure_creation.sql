@@ -1,6 +1,6 @@
 -- Create table Employee
 CREATE TABLE Employee (
-    id_employee VARCHAR(10) PRIMARY KEY,
+    id_employee SERIAL PRIMARY KEY,
     empl_surname VARCHAR(50) NOT NULL,
     empl_name VARCHAR(50) NOT NULL,
     empl_patronymic VARCHAR(50),
@@ -16,7 +16,7 @@ CREATE TABLE Employee (
 
 -- Create table Customer_Card
 CREATE TABLE Customer_Card (
-    card_number VARCHAR(13) PRIMARY KEY NOT NULL,
+    card_number SERIAL PRIMARY KEY,
     cust_surname VARCHAR(50) NOT NULL,
     cust_name VARCHAR(50) NOT NULL,
     cust_patronymic VARCHAR(50),
@@ -29,15 +29,15 @@ CREATE TABLE Customer_Card (
 
 -- Create table Category
 CREATE TABLE Category (
-    category_number SERIAL PRIMARY KEY NOT NULL,
+    category_number SERIAL PRIMARY KEY,
     category_name VARCHAR(50) NOT NULL
 );
 
--- Create table Check
+-- Create table Receipt
 CREATE TABLE Receipt (
-    check_number VARCHAR(10) PRIMARY KEY NOT NULL,
-    id_employee VARCHAR(10) NOT NULL REFERENCES Employee(id_employee) ON UPDATE CASCADE ON DELETE NO ACTION,
-    card_number VARCHAR(13) REFERENCES Customer_Card(card_number) ON UPDATE CASCADE ON DELETE NO ACTION,
+    check_number SERIAL PRIMARY KEY,
+    id_employee INT NOT NULL REFERENCES Employee(id_employee) ON UPDATE CASCADE ON DELETE NO ACTION,
+    card_number INT REFERENCES Customer_Card(card_number) ON UPDATE CASCADE ON DELETE NO ACTION,
     print_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     sum_total DECIMAL(13,4) NOT NULL,
     vat DECIMAL(13,4) NOT NULL
@@ -45,7 +45,7 @@ CREATE TABLE Receipt (
 
 -- Create table Product
 CREATE TABLE Product (
-    id_product SERIAL PRIMARY KEY NOT NULL,
+    id_product SERIAL PRIMARY KEY,
     category_number INT NOT NULL REFERENCES Category(category_number) ON UPDATE CASCADE ON DELETE NO ACTION,
     product_name VARCHAR(50) NOT NULL,
     p_characteristics VARCHAR(100) NOT NULL
@@ -53,8 +53,8 @@ CREATE TABLE Product (
 
 -- Create table Store_Product
 CREATE TABLE Store_Product (
-    UPC VARCHAR(12) PRIMARY KEY NOT NULL,
-    UPC_prom VARCHAR(12) REFERENCES Store_Product(UPC) ON UPDATE CASCADE ON DELETE SET NULL,
+    UPC SERIAL PRIMARY KEY,
+    UPC_prom INT REFERENCES Store_Product(UPC) ON UPDATE CASCADE ON DELETE SET NULL,
     id_product INT NOT NULL REFERENCES Product(id_product) ON UPDATE CASCADE ON DELETE NO ACTION,
     selling_price DECIMAL(13,4) NOT NULL,
     products_number INT NOT NULL,
@@ -63,8 +63,8 @@ CREATE TABLE Store_Product (
 
 -- Create table Sale
 CREATE TABLE Sale (
-    UPC VARCHAR(12) NOT NULL,
-    check_number VARCHAR(10) NOT NULL,
+    UPC INT NOT NULL,
+    check_number INT NOT NULL,
     product_number INT NOT NULL,
     selling_price DECIMAL(13,4) NOT NULL,
     PRIMARY KEY (UPC, check_number),

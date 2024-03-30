@@ -29,14 +29,28 @@ class ReceiptRepository:
                               receipt_data[4], receipt_data[5])
         return None
 
-    def insert_receipt(self, receipt):
+    """def insert_receipt(self, receipt):
         cursor = self.conn.cursor()
         query = sql.SQL("INSERT INTO Receipt (check_number, id_employee, card_number, print_date, sum_total, vat) "
                         "VALUES (%s, %s, %s, %s, %s, %s)")
         cursor.execute(query, (receipt.check_number, receipt.id_employee, receipt.card_number,
                                receipt.print_date, receipt.sum_total, receipt.vat))
         self.conn.commit()
+        cursor.close()"""
+
+    def insert_receipt(self, receipt):
+        cursor = self.conn.cursor()
+        query = sql.SQL("INSERT INTO Receipt (id_employee, card_number, print_date, sum_total, vat) "
+                        "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
+        cursor.execute(query, (receipt.id_employee, receipt.card_number, receipt.print_date,
+                               receipt.sum_total, receipt.vat))
+        check_number = cursor.fetchone()[0]
+        self.conn.commit()
         cursor.close()
+        if check_number:
+            return ReceiptDTO(check_number, receipt.id_employee, receipt.card_number, receipt.print_date,
+                              receipt.sum_total, receipt.vat)
+        return None
 
     def delete_receipt(self, check_number):
         cursor = self.conn.cursor()

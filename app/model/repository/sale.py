@@ -27,12 +27,24 @@ class SaleRepository:
         cursor.close()
         return tuple(sales)
 
-    def insert_sale(self, sale):
+    """def insert_sale(self, sale):
         cursor = self.conn.cursor()
         query = sql.SQL("INSERT INTO Sale (UPC, check_number, product_number, selling_price) VALUES (%s, %s, %s, %s)")
         cursor.execute(query, (sale.UPC, sale.check_number, sale.product_number, sale.selling_price))
         self.conn.commit()
+        cursor.close()"""
+
+    def insert_sale(self, sale):
+        cursor = self.conn.cursor()
+        query = sql.SQL("INSERT INTO Sale (UPC, check_number, product_number, selling_price) "
+                        "VALUES (%s, %s, %s, %s) RETURNING *")
+        cursor.execute(query, (sale.UPC, sale.check_number, sale.product_number, sale.selling_price))
+        sale_data = cursor.fetchone()
+        self.conn.commit()
         cursor.close()
+        if sale_data:
+            return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
+        return None
 
     def delete_sale(self, upc, check_number):
         cursor = self.conn.cursor()

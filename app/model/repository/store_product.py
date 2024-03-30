@@ -30,7 +30,7 @@ class StoreProductRepository:
                                    store_product_data[3], store_product_data[4], store_product_data[5])
         return None
 
-    def insert_store_product(self, store_product):
+    '''def insert_store_product(self, store_product):
         cursor = self.conn.cursor()
         query = sql.SQL("INSERT INTO Store_Product (UPC, UPC_prom, id_product, selling_price, products_number, "
                         "promotional_product) VALUES (%s, %s, %s, %s, %s, %s)")
@@ -38,7 +38,25 @@ class StoreProductRepository:
                                store_product.selling_price, store_product.products_number,
                                store_product.promotional_product))
         self.conn.commit()
+        cursor.close()'''
+
+    def insert_store_product(self, store_product):
+        cursor = self.conn.cursor()
+        query = sql.SQL("INSERT INTO Store_Product (UPC_prom, id_product, selling_price, products_number, "
+                        "promotional_product) "
+                        "VALUES (%s, %s, %s, %s, %s) RETURNING UPC, UPC_prom, id_product, selling_price, "
+                        "products_number, promotional_product")
+        cursor.execute(query, (store_product.UPC_prom, store_product.id_product,
+                               store_product.selling_price, store_product.products_number,
+                               store_product.promotional_product))
+        upc = cursor.fetchone()[0]
+        self.conn.commit()
         cursor.close()
+        if upc:
+            return StoreProductDTO(upc[0], store_product.UPC_prom, store_product.id_product,
+                                   store_product.selling_price, store_product.products_number,
+                                   store_product.promotional_product)
+        return None
 
     def delete_store_product(self, upc):
         cursor = self.conn.cursor()
