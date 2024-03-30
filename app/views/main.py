@@ -24,10 +24,10 @@ def home():
     return render_template('pages/home.html', user=user)
 
 
-@main.route('/receipts')
-def receipts():
-    user = {'username': 'John Doe'} 
-    return render_template('pages/receipts.html', user=user)
+# @main.route('/receipts')
+# def receipts():
+#     user = {'username': 'John Doe'} 
+#     return render_template('pages/receipts.html', user=user)
 
 
 @main.route('/login')
