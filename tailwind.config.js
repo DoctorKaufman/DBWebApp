@@ -19,7 +19,7 @@ module.exports = {
       },
       // this was harder than I expected 🥲
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(to bottom, #1f2937, #26303f, #1f2937, #26303f, #26303f, #26303f, #1f2937, #26303f, #1f2937)',
+        'custom-gradient': 'linear-gradient(to bottom, #1f2937, #26303f, #1f2937, #26303f, #26303f, #26303f, #26303f, #1f2937, #26303f, #1f2937)',
       }
     },
   },
