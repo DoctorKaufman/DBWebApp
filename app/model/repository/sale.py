@@ -40,4 +40,3 @@ class SaleRepository:
         cursor.execute(query, (upc, check_number))
         self.conn.commit()
         cursor.close()
-
