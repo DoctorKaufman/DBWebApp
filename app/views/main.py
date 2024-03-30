@@ -24,16 +24,10 @@ def home():
     return render_template('pages/home.html', user=user)
 
 
-@main.route('/goods-and-categories')
-def goods_and_categories():
+@main.route('/receipts')
+def receipts():
     user = {'username': 'John Doe'} 
-    return render_template('pages/goods_and_categories.html',user=user)
-
-
-@main.route('/staff-and-clients')
-def staff_and_clients():
-    user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', user=user)
+    return render_template('pages/receipts.html', user=user)
 
 
 @main.route('/login')
