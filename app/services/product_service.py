@@ -5,8 +5,8 @@ class ProductService:
     def __init__(self, product_repository):
         self.product_repository = product_repository
 
-    def get_product_by_id(self, product_id):
-        return self.product_repository.select_product(product_id)
+    def get_product_by_id_product(self, id_product):
+        return self.product_repository.select_product(id_product)
 
     def get_all_products(self):
         return self.product_repository.select_all_products()

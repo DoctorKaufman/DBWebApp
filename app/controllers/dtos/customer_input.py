@@ -1,7 +1,5 @@
-class CustomerCardDTO:
-    def __init__(self, card_number, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code,
-                 c_percent):
-        self.__card_number = card_number
+class CustomerInputDTO:
+    def __init__(self, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent):
         self.__cust_surname = cust_surname
         self.__cust_name = cust_name
         self.__cust_patronymic = cust_patronymic
@@ -10,10 +8,6 @@ class CustomerCardDTO:
         self.__street = street
         self.__zip_code = zip_code
         self.__c_percent = c_percent
-
-    @property
-    def card_number(self):
-        return self.__card_number
 
     @property
     def cust_surname(self):
@@ -47,14 +41,14 @@ class CustomerCardDTO:
     def c_percent(self):
         return self.__c_percent
 
-    def serialize(self):
-        return {
-            "card_number": self.__card_number,
-            "cust_surname": self.__cust_surname,
-            "cust_name": self.__cust_name,
-            "phone_number": self.__phone_number,
-            "city": self.__city,
-            "street": self.__street,
-            "zip_code": self.__zip_code,
-            "c_percent": self.__c_percent
-        }
+    @staticmethod
+    def deserialize(data):
+        cust_surname = data['cust_surname']
+        cust_name = data['cust_name']
+        cust_patronymic = data['cust_patronymic']
+        phone_number = data['phone_number']
+        city = data['city']
+        street = data['street']
+        zip_code = data['zip_code']
+        c_percent = float(data['c_percent'])
+        return CustomerInputDTO(cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)

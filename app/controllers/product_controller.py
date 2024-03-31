@@ -31,7 +31,7 @@ def delete_product(product_id):
 
 @product.route('/<int:product_id>', methods=["GET"])
 def get_product(product_id):
-    return product_service.get_product_by_id(product_id).serialize()
+    return product_service.get_product_by_id_product(product_id).serialize()
 
 
 @product.route('/', methods=['GET'])
