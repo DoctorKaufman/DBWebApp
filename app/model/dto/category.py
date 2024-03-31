@@ -10,3 +10,9 @@ class CategoryDTO:
     @property
     def category_name(self):
         return self.__category_name
+
+    def serialize(self):
+        return {
+            'category_number': self.__category_number,
+            'category_name': self.__category_name
+        }

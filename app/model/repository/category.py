@@ -58,3 +58,13 @@ class CategoryRepository:
         cursor.execute(query, (category_number,))
         self.conn.commit()
         cursor.close()
+
+    def exists_category(self, category_name):
+        cursor = self.conn.cursor()
+        query = sql.SQL("SELECT category_number FROM category WHERE category_name ILIKE %s")
+        cursor.execute(query, (category_name,))
+        category_number = cursor.fetchone()
+        cursor.close()
+        if category_number:
+            return True
+        return False

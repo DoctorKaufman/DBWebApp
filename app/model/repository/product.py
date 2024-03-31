@@ -48,6 +48,14 @@ class ProductRepository:
             return ProductDTO(id_product, product.category_number, product.product_name, product.p_characteristics)
         return None
 
+    def update_product(self, product):
+        cursor = self.conn.cursor()
+        query = sql.SQL("UPDATE product SET category_number = %s, product_name = %s, p_characteristics = %s "
+                        "WHERE id_product = %s")
+        cursor.execute(query, (product.category_number, product.product_name, product.p_characteristics, product.id_product))
+        self.conn.commit()
+        cursor.close()
+
     def delete_product(self, id_product):
         cursor = self.conn.cursor()
         query = sql.SQL("DELETE FROM Product WHERE id_product = %s")
