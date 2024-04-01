@@ -36,7 +36,7 @@ class CategoryRepository:
 
     def insert_category(self, category):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Category (category_name) VALUES (%s) RETURNING category_number")
+        query = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
         cursor.execute(query, (category.category_name,))
         category_number = cursor.fetchone()[0]
         self.conn.commit()
@@ -68,3 +68,21 @@ class CategoryRepository:
         if category_number:
             return True
         return False
+
+    def get_column_names(self):
+        cursor = self.conn.cursor()
+        query = sql.SQL("SELECT cols.column_name, "
+                        "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
+                        "FROM information_schema.columns AS cols "
+                        "LEFT JOIN information_schema.key_column_usage AS pkuse "
+                        "ON cols.table_schema = pkuse.constraint_schema "
+                        "AND cols.table_name = pkuse.table_name "
+                        "AND cols.column_name = pkuse.column_name "
+                        "LEFT JOIN information_schema.table_constraints AS tc "
+                        "ON pkuse.constraint_schema = tc.constraint_schema "
+                        "AND pkuse.constraint_name = tc.constraint_name "
+                        "WHERE cols.table_name = 'category'")
+        cursor.execute(query)
+        column_info = {row[0]: row[1] for row in cursor.fetchall()}
+        cursor.close()
+        return column_info

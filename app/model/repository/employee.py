@@ -9,7 +9,7 @@ class EmployeeRepository:
 
     def select_all_employees(self):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Employee")
+        query = sql.SQL("SELECT * FROM employee")
         cursor.execute(query)
         employees = []
         for employee_data in cursor.fetchall():
@@ -21,7 +21,7 @@ class EmployeeRepository:
 
     def select_employee(self, id_employee):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Employee WHERE id_employee = %s")
+        query = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
         cursor.execute(query, (id_employee,))
         employee_data = cursor.fetchone()
         cursor.close()
@@ -45,7 +45,7 @@ class EmployeeRepository:
 
     def insert_employee(self, employee):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Employee (empl_surname, empl_name, empl_patronymic, empl_role, salary, "
+        query = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, salary, "
                         "date_of_birth, date_of_start, phone_number, city, street, zip_code) "
                         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_employee")
         cursor.execute(query, (employee.empl_surname, employee.empl_name, employee.empl_patronymic,
@@ -62,7 +62,25 @@ class EmployeeRepository:
 
     def delete_employee(self, id_employee):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM Employee WHERE id_employee = %s")
+        query = sql.SQL("DELETE FROM employee WHERE id_employee = %s")
         cursor.execute(query, (id_employee,))
         self.conn.commit()
         cursor.close()
+
+    def get_column_names(self):
+        cursor = self.conn.cursor()
+        query = sql.SQL("SELECT cols.column_name, "
+                        "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
+                        "FROM information_schema.columns AS cols "
+                        "LEFT JOIN information_schema.key_column_usage AS pkuse "
+                        "ON cols.table_schema = pkuse.constraint_schema "
+                        "AND cols.table_name = pkuse.table_name "
+                        "AND cols.column_name = pkuse.column_name "
+                        "LEFT JOIN information_schema.table_constraints AS tc "
+                        "ON pkuse.constraint_schema = tc.constraint_schema "
+                        "AND pkuse.constraint_name = tc.constraint_name "
+                        "WHERE cols.table_name = 'employee'")
+        cursor.execute(query)
+        column_info = {row[0]: row[1] for row in cursor.fetchall()}
+        cursor.close()
+        return column_info

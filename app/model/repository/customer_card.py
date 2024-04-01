@@ -9,7 +9,7 @@ class CustomerCardRepository:
 
     def select_all_customer_cards(self):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Customer_Card")
+        query = sql.SQL("SELECT * FROM customer_card")
         cursor.execute(query)
         customer_cards = []
         for customer_card_data in cursor.fetchall():
@@ -23,7 +23,7 @@ class CustomerCardRepository:
 
     def select_customer_card(self, card_number):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Customer_Card WHERE card_number = %s")
+        query = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
         cursor.execute(query, (card_number,))
         customer_card_data = cursor.fetchone()
         cursor.close()
@@ -35,7 +35,7 @@ class CustomerCardRepository:
 
     """def insert_customer_card(self, customer_card):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Customer_Card (card_number, cust_surname, cust_name, cust_patronymic, "
+        query = sql.SQL("INSERT INTO customer_card (card_number, cust_surname, cust_name, cust_patronymic, "
                         "phone_number, city, street, zip_code, c_percent) "
                         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
         cursor.execute(query, (customer_card.card_number, customer_card.cust_surname, customer_card.cust_name,
@@ -46,7 +46,7 @@ class CustomerCardRepository:
 
     def insert_customer_card(self, customer_card):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Customer_Card (cust_surname, cust_name, cust_patronymic, phone_number, "
+        query = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, phone_number, "
                         "city, street, zip_code, c_percent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
                         "RETURNING card_number")
         cursor.execute(query, (customer_card.cust_surname, customer_card.cust_name, customer_card.cust_patronymic,
@@ -63,7 +63,25 @@ class CustomerCardRepository:
 
     def delete_customer_card(self, card_number):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM Customer_Card WHERE card_number = %s")
+        query = sql.SQL("DELETE FROM customer_card WHERE card_number = %s")
         cursor.execute(query, (card_number,))
         self.conn.commit()
         cursor.close()
+
+    def get_column_names(self):
+        cursor = self.conn.cursor()
+        query = sql.SQL("SELECT cols.column_name, "
+                        "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
+                        "FROM information_schema.columns AS cols "
+                        "LEFT JOIN information_schema.key_column_usage AS pkuse "
+                        "ON cols.table_schema = pkuse.constraint_schema "
+                        "AND cols.table_name = pkuse.table_name "
+                        "AND cols.column_name = pkuse.column_name "
+                        "LEFT JOIN information_schema.table_constraints AS tc "
+                        "ON pkuse.constraint_schema = tc.constraint_schema "
+                        "AND pkuse.constraint_name = tc.constraint_name "
+                        "WHERE cols.table_name = 'customer_card'")
+        cursor.execute(query)
+        column_info = {row[0]: row[1] for row in cursor.fetchall()}
+        cursor.close()
+        return column_info

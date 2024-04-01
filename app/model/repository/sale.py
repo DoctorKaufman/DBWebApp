@@ -9,7 +9,7 @@ class SaleRepository:
 
     def select_sale(self, upc, check_number):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Sale WHERE UPC = %s AND check_number = %s")
+        query = sql.SQL("SELECT * FROM sale WHERE UPC = %s AND check_number = %s")
         cursor.execute(query, (upc, check_number))
         sale_data = cursor.fetchone()
         cursor.close()
@@ -19,7 +19,7 @@ class SaleRepository:
 
     def select_all_sales(self):
         cursor = self.conn.cursor()
-        query = sql.SQL("SELECT * FROM Sale")
+        query = sql.SQL("SELECT * FROM sale")
         cursor.execute(query)
         sales = []
         for sale_data in cursor.fetchall():
@@ -29,14 +29,14 @@ class SaleRepository:
 
     """def insert_sale(self, sale):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Sale (UPC, check_number, product_number, selling_price) VALUES (%s, %s, %s, %s)")
+        query = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) VALUES (%s, %s, %s, %s)")
         cursor.execute(query, (sale.UPC, sale.check_number, sale.product_number, sale.selling_price))
         self.conn.commit()
         cursor.close()"""
 
     def insert_sale(self, sale):
         cursor = self.conn.cursor()
-        query = sql.SQL("INSERT INTO Sale (UPC, check_number, product_number, selling_price) "
+        query = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) "
                         "VALUES (%s, %s, %s, %s) RETURNING *")
         cursor.execute(query, (sale.UPC, sale.check_number, sale.product_number, sale.selling_price))
         sale_data = cursor.fetchone()
@@ -48,7 +48,25 @@ class SaleRepository:
 
     def delete_sale(self, upc, check_number):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM Sale WHERE UPC = %s AND check_number = %s")
+        query = sql.SQL("DELETE FROM sale WHERE UPC = %s AND check_number = %s")
         cursor.execute(query, (upc, check_number))
         self.conn.commit()
         cursor.close()
+
+    def get_column_names(self):
+        cursor = self.conn.cursor()
+        query = sql.SQL("SELECT cols.column_name, "
+                        "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
+                        "FROM information_schema.columns AS cols "
+                        "LEFT JOIN information_schema.key_column_usage AS pkuse "
+                        "ON cols.table_schema = pkuse.constraint_schema "
+                        "AND cols.table_name = pkuse.table_name "
+                        "AND cols.column_name = pkuse.column_name "
+                        "LEFT JOIN information_schema.table_constraints AS tc "
+                        "ON pkuse.constraint_schema = tc.constraint_schema "
+                        "AND pkuse.constraint_name = tc.constraint_name "
+                        "WHERE cols.table_name = 'sale'")
+        cursor.execute(query)
+        column_info = {row[0]: row[1] for row in cursor.fetchall()}
+        cursor.close()
+        return column_info
