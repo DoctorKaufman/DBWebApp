@@ -22,3 +22,6 @@ class ProductService:
 
     def delete_product(self, product_id):
         self.product_repository.delete_product(product_id)
+
+    def get_product_columns(self):
+        return self.product_repository.get_column_names()

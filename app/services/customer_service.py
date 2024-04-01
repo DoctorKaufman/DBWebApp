@@ -13,3 +13,6 @@ class CustomerService:
 
     def delete_customer_card(self, card_number):
         self.customer_card_repository.delete_customer_card(card_number)
+
+    def get_customer_columns(self):
+        return self.customer_card_repository.get_column_names()

@@ -38,3 +38,8 @@ def get_category(category_id):
 def get_all_categories():
     categories = category_service.get_all_categories()
     return [c.serialize() for c in categories], 200
+
+
+@category.route('/columns', methods=['GET'])
+def get_columns():
+    return category_service.get_category_columns()

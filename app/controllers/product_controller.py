@@ -38,3 +38,8 @@ def get_product(product_id):
 def get_all_products():
     products = product_service.get_all_products()
     return [p.serialize() for p in products], 200
+
+
+@product.route('/columns', methods=['GET'])
+def get_columns():
+    return product_service.get_product_columns()

@@ -33,7 +33,12 @@ def get_customer(card_number):
     return customer_service.get_customer_card_by_card_number(card_number).serialize(), 200
 
 
-@customer.route('/', methods=['GET']) #TODO Pagination
+@customer.route('/', methods=['GET'])
 def get_all_customers():
     customers = customer_service.get_all_customer_cards()
     return [c.serialize() for c in customers], 200
+
+
+@customer.route('/columns', methods=['GET'])
+def get_columns():
+    return customer_service.get_customer_columns()
