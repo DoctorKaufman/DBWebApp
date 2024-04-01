@@ -2,6 +2,7 @@ from app.views.main import generate_unique_id, generate_unique_upc
 from flask import Blueprint, render_template
 import json
 import random
+import requests
 
 
 goods_and_categories = Blueprint('goods_and_categories', __name__)
@@ -42,11 +43,13 @@ def goods():
 @goods_and_categories.route('/categories')
 def categories():
     active_tab = 'categories'
-    items = [
-        {
-            "name": f"Category {i}",
-            "category_id": generate_unique_id(),
-        } for i in range(1, 6)
-    ]
     user = {'username': 'John Doe'}
-    return render_template('pages/goods_and_categories.html',active_tab=active_tab, items=items, user=user)
+    response = requests.get('http://127.0.0.1:5000/category/')
+
+    if response.status_code == 200:
+        items = response.json()
+        return render_template('pages/goods_and_categories.html',active_tab=active_tab, items=items, user=user)
+    else:
+        items = []
+        error_message = "Failed to fetch categories"
+        return render_template('pages/goods_and_categories.html',active_tab=active_tab, items=items, user=user, error_message=error_message)
