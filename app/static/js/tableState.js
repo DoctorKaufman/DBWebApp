@@ -39,7 +39,7 @@ document.addEventListener('alpine:init', () => {
                     } else if (active_tab === 'goods') {
                         return item.ID; // Assuming 'ID' exists for items in 'goods'
                     } else if (active_tab === 'categories') {
-                        return item.category_id; // As per the given structure
+                        return item.category_number; // As per the given structure
                     }
                 });
             } else {
