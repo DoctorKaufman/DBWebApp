@@ -25,7 +25,7 @@ document.addEventListener('alpine:init', () => {
             const row = document.createElement("tr"); 
             row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
             row.id = 'row-creation-form';
-            
+
             const fieldsJson = JSON.stringify(this.fields);
             row.setAttribute('x-data', `createRow(${fieldsJson})`);
 
@@ -82,7 +82,7 @@ document.addEventListener('alpine:init', () => {
         },
         // #endregion
         
-        // #region category management
+        // #region request management
         sendRequest(action, url, data = null) {
             // Configure the request options based on the action
             const options = {
@@ -106,39 +106,35 @@ document.addEventListener('alpine:init', () => {
                     throw error; // Reject the promise with the error
                 });
         },
+        // #endregion
         
-        // Usage example for adding a category
+        // #region category actions
         addCategory() {
             console.log('Adding a new category');
             this.createRowForm();
-
         },
 
         removeCategory() {
-            const categoryId = 'abc';//event.target.getAttribute('data-id');
-            axios.delete(`http://127.0.0.1:5000/category/${categoryId}/`)
+            const categories = this.$store.tableState.selectedItems;
+
+            categories.forEach(categoryId => { 
+                axios.delete(`http://127.0.0.1:5000/category/${categoryId}/`)
                 .then(response => {
                     console.log('Category deleted:', response.data);
+                    createToast("success", "Category deleted successfully");
+                    setTimeout(() => window.location.reload(), 800);
                 })
                 .catch(error => {
                     console.error('Error deleting category:', error);
                     createToast("error", `Error deleting category: ${categoryId}`);
                 });
+            });
         },
         // #endregion
 
+        // #region product actions
         addProduct() {
             console.log('Adding a new product');
-            const data = {/* placeholder for product data */};
-            axios.post('http://127.0.0.1:5000/product/', data)
-                .then(response => {
-                    console.log('Product added successfully:', response.data);
-                    // Handle success
-                })
-                .catch(error => {
-                    console.error('Error adding product:', error);
-                    // Handle error
-                });
             this.createRowForm();
         },
 
@@ -153,5 +149,6 @@ document.addEventListener('alpine:init', () => {
                     createToast("error", `Error deleting product: ${productId}`);
                 });
         },
+        // #endregion
     }));
 });

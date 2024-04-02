@@ -7,7 +7,7 @@ document.addEventListener('alpine:init', () => {
             console.log(item)
             this.id = activeTab === 'goods_in_store' ? item['upc'] :
                       activeTab === 'goods' ? item['ID'] :
-                      activeTab === 'categories' ? item['category_id'] : null;
+                      activeTab === 'categories' ? item['category_number'] : null;
         },
 
         toggleSelection() {
