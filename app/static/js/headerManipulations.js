@@ -1,19 +1,19 @@
 document.addEventListener('alpine:init', () => {
 
-    Alpine.data('headerManipulations', (currentTab, items) => ({
+    Alpine.data('headerManipulations', (currentTab, items, columns) => ({
         // #region initializations
         items: items,
         tableState: null,
-        fields: [],
+        fields: columns,
 
         init() {
             this.$store.tableState.currentTab = currentTab;
 
             this.tableState = this.$store.tableState.globalState;
 
-            if (currentTab === 'categories') { this.fields = [{'category_name' : true}, {'category_number' : false}]; }
-            else if (currentTab === 'goods') { this.fields = [{'name' : true}, {'ID' : false}, {'producer' : true}, {'characteristics' : true}]}
-            else if (currentTab === 'goods_in_store') { this.fields = [{'name' : true}, {'upc' : false}, {'amount' : true}, {'category' : true}, {'price' : true}] }
+            // if (currentTab === 'categories') { this.fields = [{'category_name' : true}, {'category_number' : false}]; }
+            // else if (currentTab === 'goods') { this.fields = [{'name' : true}, {'ID' : false}, {'producer' : true}, {'characteristics' : true}]}
+            // else if (currentTab === 'goods_in_store') { this.fields = [{'name' : true}, {'upc' : false}, {'amount' : true}, {'category' : true}, {'price' : true}] }
 
             this.$watch('Alpine.store("tableState").globalState', (newState) => {
                 this.tableState = newState;

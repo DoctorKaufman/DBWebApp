@@ -1,6 +1,6 @@
 
 
-    <table x-data="headerManipulations('{{ active_tab }}', {{ items }})" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table x-data="headerManipulations('{{ active_tab }}', {{ items }}, {{columns_json}})" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
                
@@ -24,7 +24,7 @@
                     </div>
                 </th>
 
-                {% for header in items[0].keys() %}
+                {% for header in columns.keys() %}
                 
                 <th scope="col" class="px-6 py-3">
                     <div class="flex items-center">
