@@ -1,12 +1,21 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('createRow', () => ({
+    Alpine.data('createRow', (fields) => ({
 
         currentTab: null,
+        fillableFields: null,
 
         init() {
             Alpine.store('tableState').globalState = GlobalStates.ADDING;
             this.currentTab = Alpine.store('tableState').currentTab;
-            console.log('Global state changed to:', this.$store.tableState.globalState);
+            this.fillableFields = fields.reduce((acc, curr) => {
+                // Get the key and value of the current object
+                const [key, value] = Object.entries(curr)[0];
+                // If the value is true, add the key to the accumulator array
+                if (value) {
+                    acc.push(key);
+                }
+                return acc;
+            }, []);
         },
 
         saveCreatedRow() {
@@ -17,7 +26,6 @@ document.addEventListener('alpine:init', () => {
                 if (input.value.trim() === '') {
                     allFilled = false;
                 }
-                console.log(input.value);
             });
         
             if (allFilled) {
@@ -30,15 +38,17 @@ document.addEventListener('alpine:init', () => {
         },
 
         createRequest() {
-            const categoryName = document.querySelector('#category_name').value;
-            const data = {
-                "category_name": categoryName,
-            };
+            let data = {};
+
+            for (let i = 0; i < this.fillableFields.length; i++) {
+                data[this.fillableFields[i]] = document.getElementById(this.fillableFields[i]).value;
+            }
+            console.log(data);
             this.sendRequest('post', 'http://127.0.0.1:5000/category/', data)
                 .then(data => {
                     // Handle success, e.g., show a success message
                     createToast("success", "Row added successfully");
-                    setTimeout(() => window.location.reload(), 1000);
+                    setTimeout(() => window.location.reload(), 800);
                 })
                 .catch(error => {
                     // Handle error, e.g., showing an error message

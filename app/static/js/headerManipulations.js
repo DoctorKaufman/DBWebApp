@@ -4,16 +4,12 @@ document.addEventListener('alpine:init', () => {
         // #region initializations
         items: items,
         tableState: null,
-        fields: columns,
+        fields: Object.entries(columns).map(([key, value]) => ({ [key]: value })),
 
         init() {
             this.$store.tableState.currentTab = currentTab;
 
             this.tableState = this.$store.tableState.globalState;
-
-            // if (currentTab === 'categories') { this.fields = [{'category_name' : true}, {'category_number' : false}]; }
-            // else if (currentTab === 'goods') { this.fields = [{'name' : true}, {'ID' : false}, {'producer' : true}, {'characteristics' : true}]}
-            // else if (currentTab === 'goods_in_store') { this.fields = [{'name' : true}, {'upc' : false}, {'amount' : true}, {'category' : true}, {'price' : true}] }
 
             this.$watch('Alpine.store("tableState").globalState', (newState) => {
                 this.tableState = newState;
@@ -29,7 +25,10 @@ document.addEventListener('alpine:init', () => {
             const row = document.createElement("tr"); 
             row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
             row.id = 'row-creation-form';
-            row.setAttribute('x-data', `createRow()`);
+            
+            const fieldsJson = JSON.stringify(this.fields);
+            row.setAttribute('x-data', `createRow(${fieldsJson})`);
+
             
             let innerHTML = '';
 
