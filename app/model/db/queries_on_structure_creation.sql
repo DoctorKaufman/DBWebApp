@@ -14,6 +14,14 @@ CREATE TABLE Employee (
     zip_code VARCHAR(9) NOT NULL
 );
 
+-- Create table Employee_Account
+CREATE TABLE Employee_Account (
+    login VARCHAR(50) PRIMARY KEY,
+    id_employee INT UNIQUE,
+    password_hash VARCHAR(255), -- Storing password hash instead of plain password for security
+    FOREIGN KEY (id_employee) REFERENCES Employee(id_employee)
+);
+
 -- Create table Customer_Card
 CREATE TABLE Customer_Card (
     card_number SERIAL PRIMARY KEY,
@@ -71,3 +79,4 @@ CREATE TABLE Sale (
     FOREIGN KEY (UPC) REFERENCES Store_Product(UPC) ON UPDATE CASCADE ON DELETE NO ACTION,
     FOREIGN KEY (check_number) REFERENCES Receipt(check_number) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
