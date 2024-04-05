@@ -1,6 +1,6 @@
 
 
-    <table x-data="headerManipulations('{{ active_tab }}', {{ items }}, {{columns_json}})" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table x-data="tableInteractions('{{ active_tab }}', {{ items }}, {{columns_json}}, '{{key_column}}')" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             <div class="flex flex-col">
                
@@ -42,52 +42,48 @@
                 </th>
             </tr>
         </thead>
-        <tbody class="table-body">
-            {% for item in items %}
-            <tr x-data="rowComponent({{item}})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">                
-                <td x-cloak x-show="tableState === GlobalStates.SELECTING" class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input
-                            type="checkbox"
-                            :checked="isChecked()"
-                            @change="toggleSelection()"
-                            class="w-4 h-4 text-cyan-800 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-cyan-800 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        >
-                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                {% for key, value in item.items() %}
-                    {% if key == 'name' %}
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <span x-show="!editing" class="text-scramble">{{ value }}</span>
-                            <input x-cloak x-show="editing" type="text" id="name-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500" value="{{ value }}" />
-                        </th>
-                    {% else %}
-                        <td class="px-6 py-4">
-                            <span x-show="!editing" class="text-scramble">{{ value }}</span>
-                            <input x-cloak x-show="editing" type="text" id="{{key}}-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500" value="{{ value }}" />
-                        </td>
-                    {% endif %}
-                {% endfor %}
-                <td x-show="tableState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-28">
-                    <button x-show="!editing" @click="toggleRowEdit()" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
-                        <span>Edit</span>
-                    </button>
 
-                    <div x-show="editing" x-cloak class="flex flex-row gap-4 justify-center">
-                        <button  @click="saveEditedRow()" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
-                            <span>Save</span>
-                        </button>
 
-                        <button @click="cancelEditingRow()" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
-                            <span>Cancel</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
+        <tbody class="table-body" x-data>
+            <template x-for="row in $store.tableState.rowElements" :key="row.{{key_column}}">
+                <tr :class="{'bg-white': true, 'border-b': true, 'dark:bg-gray-800': true, 'dark:border-gray-700': true, 'editing': row.editing}">
+                    <td x-cloak x-show="$store.tableState.globalState === GlobalStates.SELECTING" class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input
+                                type="checkbox"
+                                x-model="$store.tableState.selectedItems"
+                                :value="row.id"
+                                class="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 dark:focus:ring-cyan-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            >
+                        </div>
+                    </td>
+
+                    <template x-for="[key, value] in Object.entries(row)" :key="key">
+                        <template x-if="key !== 'editing'">
+                          <td x-text="value" class="px-6 py-4"></td>
+                        </template>
+                    </template>                      
+                    
+                    <!-- Actions -->
+                    <td class="px-6 py-4 text-right max-w-28">
+                        <template x-if="!row.editing">
+                            <button @click="$store.tableState.editRow(row.{{key_column}}, true)" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
+                                Edit
+                            </button>
+                        </template>
+                        <template x-if="row.editing">
+                            <div class="flex flex-row gap-4 justify-center">
+                                <button @click="$store.tableState.saveEditedRow(row.{{key_column}})" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
+                                    Save
+                                </button>
+                                <button @click="$store.tableState.cancelEditingRow(row.{{key_column}})" class="font-medium text-red-600 dark:text-gray-400 hover:underline">
+                                    Cancel
+                                </button>
+                            </div>
+                        </template>
+                    </td>
+                </tr>
+            </template>
         </tbody>
-
-            
             
     </table>

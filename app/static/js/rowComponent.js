@@ -1,13 +1,25 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('rowComponent', (item) => ({
+    Alpine.data('rowComponent', (item, columns) => ({
         editing: false,
-        id: null,
+        id: null, 
+        fillableFields: null,
         init() {
-            activeTab = Alpine.store('tableState').currentTab;
-            console.log(item)
-            this.id = activeTab === 'goods_in_store' ? item['upc'] :
-                      activeTab === 'goods' ? item['ID'] :
-                      activeTab === 'categories' ? item['category_number'] : null;
+          activeTab = Alpine.store('tableState').currentTab;
+          console.log(item)
+          this.id = activeTab === 'goods_in_store' ? item['upc'] :
+                    activeTab === 'goods' ? item['ID'] :
+                    activeTab === 'categories' ? item['category_number'] : null;
+
+          let fields = Object.entries(columns).map(([key, value]) => ({ [key]: value }))
+          this.fillableFields = fields.reduce((acc, curr) => {
+            // Get the key and value of the current object
+            const [key, value] = Object.entries(curr)[0];
+            // If the value is true, add the key to the accumulator array
+            if (value) {
+                acc.push(key);
+            }
+            return acc;
+          }, []);
         },
 
         toggleSelection() {
@@ -20,7 +32,6 @@ document.addEventListener('alpine:init', () => {
 
         toggleRowEdit() {
             if (Alpine.store('tableState').globalState === GlobalStates.NONE) {
-                this.originalValues = Array.from(document.querySelector('.table-body').querySelectorAll('input[type="text"]')).map(input => input.value);
                 this.editing = true;
                 Alpine.store('tableState').globalState = GlobalStates.EDITING;
             } else {
@@ -42,6 +53,11 @@ document.addEventListener('alpine:init', () => {
             if (allFilled) {
                 this.editing = false;
                 Alpine.store('tableState').globalState = GlobalStates.NONE;
+
+                axios.put(`http://127.0.0.1:5000/category/${id}/`, {
+                    category_name: inputs[0].value,
+                    category_description: inputs[1].value,
+                })
  
                 const el = parentElement.querySelectorAll('.text-scramble');
                 for (let i = 0; i < el.length; i++) {
@@ -57,11 +73,6 @@ document.addEventListener('alpine:init', () => {
         
 
         cancelEditingRow() {
-            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
-            inputs.forEach((input, index) => {
-                input.value = this.originalValues[index] ?? ''; 
-            });
-
             this.editing = false;
             Alpine.store('tableState').globalState = GlobalStates.NONE;
             createToast("info", "Editing cancelled");

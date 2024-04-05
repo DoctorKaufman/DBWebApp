@@ -12,13 +12,49 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.store('tableState', {
 
+        rowElements: [],
+        keyColumn: null,
+
         currentTab: null,
         
         globalState: GlobalStates.NONE,
 
         selectedItems: [],
-        originalValues: [],
         selectAll: false,
+
+        initializeRows(items) {
+            this.rowElements = items.map(item => ({
+                ...item,
+                editing: false, // Additional state as needed
+                // Other row-specific states
+            }));
+        },
+
+        editRow(id, newState) {
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+            if (rowIndex !== -1) {
+                this.rowElements[rowIndex].editing = newState;
+                this.globalState = GlobalStates.EDITING;
+                // Handle other state changes as necessary
+            }
+        },
+
+        saveEditedRow(id) {
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+            if (rowIndex !== -1) {
+                // axios.put(`http://
+                this.rowElements[rowIndex].editing = false;
+                this.globalState = GlobalStates.NONE;
+            }
+        },
+
+        cancelEditingRow(id){
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+            if (rowIndex !== -1) {
+                this.rowElements[rowIndex].editing = false;
+                this.globalState = GlobalStates.NONE;
+            }
+        },
 
         startSelecting() {
             this.globalState = GlobalStates.SELECTING;

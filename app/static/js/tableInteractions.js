@@ -1,6 +1,6 @@
 document.addEventListener('alpine:init', () => {
 
-    Alpine.data('headerManipulations', (currentTab, items, columns) => ({
+    Alpine.data('tableInteractions', (currentTab, items, columns, keyColumn) => ({
         // #region initializations
         items: items,
         tableState: null,
@@ -8,6 +8,8 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.$store.tableState.currentTab = currentTab;
+            this.$store.tableState.initializeRows(items);
+            this.$store.tableState.keyColumn = keyColumn;
 
             this.tableState = this.$store.tableState.globalState;
 
