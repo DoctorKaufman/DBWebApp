@@ -1,11 +1,18 @@
 import psycopg2
 
 # Connection params
-conn_params = {
+"""conn_params = {
     "host": "jdbc:postgresql://db-zlagoda.cf4hhnfg01ca.eu-central-1.rds.amazonaws.com:5432/zlagoda",
     "database": "Supermarket_Zlagoda",
     "user": "postgres",
     "password": "qawsed_Kli"
+}"""
+
+conn_params = {
+    "host": "ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
+    "database": "DB_Zlagoda",
+    "user": "DB_Zlagoda_owner",
+    "password": "85rkPbEFmuDM"
 }
 
 # Clear data

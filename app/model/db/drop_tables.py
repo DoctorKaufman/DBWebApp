@@ -14,7 +14,7 @@ def drop_tables():
         conn = psycopg2.connect(**conn_params)
         cur = conn.cursor()
 
-        tables = ["Sale", "Receipt", "Store_Product", "Product", "Category", "Customer_Card", "Employee"]
+        tables = ["Sale", "Receipt", "Store_Product", "Product", "Category", "Customer_Card", "Employee", "Employee_Account"]
         for table in tables:
             cur.execute(f"DROP TABLE IF EXISTS {table} CASCADE;")
             print(f"Table dropped: {table}")
