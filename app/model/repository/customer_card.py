@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.customer_card import CustomerCardDTO
 
 
@@ -103,7 +103,7 @@ class CustomerCardRepository:
             try:
                 cursor.execute(CustomerCardRepository.DELETE_CUSTOMER_CARD_QUERY, (card_number,))
                 self.conn.commit()
-            except InFailedSqlTransaction:
+            except (ForeignKeyViolation, InFailedSqlTransaction):
                 self.conn.rollback()
                 return False
         return True

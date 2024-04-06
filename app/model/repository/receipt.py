@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.receipt import ReceiptDTO
 
 
@@ -99,7 +99,7 @@ class ReceiptRepository:
             try:
                 cursor.execute(ReceiptRepository.DELETE_RECEIPT_QUERY, (check_number,))
                 self.conn.commit()
-            except InFailedSqlTransaction:
+            except (ForeignKeyViolation, InFailedSqlTransaction):
                 self.conn.rollback()
                 return False
         return True

@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.employee import EmployeeDTO
 
 
@@ -104,7 +104,7 @@ class EmployeeRepository:
             try:
                 cursor.execute(EmployeeRepository.DELETE_EMPLOYEE_QUERY, (id_employee,))
                 self.conn.commit()
-            except InFailedSqlTransaction:
+            except (ForeignKeyViolation, InFailedSqlTransaction):
                 self.conn.rollback()
                 return False
         return True

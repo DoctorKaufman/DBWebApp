@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.store_product import StoreProductDTO
 
 
@@ -109,7 +109,7 @@ class StoreProductRepository:
             try:
                 cursor.execute(StoreProductRepository.DELETE_STORE_PRODUCT_QUERY, (upc,))
                 self.conn.commit()
-            except InFailedSqlTransaction:
+            except (ForeignKeyViolation, InFailedSqlTransaction):
                 self.conn.rollback()
                 return False
         return True
