@@ -1,4 +1,4 @@
-class CategoryInputDTO:
+class CategoryCreationDTO:
     def __init__(self, category_name):
         self.__category_name = category_name
 
@@ -9,4 +9,4 @@ class CategoryInputDTO:
     @staticmethod
     def deserialize(data):
         category_name = data.get('category_name')
-        return CategoryInputDTO(category_name)
+        return CategoryCreationDTO(category_name)

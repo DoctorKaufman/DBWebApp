@@ -37,13 +37,14 @@ def create_app(config_filename=None):
     from app.controllers.product_controller import product
     from app.controllers.customer_controller import customer
     from app.controllers.check_controller import check
+    from app.controllers.store_product_controller import store_product
 
     app.register_blueprint(employee)
     app.register_blueprint(category)
     app.register_blueprint(product)
     app.register_blueprint(customer)
     app.register_blueprint(check)
-    # app.register_blueprint(product_controller)
+    app.register_blueprint(store_product)
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')

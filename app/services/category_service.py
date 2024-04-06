@@ -26,7 +26,7 @@ class CategoryService:
         return updated_category
 
     def delete_category(self, category_number):
-        self.category_repository.delete_category(category_number)
+        return self.category_repository.delete_category(category_number)
 
     def get_category_columns(self):
         return self.category_repository.get_column_names()
