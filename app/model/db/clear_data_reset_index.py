@@ -15,6 +15,7 @@ conn_params = {
     "password": "85rkPbEFmuDM"
 }
 
+
 # Clear data
 def clear_tables():
     try:
@@ -25,7 +26,7 @@ def clear_tables():
         # Deletion
         tables = ["Sale", "Receipt", "Store_Product", "Product", "Category", "Customer_Card", "Employee"]
         for table in tables:
-            cur.execute(f"DELETE FROM {table};")
+            cur.execute(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;")
             print(f"Data cleared from table: {table}")
 
         # Commit and close

@@ -54,10 +54,18 @@ class CategoryRepository:
 
     def delete_category(self, category_number):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM category WHERE category_number = %s")
-        cursor.execute(query, (category_number,))
-        self.conn.commit()
-        cursor.close()
+        try:
+            query = sql.SQL("DELETE FROM category WHERE category_number = %s")
+            cursor.execute(query, (category_number,))
+            self.conn.commit()
+            cursor.close()
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            cursor.close()
+            return False
+        finally:
+            cursor.close()
+        return True
 
     def exists_category(self, category_name):
         cursor = self.conn.cursor()

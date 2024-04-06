@@ -1,5 +1,6 @@
 import psycopg2
 from faker import Faker
+from faker.providers.phone_number import Provider
 import random
 from datetime import datetime, timedelta
 
@@ -20,19 +21,42 @@ from datetime import datetime, timedelta
     port="5432"
 )'''
 
-conn = psycopg2.connect(
+"""conn = psycopg2.connect(
     dbname="DB_Zlagoda",
     user="DB_Zlagoda_owner",
     password="85rkPbEFmuDM",
     host="ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
-    port="85"
-)
+    # port="85"
+)"""
+
+
+class UkrainePhoneNumberProvider(Provider):
+    """
+    A Provider for Ukrainian phone numbers.
+    """
+    def ukraine_phone_number(self):
+        return f'+380{self.random_number(digits=9)}'
+
+conn_params = {
+    "host": "ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
+    "database": "DB_Zlagoda",
+    "user": "DB_Zlagoda_owner",
+    "password": "85rkPbEFmuDM"
+}
+
+conn = psycopg2.connect(**conn_params)
 
 # Create a cursor object
 cur = conn.cursor()
 
 # Instantiate Faker to generate fake data
 fake = Faker()
+
+fake.add_provider(UkrainePhoneNumberProvider)
+print(fake.ukraine_phone_number())
+
+# Instantiate Faker to generate fake data with Ukrainian locale
+# fake = Faker('uk_UA')
 
 # Function to generate fake employee data
 # Counter for sequential keys
@@ -56,7 +80,9 @@ def generate_employee_data():
     salary = round(random.uniform(1000, 5000), 2)
     date_of_birth = fake.date_of_birth(minimum_age=18, maximum_age=65)
     date_of_start = fake.date_between(start_date='-5y', end_date='today')
-    phone_number = fake.phone_number()[:13]  # Limiting to 13 characters
+    # phone_number = fake.phone_number()[:13]  # Limiting to 13 characters
+    phone_number = fake.ukraine_phone_number()[:13]  # Limiting to 13 characters
+    fake.ukraine_phone_number()
     city = fake.city()[:50]  # Limiting to 50 characters
     street = fake.street_name()[:50]  # Limiting to 50 characters
     zip_code = fake.zipcode()[:9]  # Limiting to 9 characters
@@ -105,6 +131,8 @@ def generate_category_data():
     p_characteristics = fake.sentence()[:100]  # Limiting to 100 characters
     product_counter += 1
     return (product_name, p_characteristics)'''
+
+
 # Function to generate fake product data
 def generate_product_data():
     category_number = random.choice(categories)[0]
@@ -140,9 +168,9 @@ def generate_sale_data():
 for _ in range(10):
     try:
         cur.execute("""
-            INSERT INTO Employee (id_employee, empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, generate_employee_data())
+            INSERT INTO Employee (empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, generate_employee_data()[1:])
         conn.commit()
     except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction) as e:
         print(e)
@@ -157,9 +185,9 @@ employees = cur.fetchall()
 for _ in range(10):
     try:
         cur.execute("""
-            INSERT INTO Customer_Card (card_number, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, generate_customer_card_data())
+            INSERT INTO Customer_Card (cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, generate_customer_card_data()[1:])
         conn.commit()
     except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction) as e:
         print(e)
@@ -187,9 +215,9 @@ for _ in range(10):
 for _ in range(20):
     try:
         cur.execute("""
-            INSERT INTO Receipt (check_number, id_employee, card_number, print_date, sum_total, vat)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, generate_receipt_data())
+            INSERT INTO Receipt (id_employee, card_number, print_date, sum_total, vat)
+            VALUES (%s, %s, %s, %s, %s)
+        """, generate_receipt_data()[1:])
         conn.commit()
     except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction) as e:
         print(e)
@@ -221,9 +249,9 @@ products = cur.fetchall()
 for _ in range(50):
     try:
         cur.execute("""
-            INSERT INTO Store_Product (UPC, UPC_prom, id_product, selling_price, products_number, promotional_product)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, generate_store_product_data())
+            INSERT INTO Store_Product (UPC_prom, id_product, selling_price, products_number, promotional_product)
+            VALUES (%s, %s, %s, %s, %s)
+        """, generate_store_product_data()[1:])
         conn.commit()
     except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction) as e:
         print(e)
@@ -261,3 +289,4 @@ conn.commit()
 # Close the cursor and connection
 cur.close()
 conn.close()
+
