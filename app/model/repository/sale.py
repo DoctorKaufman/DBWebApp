@@ -81,7 +81,7 @@ class SaleRepository:
             sale_data = cursor.fetchone()
             self.conn.commit()
         if sale_data:
-            return SaleDTO(sale.upc, sale.check_number, sale.product_number, sale.selling_price)
+            return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
         return None
 
     def delete_sale(self, upc, check_number):
