@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.product_input import ProductInputDTO
+from app.controllers.dtos.product_creation import ProductCreationDTO
 from app.model.repository.product import ProductRepository
 from app.services.product_service import ProductService
 
@@ -13,13 +13,13 @@ product_service = ProductService(product_repository)
 
 @product.route('/', methods=['POST'])
 def create_product():
-    product_dto = ProductInputDTO.deserialize(request.get_json())
+    product_dto = ProductCreationDTO.deserialize(request.get_json())
     return product_service.create_product(product_dto).serialize(), 201
 
 
 @product.route('/<int:id_product>/', methods=['PUT'])
 def update_product(id_product):
-    product_dto = ProductInputDTO.deserialize(request.get_json())
+    product_dto = ProductCreationDTO.deserialize(request.get_json())
     return product_service.update_product(product_dto, id_product).serialize(), 200
 
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.customer_input import CustomerInputDTO
+from app.controllers.dtos.customer_creation import CustomerCreationDTO
 from app.model.repository.customer_card import CustomerCardRepository
 from app.services.customer_service import CustomerService
 
@@ -13,7 +13,7 @@ customer_service = CustomerService(customer_card_repository)
 
 @customer.route('/', methods=['POST'])
 def create_customer():
-    customer_dto = CustomerInputDTO.deserialize(request.get_json())
+    customer_dto = CustomerCreationDTO.deserialize(request.get_json())
     return customer_service.create_customer_card(customer_dto).serialize(), 201
 
 

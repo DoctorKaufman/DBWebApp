@@ -1,7 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.category_input import CategoryInputDTO
+from app.controllers.dtos.category_creation import CategoryCreationDTO
 from app.model.repository.category import CategoryRepository
 from app.services.category_service import CategoryService
 
@@ -13,20 +13,19 @@ category_service = CategoryService(category_repository)
 
 @category.route('/', methods=['POST'])
 def create_category():
-    category_dto = CategoryInputDTO.deserialize(request.get_json())
+    category_dto = CategoryCreationDTO.deserialize(request.get_json())
     return category_service.create_category(category_dto).serialize(), 201
 
 
 @category.route('/<int:category_number>/', methods=['PUT'])
 def update_category(category_number):
-    category_dto = CategoryInputDTO.deserialize(request.get_json())
+    category_dto = CategoryCreationDTO.deserialize(request.get_json())
     return category_service.update_category(category_dto, category_number).serialize(), 200
 
 
 @category.route('/<int:category_id>/', methods=['DELETE'])
 def delete_category(category_id):
-    category_service.delete_category(category_id)
-    return '', 204
+    return jsonify(category_service.delete_category(category_id)), 200
 
 
 @category.route('/<int:category_id>/', methods=['GET'])

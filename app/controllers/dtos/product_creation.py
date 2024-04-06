@@ -1,4 +1,4 @@
-class ProductInputDTO:
+class ProductCreationDTO:
     def __init__(self, category_number, product_name, p_characteristics):
         self.__category_number = category_number
         self.__product_name = product_name
@@ -21,4 +21,4 @@ class ProductInputDTO:
         category_number = data.get('category_number')
         product_name = data.get('product_name')
         p_characteristics = data.get('p_characteristics')
-        return ProductInputDTO(category_number, product_name, p_characteristics)
+        return ProductCreationDTO(category_number, product_name, p_characteristics)

@@ -1,4 +1,4 @@
-class CustomerInputDTO:
+class CustomerCreationDTO:
     def __init__(self, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent):
         self.__cust_surname = cust_surname
         self.__cust_name = cust_name
@@ -51,4 +51,4 @@ class CustomerInputDTO:
         street = data['street']
         zip_code = data['zip_code']
         c_percent = float(data['c_percent'])
-        return CustomerInputDTO(cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)
+        return CustomerCreationDTO(cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)

@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.category import CategoryDTO
 
 
@@ -108,7 +108,7 @@ class CategoryRepository:
             try:
                 cursor.execute(CategoryRepository.DELETE_CATEGORY_QUERY, (category_number,))
                 self.conn.commit()
-            except InFailedSqlTransaction:
+            except (ForeignKeyViolation, InFailedSqlTransaction):
                 self.conn.rollback()
                 return False
         return True
