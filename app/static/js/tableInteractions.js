@@ -1,5 +1,7 @@
-document.addEventListener('alpine:init', () => {
+// import { sendRequest } from './sendRequest';
 
+document.addEventListener('alpine:init', () => {
+    console.log('tableInteractions.js loaded');
     Alpine.data('tableInteractions', (currentTab, items, columns, keyColumn) => ({
         // #region initializations
         items: items,
@@ -84,32 +86,6 @@ document.addEventListener('alpine:init', () => {
         },
         // #endregion
         
-        // #region request management
-        sendRequest(action, url, data = null) {
-            // Configure the request options based on the action
-            const options = {
-                method: action,
-                url: url,
-            };
-        
-            // If the action requires data (e.g., POST), include it in the request
-            if (['post', 'put', 'patch'].includes(action.toLowerCase()) && data) {
-                options.data = data;
-            }
-        
-            // Make the request using axios and return the Promise
-            return axios(options)
-                .then(response => {
-                    console.log(`${action.toUpperCase()} request to ${url} successful:`, response.data);
-                    return response.data; // Resolve the promise with the response data
-                })
-                .catch(error => {
-                    console.error(`${action.toUpperCase()} request to ${url} failed:`, error);
-                    throw error; // Reject the promise with the error
-                });
-        },
-        // #endregion
-        
         // #region category actions
         addCategory() {
             console.log('Adding a new category');
@@ -118,9 +94,9 @@ document.addEventListener('alpine:init', () => {
 
         removeCategory() {
             const categories = this.$store.tableState.selectedItems;
-
+            console.log('Removing categories:', categories);
             categories.forEach(categoryId => { 
-                axios.delete(`http://127.0.0.1:5000/category/${categoryId}/`)
+                axios.delete(`http://127.0.0.1:5000/category/${categoryId}`)
                 .then(response => {
                     console.log('Category deleted:', response.data);
                     createToast("success", "Category deleted successfully");

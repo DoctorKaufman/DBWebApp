@@ -17,7 +17,7 @@
                             id="checkbox-all-search"
                             type="checkbox"
                             x-model="$store.tableState.selectAll"
-                            @click="$store.tableState.toggleSelectAll({{items}}, '{{active_tab}}')"
+                            @click="$store.tableState.toggleSelectAll()"
                             class="w-4 h-4 text-cyan-800 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-cyan-800 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         >
                         <label for="checkbox-all-search" class="sr-only">checkbox</label>
@@ -52,7 +52,7 @@
                             <input
                                 type="checkbox"
                                 x-model="$store.tableState.selectedItems"
-                                :value="row.id"
+                                :value="row.{{key_column}}"
                                 class="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 dark:focus:ring-cyan-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             >
                         </div>
@@ -60,12 +60,18 @@
 
                     <template x-for="[key, value] in Object.entries(row)" :key="key">
                         <template x-if="key !== 'editing'">
-                          <td x-text="value" class="px-6 py-4"></td>
+                            <td class="px-6 py-4">
+                                <span x-show="!row.editing" x-text="value"></span>
+                                <input x-cloak x-show="row.editing" type="text" :id="`${row.{{key_column}}}-${key}-input`" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+                                :value="value" />
+                            </td>
                         </template>
-                    </template>                      
+                    </template>
+                                           
                     
                     <!-- Actions -->
-                    <td class="px-6 py-4 text-right max-w-28">
+                    <td x-show="$store.tableState.globalState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-28">
                         <template x-if="!row.editing">
                             <button @click="$store.tableState.editRow(row.{{key_column}}, true)" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
                                 Edit

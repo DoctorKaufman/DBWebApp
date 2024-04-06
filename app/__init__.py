@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.controllers.handler.exceptions import DataDuplicateException
@@ -13,7 +13,7 @@ API_URL = '/static/swagger.json'  # Our API url (can of course be a local resour
 def create_app(config_filename=None):
     app = Flask(__name__, instance_relative_config=True)
     
-    CORS(app)
+    # CORS(app)
 
     # Load configuration from 'config.py' file or parameter
     if config_filename is not None:

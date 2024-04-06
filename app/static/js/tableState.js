@@ -31,11 +31,16 @@ document.addEventListener('alpine:init', () => {
         },
 
         editRow(id, newState) {
-            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
-            if (rowIndex !== -1) {
-                this.rowElements[rowIndex].editing = newState;
-                this.globalState = GlobalStates.EDITING;
-                // Handle other state changes as necessary
+            if (this.globalState != GlobalStates.NONE) {
+                createToast("error", `You can't edit another row while in ${this.globalState} mode.`);
+            }
+            else {
+                const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+                if (rowIndex !== -1) {
+                    this.rowElements[rowIndex].editing = newState;
+                    this.globalState = GlobalStates.EDITING;
+                    // Handle other state changes as necessary
+                }
             }
         },
 
@@ -66,17 +71,11 @@ document.addEventListener('alpine:init', () => {
             this.selectAll = false;
         },
 
-        toggleSelectAll(items, active_tab) {
+        toggleSelectAll() {
             this.selectAll = !this.selectAll;
             if (this.selectAll) {
-                this.selectedItems = items.map(item => {
-                    if (active_tab === 'goods_in_store') {
-                        return item.upc; // Assuming 'upc' exists for items in 'goods_in_store'
-                    } else if (active_tab === 'goods') {
-                        return item.ID; // Assuming 'ID' exists for items in 'goods'
-                    } else if (active_tab === 'categories') {
-                        return item.category_number; // As per the given structure
-                    }
+                this.selectedItems = this.rowElements.map(item => {
+                    return item[this.keyColumn];
                 });
             } else {
                 this.selectedItems = [];
