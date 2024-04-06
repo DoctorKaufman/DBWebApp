@@ -1,4 +1,4 @@
-export const sendRequest = (action, currentPage, data = null) => {
+export async function sendRequest (action, currentPage, id=null, data = null) {
     // Base URL for the API
     const baseUrl = 'http://127.0.0.1:5000';
 
@@ -19,8 +19,8 @@ export const sendRequest = (action, currentPage, data = null) => {
 
     // Construct the URL differently for DELETE requests when data is expected to be part of the URL
     let url;
-    if (action.toLowerCase() === 'delete' && data !== null) {
-        url = `${baseUrl}${endpoint}${data}`; // For DELETE, append data (e.g., ID) to the URL
+    if (['delete', 'put'].includes(action.toLowerCase()) && id !== null) {
+        url = `${baseUrl}${endpoint}${id}`; // For DELETE, append data (e.g., ID) to the URL
     } else {
         url = `${baseUrl}${endpoint}`;
     }

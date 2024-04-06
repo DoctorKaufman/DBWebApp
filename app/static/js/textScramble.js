@@ -1,76 +1,64 @@
 export class TextScramble {
-    constructor(el) {
-      this.el = el
-      this.chars = '!<>-_\\/[]{}—=+*^?#________'
-      this.update = this.update.bind(this)
+  constructor(el) {
+    this.el = el;
+    this.update = this.update.bind(this);
+    this.deleteText = this.deleteText.bind(this);
+    this.typeText = this.typeText.bind(this);
+  }
+
+  setText(newText) {
+    this.newText = newText;
+    this.oldText = this.el.innerText;
+    this.promise = new Promise((resolve) => this.resolve = resolve);
+
+    this.deleteText();
+    return this.promise;
+  }
+
+  deleteText() {
+    const length = this.oldText.length;
+    this.queue = [];
+    for (let i = length; i >= 0; i--) {
+      this.queue.push({ text: this.oldText.slice(0, i), start: (length - i) * 4, end: (length - i + 1) * 4 });
     }
-    setText(newText) {
-      const oldText = this.el.innerText
-      const length = Math.max(oldText.length, newText.length)
-      const promise = new Promise((resolve) => this.resolve = resolve)
-      this.queue = []
-      for (let i = 0; i < length; i++) {
-        const from = oldText[i] || ''
-        const to = newText[i] || ''
-        const start = Math.floor(Math.random() * 40)
-        const end = start + Math.floor(Math.random() * 40)
-        this.queue.push({ from, to, start, end })
-      }
-      cancelAnimationFrame(this.frameRequest)
-      this.frame = 0
-      this.update()
-      return promise
+    this.frame = 0;
+    this.update(this.typeText);
+  }
+
+  typeText() {
+    const length = this.newText.length;
+    this.queue = [];
+    for (let i = 0; i <= length; i++) {
+      this.queue.push({ text: this.newText.slice(0, i), start: i * 4, end: (i + 1) * 4 });
     }
-    update() {
-      let output = ''
-      let complete = 0
-      for (let i = 0, n = this.queue.length; i < n; i++) {
-        let { from, to, start, end, char } = this.queue[i]
-        if (this.frame >= end) {
-          complete++
-          output += to
-        } else if (this.frame >= start) {
-          if (!char || Math.random() < 0.28) {
-            char = this.randomChar()
-            this.queue[i].char = char
-          }
-          output += `<span class="dud">${char}</span>`
-        } else {
-          output += from
-        }
+    this.frame = 0;
+    this.update();
+  }
+
+  update(nextStep = null) {
+    let output = '';
+    let complete = 0;
+    for (let i = 0, n = this.queue.length; i < n; i++) {
+      let { text, start, end } = this.queue[i];
+      if (this.frame >= end) {
+        complete++;
+        output = text;
+      } else if (this.frame >= start) {
+        output = text;
+        break;
       }
-      this.el.innerHTML = output
-      if (complete === this.queue.length) {
-        this.resolve()
+    }
+
+    this.el.innerHTML = output;
+    if (complete === this.queue.length) {
+      if (nextStep) {
+        nextStep(); 
       } else {
-        this.frameRequest = requestAnimationFrame(this.update)
-        this.frame++
+        this.resolve();
       }
-    }
-    randomChar() {
-      return this.chars[Math.floor(Math.random() * this.chars.length)]
+    } else {
+      this.frameRequest = requestAnimationFrame(() => this.update(nextStep));
+      this.frame++;
     }
   }
-  
-  
-  const phrases = [
-    'Hey,',
-    'put here all the sentences',
-    'that you want to cycle',
-    'they will all be automatically displayed.',
-    'Just',
-    'Like',
-    'This.',
-    'Have fun :)'
-  ]
-  
-//   const el = document.querySelectorAll('.text-scramble')
-
-// el.forEach((element) => {
-//     const fx = new TextScramble(element)
-// })
-
-window.TextScramble = TextScramble;
-  
-
-  
+}

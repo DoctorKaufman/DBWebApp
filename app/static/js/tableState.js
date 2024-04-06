@@ -1,3 +1,7 @@
+import { sendRequest } from "./sendRequest.js";
+import { createToast } from "./toastNotifications.js";
+import { TextScramble } from "./textScramble.js";
+
 document.addEventListener('alpine:init', () => {
 
     const GlobalStates = {
@@ -45,16 +49,48 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveEditedRow(id) {
-            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
-                // axios.put(`http://
+                let newElement = {};
+                for (let key in this.rowElements[rowIndex]) {
+                    if (key !== this.keyColumn && key !== 'editing') {
+                        newElement[key] = document.getElementById(`${id}-${key}-input`).value;
+                    }
+                }
+                console.log(newElement);
+                sendRequest('put', this.currentTab, id, newElement)
+                    .then(response => {
+                        console.log('Item edited:', response);
+                        createToast("success", "Item edited successfully");
+                        const scrambleElementsArray = document.querySelector(`[data-key="${id}"]`).querySelectorAll('.text-scramble');
+                        let scrambleElements = {};
+
+                        scrambleElementsArray.forEach(element => {
+                            const key = element.getAttribute('data-key');
+                            scrambleElements[key] = element; 
+                        });
+                        console.log(scrambleElements);
+                        for (let key in newElement) {
+                            const index = this.rowElements[rowIndex][key];
+                            if (index !== newElement[key]) {
+                                this.rowElements[rowIndex][key] =newElement[key];
+                                const scramble = new TextScramble(scrambleElements[key]);
+                                console.log(scrambleElements[key]);
+                                scramble.setText(newElement[key]);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error editing item:', error);
+                        createToast("error", `Error editing item: ${itemId}`);
+                    });
                 this.rowElements[rowIndex].editing = false;
                 this.globalState = GlobalStates.NONE;
             }
         },
 
         cancelEditingRow(id){
-            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
                 this.rowElements[rowIndex].editing = false;
                 this.globalState = GlobalStates.NONE;
@@ -91,8 +127,15 @@ document.addEventListener('alpine:init', () => {
                 this.selectedItems.push(itemId);
             }
         },
-        
-        
+
+        handleSuccessfullDeletion(id){
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
+            const selectedRowIndex = this.selectedItems.indexOf(id);
+            if (rowIndex !== -1) {
+                this.rowElements.splice(rowIndex, 1);
+                this.selectedItems.splice(selectedRowIndex, 1);
+            }
+        },
     });
 
 });

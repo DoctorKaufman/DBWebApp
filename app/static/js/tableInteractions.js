@@ -78,18 +78,19 @@ document.addEventListener('alpine:init', () => {
         removeRows() {
             const items = this.$store.tableState.selectedItems;
             console.log('Removing items:', items);
-            items.forEach(itemId => {
-                console.log(itemId)
-                sendRequest('delete', currentTab, itemId)
+            items.forEach(async itemId => {
+                await sendRequest('delete', currentTab, itemId, null)
                     .then(response => {
                         console.log('Item deleted:', response);
                         createToast("success", "Item deleted successfully");
+                        this.$store.tableState.handleSuccessfullDeletion(itemId);
                     })
                     .catch(error => {
                         console.error('Error deleting item:', error);
                         createToast("error", `Error deleting item: ${itemId}`);
                     });
             });
+            this.$store.tableState.stopSelecting();
         },
     }));
 });

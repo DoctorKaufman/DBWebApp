@@ -45,7 +45,7 @@ document.addEventListener('alpine:init', () => {
                 data[this.fillableFields[i]] = document.getElementById(this.fillableFields[i]).value;
             }
             console.log(data);
-            sendRequest('post', this.currentTab, data)
+            sendRequest('post', this.currentTab, null, data)
                 .then(response => {
                     // Handle success, e.g., show a success message
                     createToast("success", "Row added successfully");

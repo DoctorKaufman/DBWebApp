@@ -46,7 +46,7 @@
 
         <tbody class="table-body" x-data>
             <template x-for="row in $store.tableState.rowElements" :key="row.{{key_column}}">
-                <tr :class="{'bg-white': true, 'border-b': true, 'dark:bg-gray-800': true, 'dark:border-gray-700': true, 'editing': row.editing}">
+                <tr :class="{'bg-white': true, 'border-b': true, 'dark:bg-gray-800': true, 'dark:border-gray-700': true, 'editing': row.editing}" :data-key="row.{{key_column}}">
                     <td x-cloak x-show="$store.tableState.globalState === GlobalStates.SELECTING" class="w-4 p-4">
                         <div class="flex items-center">
                             <input
@@ -61,7 +61,7 @@
                     <template x-for="[key, value] in Object.entries(row)" :key="key">
                         <template x-if="key !== 'editing'">
                             <td class="px-6 py-4">
-                                <span x-show="!row.editing" x-text="value"></span>
+                                <span x-show="!row.editing" x-text="value" class="text-scramble" :data-key="key"></span>
                                 <input x-cloak x-show="row.editing" type="text" :id="`${row.{{key_column}}}-${key}-input`" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
                                 :value="value" />
