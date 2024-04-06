@@ -15,6 +15,7 @@ conn_params = {
     "password": "85rkPbEFmuDM"
 }
 
+
 # Clear data
 def clear_tables():
     try:

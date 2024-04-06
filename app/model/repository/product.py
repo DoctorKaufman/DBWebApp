@@ -58,10 +58,18 @@ class ProductRepository:
 
     def delete_product(self, id_product):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM product WHERE id_product = %s")
-        cursor.execute(query, (id_product,))
-        self.conn.commit()
-        cursor.close()
+        try:
+            query = sql.SQL("DELETE FROM product WHERE id_product = %s")
+            cursor.execute(query, (id_product,))
+            self.conn.commit()
+            cursor.close()
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            cursor.close()
+            return False
+        finally:
+            cursor.close()
+        return True
 
     def get_column_names(self):
         cursor = self.conn.cursor()

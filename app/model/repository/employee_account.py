@@ -24,10 +24,18 @@ class EmployeeAccountRepository:
 
     def delete_employee_account(self, login):
         cursor = self.conn.cursor()
-        query = sql.SQL("DELETE FROM employee_account WHERE login = %s")
-        cursor.execute(query, (login,))
-        self.conn.commit()
-        cursor.close()
+        try:
+            query = sql.SQL("DELETE FROM employee_account WHERE login = %s")
+            cursor.execute(query, (login,))
+            self.conn.commit()
+            cursor.close()
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            cursor.close()
+            return False
+        finally:
+            cursor.close()
+        return True
 
     def get_employee_account_by_login(self, login):
         cursor = self.conn.cursor()
