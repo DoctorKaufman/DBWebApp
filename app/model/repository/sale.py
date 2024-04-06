@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import sql
+from psycopg2.errors import InFailedSqlTransaction
 from app.model.dto.sale import SaleDTO
 
 
@@ -53,7 +54,7 @@ class SaleRepository:
             cursor.execute(query, (upc, check_number))
             self.conn.commit()
             cursor.close()
-        except psycopg2.Error as e:
+        except InFailedSqlTransaction as e:
             self.conn.rollback()
             cursor.close()
             return False

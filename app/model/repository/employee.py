@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import sql
+from psycopg2.errors import InFailedSqlTransaction
 from app.model.dto.employee import EmployeeDTO
 
 
@@ -67,7 +68,7 @@ class EmployeeRepository:
             cursor.execute(query, (id_employee,))
             self.conn.commit()
             cursor.close()
-        except psycopg2.Error as e:
+        except InFailedSqlTransaction as e:
             self.conn.rollback()
             cursor.close()
             return False
