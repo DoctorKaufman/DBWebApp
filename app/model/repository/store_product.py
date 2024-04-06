@@ -13,7 +13,7 @@ class StoreProductRepository:
     SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %s")
     INSERT_STORE_PRODUCT_QUERY = sql.SQL("INSERT INTO store_product (UPC_prom, id_product, selling_price, "
                                          "products_number, promotional_product) "
-                                         "VALUES (%s, %s, %s, %s, %s) RETURNING *")
+                                         "VALUES (%s, %s, %s, %s, %s) RETURNING UPC")
     DELETE_STORE_PRODUCT_QUERY = sql.SQL("DELETE FROM store_product WHERE UPC = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -45,7 +45,11 @@ class StoreProductRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_QUERY)
-            store_products = [StoreProductDTO(*store_product_data) for store_product_data in cursor.fetchall()]
+            store_products = []
+            for store_product_data in cursor.fetchall():
+                store_products.append(StoreProductDTO(store_product_data[0], store_product_data[1],
+                                                      store_product_data[2], store_product_data[3],
+                                                      store_product_data[4], store_product_data[5]))
         return tuple(store_products)
 
     def select_store_product(self, upc):
@@ -62,7 +66,9 @@ class StoreProductRepository:
             cursor.execute(StoreProductRepository.SELECT_STORE_PRODUCT_QUERY, (upc,))
             store_product_data = cursor.fetchone()
         if store_product_data:
-            return StoreProductDTO(*store_product_data)
+            return StoreProductDTO(store_product_data[0], store_product_data[1],
+                                   store_product_data[2], store_product_data[3],
+                                   store_product_data[4], store_product_data[5])
         return None
 
     def insert_store_product(self, store_product):
@@ -77,12 +83,16 @@ class StoreProductRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(StoreProductRepository.INSERT_STORE_PRODUCT_QUERY,
-                           (store_product.UPC_prom, store_product.id_product, store_product.selling_price,
+                           (store_product.upc_prom, store_product.id_product, store_product.selling_price,
                             store_product.products_number, store_product.promotional_product))
             store_product_data = cursor.fetchone()
+            upc = cursor.fetchone()[0]
             self.conn.commit()
-        if store_product_data:
-            return StoreProductDTO(*store_product_data)
+        cursor.close()
+        if upc:
+            return StoreProductDTO(upc[0], store_product.UPC_prom, store_product.id_product,
+                                   store_product.selling_price, store_product.products_number,
+                                   store_product.promotional_product)
         return None
 
     def delete_store_product(self, upc):

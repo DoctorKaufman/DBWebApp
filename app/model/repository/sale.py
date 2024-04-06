@@ -12,7 +12,7 @@ class SaleRepository:
     SELECT_SALE_QUERY = sql.SQL("SELECT * FROM sale WHERE UPC = %s AND check_number = %s")
     SELECT_ALL_SALES_QUERY = sql.SQL("SELECT * FROM sale")
     INSERT_SALE_QUERY = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) "
-                                "VALUES (%s, %s, %s, %s) RETURNING *")
+                                "VALUES (%s, %s, %s, %s)")
     DELETE_SALE_QUERY = sql.SQL("DELETE FROM sale WHERE UPC = %s AND check_number = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -50,7 +50,7 @@ class SaleRepository:
             cursor.execute(SaleRepository.SELECT_SALE_QUERY, (upc, check_number))
             sale_data = cursor.fetchone()
         if sale_data:
-            return SaleDTO(*sale_data)
+            return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
         return None
 
     def select_all_sales(self):
@@ -62,7 +62,7 @@ class SaleRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(SaleRepository.SELECT_ALL_SALES_QUERY)
-            sales = [SaleDTO(*sale_data) for sale_data in cursor.fetchall()]
+            sales = [SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3]) for sale_data in cursor.fetchall()]
         return tuple(sales)
 
     def insert_sale(self, sale):
@@ -77,11 +77,11 @@ class SaleRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(SaleRepository.INSERT_SALE_QUERY,
-                           (sale.UPC, sale.check_number, sale.product_number, sale.selling_price))
+                           (sale.upc, sale.check_number, sale.product_number, sale.selling_price))
             sale_data = cursor.fetchone()
             self.conn.commit()
         if sale_data:
-            return SaleDTO(*sale_data)
+            return SaleDTO(sale.upc, sale.check_number, sale.product_number, sale.selling_price)
         return None
 
     def delete_sale(self, upc, check_number):
