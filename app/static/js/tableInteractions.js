@@ -1,7 +1,7 @@
-// import { sendRequest } from './sendRequest';
+import { sendRequest } from './sendRequest.js';
+import { createToast } from './toastNotifications.js';
 
 document.addEventListener('alpine:init', () => {
-    console.log('tableInteractions.js loaded');
     Alpine.data('tableInteractions', (currentTab, items, columns, keyColumn) => ({
         // #region initializations
         items: items,
@@ -75,58 +75,21 @@ document.addEventListener('alpine:init', () => {
         },
         // #endregion
 
-        // #region managing states
-        startSelecting() {
-            this.$store.tableState.startSelecting();
-            console.log(this.$store.tableState.globalState)
-        },
-
-        stopSelecting() {
-            this.$store.tableState.stopSelecting();
-        },
-        // #endregion
-        
-        // #region category actions
-        addCategory() {
-            console.log('Adding a new category');
-            this.createRowForm();
-        },
-
-        removeCategory() {
-            const categories = this.$store.tableState.selectedItems;
-            console.log('Removing categories:', categories);
-            categories.forEach(categoryId => { 
-                axios.delete(`http://127.0.0.1:5000/category/${categoryId}`)
-                .then(response => {
-                    console.log('Category deleted:', response.data);
-                    createToast("success", "Category deleted successfully");
-                    setTimeout(() => window.location.reload(), 800);
-                })
-                .catch(error => {
-                    console.error('Error deleting category:', error);
-                    createToast("error", `Error deleting category: ${categoryId}`);
-                });
+        removeRows() {
+            const items = this.$store.tableState.selectedItems;
+            console.log('Removing items:', items);
+            items.forEach(itemId => {
+                console.log(itemId)
+                sendRequest('delete', currentTab, itemId)
+                    .then(response => {
+                        console.log('Item deleted:', response);
+                        createToast("success", "Item deleted successfully");
+                    })
+                    .catch(error => {
+                        console.error('Error deleting item:', error);
+                        createToast("error", `Error deleting item: ${itemId}`);
+                    });
             });
         },
-        // #endregion
-
-        // #region product actions
-        addProduct() {
-            console.log('Adding a new product');
-            this.createRowForm();
-        },
-
-        removeProduct() {
-            const productId = 'abc'; //event.target.getAttribute('data-id');
-            axios.delete(`http://127.0.0.1:5000/product/${productId}/`)
-                .then(response => {
-                    console.log('Product deleted:', response.data);
-                })
-                .catch(error => {
-                    console.error('Error deleting product:', error);
-                    createToast("error", `Error deleting product: ${productId}`);
-                });
-        },
-        // #endregion
     }));
 });

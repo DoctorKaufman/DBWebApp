@@ -1,3 +1,6 @@
+import { sendRequest } from "./sendRequest.js";
+import { createToast } from "./toastNotifications.js";
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', (fields) => ({
 
@@ -42,7 +45,7 @@ document.addEventListener('alpine:init', () => {
                 data[this.fillableFields[i]] = document.getElementById(this.fillableFields[i]).value;
             }
             console.log(data);
-            axios.post(`http://127.0.0.1:5000/category`, data)
+            sendRequest('post', this.currentTab, data)
                 .then(response => {
                     // Handle success, e.g., show a success message
                     createToast("success", "Row added successfully");

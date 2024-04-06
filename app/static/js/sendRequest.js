@@ -1,21 +1,29 @@
-// #region request management
-
-console.log('sendRequest.js loaded');
 export const sendRequest = (action, currentPage, data = null) => {
     // Base URL for the API
     const baseUrl = 'http://127.0.0.1:5000';
 
     // Determine the endpoint based on the currentPage
     let endpoint = '';
-    if (currentPage === 'categories') {
-        endpoint = '/category/';
-    } else if (currentPage === 'goods') {
-        endpoint = '/product/';
-    } else if (currentPage === 'goods_in_store') {
-        endpoint = '/product/';
+    switch (currentPage) {
+        case 'categories':
+            endpoint = '/category/';
+            break;
+        case 'goods':
+        case 'goods_in_store': // Assuming both cases use the same endpoint for simplicity
+            endpoint = '/product/';
+            break;
+        default:
+            console.error('Unknown currentPage:', currentPage);
+            return Promise.reject(new Error('Unknown currentPage'));
     }
-    // Construct the full URL
-    const url = `${baseUrl}${endpoint}`;
+
+    // Construct the URL differently for DELETE requests when data is expected to be part of the URL
+    let url;
+    if (action.toLowerCase() === 'delete' && data !== null) {
+        url = `${baseUrl}${endpoint}${data}`; // For DELETE, append data (e.g., ID) to the URL
+    } else {
+        url = `${baseUrl}${endpoint}`;
+    }
 
     // Configure the request options
     const options = {
@@ -23,7 +31,7 @@ export const sendRequest = (action, currentPage, data = null) => {
         url: url,
     };
 
-    // Include data for methods that require it (e.g., POST, PUT, PATCH)
+    // For methods other than DELETE that require data, include it in the request
     if (['post', 'put', 'patch'].includes(action.toLowerCase()) && data) {
         options.data = data;
     }
@@ -39,5 +47,3 @@ export const sendRequest = (action, currentPage, data = null) => {
             throw error; // Reject the promise with the error
         });
 }
-
-// #endregion
