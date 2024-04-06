@@ -9,7 +9,7 @@ class ProductRepository:
     Repository class for managing products in the database.
     """
 
-    SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product")
+    SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product ORDER BY id_product")
     SELECT_PRODUCT_QUERY = sql.SQL("SELECT * FROM product WHERE id_product = %s")
     INSERT_PRODUCT_QUERY = sql.SQL("INSERT INTO product (category_number, product_name, p_characteristics) "
                                    "VALUES (%s, %s, %s) RETURNING id_product")

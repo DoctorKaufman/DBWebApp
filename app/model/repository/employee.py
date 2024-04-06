@@ -9,7 +9,7 @@ class EmployeeRepository:
     Repository class for managing employees in the database.
     """
 
-    SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee")
+    SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee ORDER BY id_employee")
     SELECT_EMPLOYEE_QUERY = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
                                     "salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) "

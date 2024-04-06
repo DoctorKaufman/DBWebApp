@@ -9,7 +9,7 @@ class CategoryRepository:
     Repository class for managing categories in the database.
     """
 
-    SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category")
+    SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY category_number")
     SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
     UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %s")

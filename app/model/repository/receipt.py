@@ -9,7 +9,7 @@ class ReceiptRepository:
     Repository class for managing receipts in the database.
     """
 
-    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt")
+    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY check_number")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")

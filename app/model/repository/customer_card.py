@@ -9,7 +9,7 @@ class CustomerCardRepository:
     Repository class for managing customer cards in the database.
     """
 
-    SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card")
+    SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card ORDER BY card_number")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
                                          "phone_number, city, street, zip_code, c_percent) "
