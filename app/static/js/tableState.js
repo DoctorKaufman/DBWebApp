@@ -22,6 +22,7 @@ document.addEventListener('alpine:init', () => {
         currentTab: null,
         
         globalState: GlobalStates.NONE,
+        sortState: {},
 
         selectedItems: [],
         selectAll: false,
@@ -155,17 +156,29 @@ document.addEventListener('alpine:init', () => {
         //     }
         // },
 
-        refetchData(sortBy = null, sortOrder = null) {
-            sendRequest('get', this.currentTab, null, null, sortBy)
+        refetchData(sortBy = null) {
+            // Default sort order is ascending. Toggle the state if previously clicked.
+            let sortOrder = 'asc';
+            if (this.sortState[sortBy] && this.sortState[sortBy] === 'asc') {
+                sortOrder = 'desc';
+            } else {
+                sortOrder = 'asc';
+            }
+
+            // Update the sortState with the new sortOrder
+            this.sortState[sortBy] = sortOrder;
+
+            sendRequest('get', this.currentTab, null, null, sortBy, sortOrder)
                 .then(response => {
                     console.log('Data fetched:', response);
                     this.initializeRows(response);
+                    createToast("success", `Data sorted by ${sortBy} in ${sortOrder} order`);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                     createToast("error", "Error fetching data");
                 });
-        }
+        },
     });
 
 });

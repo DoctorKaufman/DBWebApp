@@ -1,4 +1,4 @@
-export async function sendRequest(action, currentPage, id = null, data = null, sort = null) {
+export async function sendRequest(action, currentPage, id = null, data = null, sortBy = null, sortOrder = null) {
     // Base URL for the API
     const baseUrl = 'http://127.0.0.1:5000';
 
@@ -9,8 +9,10 @@ export async function sendRequest(action, currentPage, id = null, data = null, s
             endpoint = '/category/';
             break;
         case 'goods':
-        case 'goods_in_store': // Assuming both cases use the same endpoint for simplicity
             endpoint = '/product/';
+            break;
+        case 'goods_in_store':
+            endpoint = '/store-product/';
             break;
         default:
             console.error('Unknown currentPage:', currentPage);
@@ -21,9 +23,10 @@ export async function sendRequest(action, currentPage, id = null, data = null, s
     let url = `${baseUrl}${endpoint}`;
     if (['delete', 'put'].includes(action.toLowerCase()) && id !== null) {
         url += `${id}`; // For DELETE and PUT, append id to the URL
-    } else if (sort) {
-        url += `?sort=${sort}`; // Append sorting query parameter if sort is provided
+    } else if (sortBy) {
+        url += `?sort=${sortBy}&order=${sortOrder}`; // Append sorting query parameter if sort is provided
     }
+    console.log('URL:', url);
 
     // Configure the request options
     const options = {

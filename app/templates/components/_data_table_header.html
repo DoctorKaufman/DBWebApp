@@ -6,7 +6,7 @@
 
         <div class="py-5 bg-white dark:bg-gray-800">
             {% if (active_tab != 'goods' and active_tab != 'categories')%}
-                {% include 'components/_dropdown_search_input.html' %}
+                {% include 'components/_search_input_by_category.html' %}
             {% else %}
                 {% include 'components/_default_search_input.html' %}
             {% endif %}
