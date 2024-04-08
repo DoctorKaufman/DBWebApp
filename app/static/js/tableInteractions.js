@@ -1,5 +1,5 @@
 import { sendRequest } from './sendRequest.js';
-import { createToast } from './toastNotifications.js';
+import { createToast, removeToast } from './toastNotifications.js';
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('tableInteractions', (currentTab, items, columns, keyColumn) => ({
@@ -75,22 +75,5 @@ document.addEventListener('alpine:init', () => {
         },
         // #endregion
 
-        removeRows() {
-            const items = this.$store.tableState.selectedItems;
-            console.log('Removing items:', items);
-            items.forEach(async itemId => {
-                await sendRequest('delete', currentTab, itemId, null)
-                    .then(response => {
-                        console.log('Item deleted:', response);
-                        createToast("success", "Item deleted successfully");
-                        this.$store.tableState.handleSuccessfullDeletion(itemId);
-                    })
-                    .catch(error => {
-                        console.error('Error deleting item:', error);
-                        createToast("error", `Error deleting item: ${itemId}`);
-                    });
-            });
-            this.$store.tableState.stopSelecting();
-        },
     }));
 });

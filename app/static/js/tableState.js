@@ -1,5 +1,5 @@
 import { sendRequest } from "./sendRequest.js";
-import { createToast } from "./toastNotifications.js";
+import { createToast, removeToast } from './toastNotifications.js';
 import { TextScramble } from "./textScramble.js";
 
 document.addEventListener('alpine:init', () => {
@@ -29,8 +29,7 @@ document.addEventListener('alpine:init', () => {
         initializeRows(items) {
             this.rowElements = items.map(item => ({
                 ...item,
-                editing: false, // Additional state as needed
-                // Other row-specific states
+                editing: false, 
             }));
         },
 
@@ -43,7 +42,6 @@ document.addEventListener('alpine:init', () => {
                 if (rowIndex !== -1) {
                     this.rowElements[rowIndex].editing = newState;
                     this.globalState = GlobalStates.EDITING;
-                    // Handle other state changes as necessary
                 }
             }
         },
@@ -107,6 +105,25 @@ document.addEventListener('alpine:init', () => {
             this.selectAll = false;
         },
 
+        deleteSelected() {
+            const items = this.selectedItems;
+            console.log('Removing items:', items);
+            items.forEach(async itemId => {
+                await sendRequest('delete', this.currentTab, itemId, null)
+                    .then(response => {
+                        console.log('Item deleted:', response);
+                        createToast("success", "Item deleted successfully");
+                        // this.handleSuccessfullDeletion(itemId);  is it necessary??
+                        this.refetchData();
+                    })
+                    .catch(error => {
+                        console.error('Error deleting item:', error);
+                        createToast("error", `Error deleting item: ${itemId}`);
+                    });
+            });
+            this.stopSelecting();
+        },
+
         toggleSelectAll() {
             this.selectAll = !this.selectAll;
             if (this.selectAll) {
@@ -119,6 +136,7 @@ document.addEventListener('alpine:init', () => {
 
             console.log("Selected items:", this.selectedItems);
         },
+
         toggleItemSelection(itemId) {
             const index = this.selectedItems.indexOf(itemId);
             if (index > -1) {
@@ -128,14 +146,26 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        handleSuccessfullDeletion(id){
-            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
-            const selectedRowIndex = this.selectedItems.indexOf(id);
-            if (rowIndex !== -1) {
-                this.rowElements.splice(rowIndex, 1);
-                this.selectedItems.splice(selectedRowIndex, 1);
-            }
-        },
+        // handleSuccessfullDeletion(id){
+        //     const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
+        //     const selectedRowIndex = this.selectedItems.indexOf(id);
+        //     if (rowIndex !== -1) {
+        //         this.rowElements.splice(rowIndex, 1);
+        //         this.selectedItems.splice(selectedRowIndex, 1);
+        //     }
+        // },
+
+        refetchData(sortBy = null, sortOrder = null) {
+            sendRequest('get', this.currentTab, null, null)
+                .then(response => {
+                    console.log('Data fetched:', response);
+                    this.initializeRows(response);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    createToast("error", "Error fetching data");
+                });
+        }
     });
 
 });
