@@ -27,11 +27,12 @@ def goods_in_store():
     else:
         items = []
         columns = {
-            "name": True,
+            "id_product": True,
+            "products_number": True,
+            "promotional_product": True,
+            "selling_price": True,
             "upc": False,
-            "amount": True,
-            "category": True,
-            "price": True,
+            "upc_prom": True
         }
         columns_json = json.dumps(columns)
         error_message = "Failed to fetch categories"
