@@ -9,7 +9,7 @@ class ReceiptRepository:
     Repository class for managing receipts in the database.
     """
 
-    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY check_number")
+    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY %s")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
@@ -26,7 +26,7 @@ class ReceiptRepository:
                                      "AND pkuse.constraint_name = tc.constraint_name "
                                      "WHERE cols.table_name = 'receipt'")
 
-    def __init__(self, conn):
+    def __init__(self, conn, sorting_column="check_number"):
         """
         Initialize ReceiptRepository with a database connection.
 
@@ -35,7 +35,7 @@ class ReceiptRepository:
         """
         self.conn = conn
 
-    def select_all_receipts(self):
+    def select_all_receipts(self, sorting_column="check_number"):
         """
         Select all receipts from the database.
 
@@ -43,7 +43,7 @@ class ReceiptRepository:
             Tuple of ReceiptDTO objects representing receipts.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY)
+            cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY, (sorting_column,))
             receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
         return tuple(receipts)
 
