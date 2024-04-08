@@ -9,7 +9,7 @@ class ReceiptRepository:
     Repository class for managing receipts in the database.
     """
 
-    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY %s")
+    SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
@@ -43,7 +43,7 @@ class ReceiptRepository:
             Tuple of ReceiptDTO objects representing receipts.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY, (sorting_column,))
+            cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY.format(sql.Identifier(sorting_column)))
             receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
         return tuple(receipts)
 

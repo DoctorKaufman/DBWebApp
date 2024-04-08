@@ -25,7 +25,9 @@ def update_category(category_number):
 
 @category.route('/<int:category_id>/', methods=['DELETE'])
 def delete_category(category_id):
-    return jsonify(category_service.delete_category(category_id)), 200
+    if category_service.delete_category(category_id):
+        return '', 204
+    return 'Could not delete category', 400
 
 
 @category.route('/<int:category_id>/', methods=['GET'])
@@ -35,7 +37,8 @@ def get_category(category_id):
 
 @category.route('/', methods=['GET'])
 def get_all_categories():
-    categories = category_service.get_all_categories()
+    args = request.args
+    categories = category_service.get_all_categories(args.get('sort', 'category_number', type=str))
     return [c.serialize() for c in categories], 200
 
 

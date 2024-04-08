@@ -9,7 +9,7 @@ class CustomerCardRepository:
     Repository class for managing customer cards in the database.
     """
 
-    SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card ORDER BY %s")
+    SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card ORDER BY {}")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
                                          "phone_number, city, street, zip_code, c_percent) "
@@ -36,7 +36,7 @@ class CustomerCardRepository:
         """
         self.conn = conn
 
-    def select_all_customer_cards(self, sorting_column="card_number"):
+    def select_all_customer_cards(self, sorting_column):
         """
         Select all customer cards from the database.
 
@@ -44,7 +44,7 @@ class CustomerCardRepository:
             Tuple of CustomerCardDTO objects representing customer cards.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(CustomerCardRepository.SELECT_ALL_CUSTOMER_CARDS_QUERY, (sorting_column,))
+            cursor.execute(CustomerCardRepository.SELECT_ALL_CUSTOMER_CARDS_QUERY.format(sql.Identifier(sorting_column)))
             customer_cards = [CustomerCardDTO(*customer_card_data) for customer_card_data in cursor.fetchall()]
         return tuple(customer_cards)
 

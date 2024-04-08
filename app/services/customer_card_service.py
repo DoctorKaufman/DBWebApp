@@ -5,8 +5,8 @@ class CustomerService:
     def get_customer_card_by_card_number(self, card_number):
         return self.customer_card_repository.select_customer_card(card_number)
 
-    def get_all_customer_cards(self):
-        return self.customer_card_repository.select_all_customer_cards()
+    def get_all_customer_cards(self, sort_column):
+        return self.customer_card_repository.select_all_customer_cards(sort_column)
 
     def create_customer_card(self, customer_dto):
         return self.customer_card_repository.insert_customer_card(customer_dto)

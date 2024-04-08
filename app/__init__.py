@@ -35,7 +35,7 @@ def create_app(config_filename=None):
     from app.controllers.employee_controller import employee
     from app.controllers.category_controller import category
     from app.controllers.product_controller import product
-    from app.controllers.customer_controller import customer
+    from app.controllers.customer_card_controller import customer
     from app.controllers.check_controller import check
     from app.controllers.store_product_controller import store_product
 

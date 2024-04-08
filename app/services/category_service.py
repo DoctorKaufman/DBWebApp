@@ -9,8 +9,8 @@ class CategoryService:
     def get_by_category_number(self, category_number):
         return self.category_repository.select_category(category_number)
 
-    def get_all_categories(self):
-        return self.category_repository.select_all_categories()
+    def get_all_categories(self, sort_column):
+        return self.category_repository.select_all_categories(sort_column)
 
     def create_category(self, category_creation_dto):
         # check for duplicate and process

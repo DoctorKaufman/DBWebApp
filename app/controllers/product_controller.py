@@ -36,7 +36,8 @@ def get_product(product_id):
 
 @product.route('/', methods=['GET'])
 def get_all_products():
-    products = product_service.get_all_products()
+    args = request.args
+    products = product_service.get_all_products(args.get('sort', 'id_product', type=str))
     return [p.serialize() for p in products], 200
 
 
