@@ -34,3 +34,5 @@ export const createToast = (id, text) => {
     notifications.appendChild(toast); 
     toast.timeoutId = setTimeout(() => removeToast(toast), toastDetails.timer);
 }
+
+window.removeToast = removeToast;

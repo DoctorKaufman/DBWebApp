@@ -1,5 +1,5 @@
 import { sendRequest } from "./sendRequest.js";
-import { createToast } from "./toastNotifications.js";
+import { createToast, removeToast } from './toastNotifications.js';
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', (fields) => ({
@@ -49,7 +49,8 @@ document.addEventListener('alpine:init', () => {
                 .then(response => {
                     // Handle success, e.g., show a success message
                     createToast("success", "Row added successfully");
-                    setTimeout(() => window.location.reload(), 800);
+                    Alpine.store('tableState').refetchData();
+                    // setTimeout(() => window.location.reload(), 800);
                 })
                 .catch(error => {
                     // Handle error, e.g., showing an error message

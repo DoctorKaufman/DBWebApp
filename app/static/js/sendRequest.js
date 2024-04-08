@@ -1,4 +1,4 @@
-export async function sendRequest (action, currentPage, id=null, data = null) {
+export async function sendRequest(action, currentPage, id = null, data = null, sort = null) {
     // Base URL for the API
     const baseUrl = 'http://127.0.0.1:5000';
 
@@ -17,12 +17,12 @@ export async function sendRequest (action, currentPage, id=null, data = null) {
             return Promise.reject(new Error('Unknown currentPage'));
     }
 
-    // Construct the URL differently for DELETE requests when data is expected to be part of the URL
-    let url;
+    // Construct the URL
+    let url = `${baseUrl}${endpoint}`;
     if (['delete', 'put'].includes(action.toLowerCase()) && id !== null) {
-        url = `${baseUrl}${endpoint}${id}`; // For DELETE, append data (e.g., ID) to the URL
-    } else {
-        url = `${baseUrl}${endpoint}`;
+        url += `${id}`; // For DELETE and PUT, append id to the URL
+    } else if (sort) {
+        url += `?sort=${sort}`; // Append sorting query parameter if sort is provided
     }
 
     // Configure the request options
@@ -34,6 +34,8 @@ export async function sendRequest (action, currentPage, id=null, data = null) {
     // For methods other than DELETE that require data, include it in the request
     if (['post', 'put', 'patch'].includes(action.toLowerCase()) && data) {
         options.data = data;
+        // Axios POST, PUT, PATCH requests expect 'data' field, not 'body'
+        options.headers = { 'Content-Type': 'application/json' };
     }
 
     // Perform the request using axios
