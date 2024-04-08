@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
+from app.controllers.dtos.Pageable import Pageable
 from app.controllers.dtos.customer_creation import CustomerCreationDTO
 from app.model.repository.customer_card import CustomerCardRepository
 from app.services.customer_card_service import CustomerService
@@ -36,7 +37,8 @@ def get_customer(card_number):
 @customer.route('/', methods=['GET'])
 def get_all_customers():
     args = request.args
-    customers = customer_service.get_all_customer_cards(args.get('sort', 'card_number', type=str))
+    pageable = Pageable(args.get('sort', 'card_number', type=str), args.get('order', 'asc', type=str))
+    customers = customer_service.get_all_customer_cards(pageable)
     return [c.serialize() for c in customers], 200
 
 

@@ -9,7 +9,7 @@ class CategoryRepository:
     Repository class for managing categories in the database.
     """
 
-    SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {}")
+    SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {} {}")
     SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
     UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %s")
@@ -36,7 +36,7 @@ class CategoryRepository:
         """
         self.conn = conn
 
-    def select_all_categories(self, sorting_column):
+    def select_all_categories(self, pageable):
         """
         Select all categories from the database.
 
@@ -44,7 +44,8 @@ class CategoryRepository:
             Tuple of CategoryDTO objects representing categories.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(CategoryRepository.SELECT_ALL_CATEGORIES_QUERY.format(sql.Identifier(sorting_column)))
+            cursor.execute(CategoryRepository.SELECT_ALL_CATEGORIES_QUERY.format(sql.Identifier(pageable.column),
+                                                                                 sql.SQL(pageable.order)))
             categories = [CategoryDTO(category_data[0], category_data[1]) for category_data in cursor.fetchall()]
         return tuple(categories)
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 from app.controllers.connector.db_connector import get_connection
+from app.controllers.dtos.Pageable import Pageable
 from app.controllers.dtos.category_creation import CategoryCreationDTO
 from app.model.repository.category import CategoryRepository
 from app.services.category_service import CategoryService
@@ -38,7 +39,8 @@ def get_category(category_id):
 @category.route('/', methods=['GET'])
 def get_all_categories():
     args = request.args
-    categories = category_service.get_all_categories(args.get('sort', 'category_number', type=str))
+    pageable = Pageable(args.get('sort', 'category_number', type=str), args.get('order', 'asc', type=str))
+    categories = category_service.get_all_categories(pageable)
     return [c.serialize() for c in categories], 200
 
 

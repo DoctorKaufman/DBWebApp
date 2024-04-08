@@ -9,7 +9,7 @@ class ProductRepository:
     Repository class for managing products in the database.
     """
 
-    SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product ORDER BY {}")
+    SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product ORDER BY {} {}")
     SELECT_PRODUCT_QUERY = sql.SQL("SELECT * FROM product WHERE id_product = %s")
     INSERT_PRODUCT_QUERY = sql.SQL("INSERT INTO product (category_number, product_name, p_characteristics) "
                                    "VALUES (%s, %s, %s) RETURNING id_product")
@@ -37,7 +37,7 @@ class ProductRepository:
         """
         self.conn = conn
 
-    def select_all_products(self, sorting_column):
+    def select_all_products(self, pageable):
         """
         Select all products from the database.
 
@@ -45,7 +45,8 @@ class ProductRepository:
             Tuple of ProductDTO objects representing products.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_QUERY.format(sql.Identifier(sorting_column)))
+            cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_QUERY.format(sql.Identifier(pageable.column),
+                                                                              sql.SQL(pageable.order)))
             products = [ProductDTO(*product_data) for product_data in cursor.fetchall()]
         return tuple(products)
 
