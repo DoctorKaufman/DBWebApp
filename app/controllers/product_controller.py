@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
+from app.controllers.dtos.Pageable import Pageable
 from app.controllers.dtos.product_creation import ProductCreationDTO
 from app.model.repository.product import ProductRepository
 from app.services.product_service import ProductService
@@ -37,7 +38,8 @@ def get_product(product_id):
 @product.route('/', methods=['GET'])
 def get_all_products():
     args = request.args
-    products = product_service.get_all_products(args.get('sort', 'id_product', type=str))
+    pageable = Pageable(args.get('sort', 'id_product', type=str), args.get('order', 'asc', type=str))
+    products = product_service.get_all_products(pageable)
     return [p.serialize() for p in products], 200
 
 

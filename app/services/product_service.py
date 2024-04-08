@@ -8,8 +8,8 @@ class ProductService:
     def get_product_by_id_product(self, id_product):
         return self.product_repository.select_product(id_product)
 
-    def get_all_products(self, sort_column):
-        return self.product_repository.select_all_products(sort_column)
+    def get_all_products(self, pageable):
+        return self.product_repository.select_all_products(pageable)
 
     def create_product(self, product_creation_dto):
         return self.product_repository.insert_product(product_creation_dto)

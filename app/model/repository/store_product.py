@@ -9,7 +9,7 @@ class StoreProductRepository:
     Repository class for managing store products in the database.
     """
 
-    SELECT_ALL_STORE_PRODUCTS_QUERY = sql.SQL("SELECT * FROM store_product ORDER BY {}")
+    SELECT_ALL_STORE_PRODUCTS_QUERY = sql.SQL("SELECT * FROM store_product ORDER BY {} {}")
     SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %s")
     INSERT_STORE_PRODUCT_QUERY = sql.SQL("INSERT INTO store_product (UPC_prom, id_product, selling_price, "
                                          "products_number, promotional_product) "
@@ -36,7 +36,7 @@ class StoreProductRepository:
         """
         self.conn = conn
 
-    def select_all_store_products(self, sorting_column):
+    def select_all_store_products(self, pageable):
         """
         Select all store products from the database.
 
@@ -44,7 +44,8 @@ class StoreProductRepository:
             Tuple of StoreProductDTO objects representing store products.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_QUERY.format(sql.Identifier(sorting_column)))
+            cursor.execute(StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_QUERY.format(sql.Identifier(pageable.column),
+                                                                                         sql.SQL(pageable.order)))
             store_products = []
             for store_product_data in cursor.fetchall():
                 store_products.append(StoreProductDTO(store_product_data[0], store_product_data[1],

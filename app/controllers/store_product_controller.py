@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 from app.controllers.connector.db_connector import get_connection
+from app.controllers.dtos.Pageable import Pageable
 from app.controllers.dtos.store_product_creation import StoreProductCreationDTO
 from app.model.repository.store_product import StoreProductRepository
 from app.services.store_product_service import StoreProductService
@@ -30,7 +31,8 @@ def get_store_product(upc):
 @store_product.route('/', methods=['GET'])
 def get_all_store_products():
     args = request.args
-    store_products = store_product_service.get_all_store_products(args.get('sort', 'upc', type=str))
+    pageable = Pageable(args.get('sort', 'upc', type=str), args.get('order', 'asc', type=str))
+    store_products = store_product_service.get_all_store_products(pageable)
     return [p.serialize() for p in store_products], 200
 
 

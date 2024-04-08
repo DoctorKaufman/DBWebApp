@@ -9,7 +9,7 @@ class EmployeeRepository:
     Repository class for managing employees in the database.
     """
 
-    SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee ORDER BY {}")
+    SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee ORDER BY {} {}")
     SELECT_EMPLOYEE_QUERY = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
                                     "salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) "
@@ -36,7 +36,7 @@ class EmployeeRepository:
         """
         self.conn = conn
 
-    def select_all_employees(self, sorting_column="id_employee"):
+    def select_all_employees(self, pageable):
         """
         Select all employees from the database.
 
@@ -44,7 +44,8 @@ class EmployeeRepository:
             Tuple of EmployeeDTO objects representing employees.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(EmployeeRepository.SELECT_ALL_EMPLOYEES_QUERY.format(sql.Identifier(sorting_column)))
+            cursor.execute(EmployeeRepository.SELECT_ALL_EMPLOYEES_QUERY.format(sql.Identifier(pageable.column),
+                                                                                sql.SQL(pageable.order)))
             employees = [EmployeeDTO(*employee_data) for employee_data in cursor.fetchall()]
         return tuple(employees)
 
