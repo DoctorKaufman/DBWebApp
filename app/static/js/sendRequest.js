@@ -9,8 +9,10 @@ export async function sendRequest(action, currentPage, id = null, data = null, s
             endpoint = '/category/';
             break;
         case 'goods':
-        case 'goods_in_store': // Assuming both cases use the same endpoint for simplicity
             endpoint = '/product/';
+            break;
+        case 'goods_in_store':
+            endpoint = '/store-product/';
             break;
         default:
             console.error('Unknown currentPage:', currentPage);
