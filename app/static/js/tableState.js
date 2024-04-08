@@ -156,7 +156,7 @@ document.addEventListener('alpine:init', () => {
         // },
 
         refetchData(sortBy = null, sortOrder = null) {
-            sendRequest('get', this.currentTab, null, null)
+            sendRequest('get', this.currentTab, null, null, sortBy)
                 .then(response => {
                     console.log('Data fetched:', response);
                     this.initializeRows(response);
