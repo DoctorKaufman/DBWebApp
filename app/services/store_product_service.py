@@ -6,8 +6,8 @@ class StoreProductService:
     def get_store_product_by_upc(self, upc):
         return self.store_product_repository.select_store_product(upc)
 
-    def get_all_store_products(self):
-        return self.store_product_repository.select_all_store_products()
+    def get_all_store_products(self, sort_column):
+        return self.store_product_repository.select_all_store_products(sort_column)
 
     def create_store_product(self, store_product_dto):
         return self.store_product_repository.insert_store_product(store_product_dto)

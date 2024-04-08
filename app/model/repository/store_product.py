@@ -36,7 +36,7 @@ class StoreProductRepository:
         """
         self.conn = conn
 
-    def select_all_store_products(self, sorting_column="upc"):
+    def select_all_store_products(self, sorting_column):
         """
         Select all store products from the database.
 

@@ -29,7 +29,8 @@ def get_store_product(upc):
 
 @store_product.route('/', methods=['GET'])
 def get_all_store_products():
-    store_products = store_product_service.get_all_store_products()
+    args = request.args
+    store_products = store_product_service.get_all_store_products(args.get('sort', 'upc', type=str))
     return [p.serialize() for p in store_products], 200
 
 
