@@ -27,6 +27,16 @@ class ReceiptRepository:
                                      "ON pkuse.constraint_schema = tc.constraint_schema "
                                      "AND pkuse.constraint_name = tc.constraint_name "
                                      "WHERE cols.table_name = 'receipt'")
+    GET_PRIMARY_KEY_NAME_QUERY = sql.SQL("SELECT cols.column_name FROM information_schema.columns AS cols "
+                                         "JOIN information_schema.key_column_usage AS pkuse "
+                                         "ON cols.table_schema = pkuse.constraint_schema "
+                                         "AND cols.table_name = pkuse.table_name "
+                                         "AND cols.column_name = pkuse.column_name "
+                                         "JOIN information_schema.table_constraints AS tc "
+                                         "ON pkuse.constraint_schema = tc.constraint_schema "
+                                         "AND pkuse.constraint_name = tc.constraint_name "
+                                         "WHERE cols.table_name = 'receipt' "
+                                         "AND tc.constraint_type = 'PRIMARY KEY'")
 
     def __init__(self, conn, sorting_column="check_number"):
         """
@@ -130,3 +140,18 @@ class ReceiptRepository:
             cursor.execute(ReceiptRepository.GET_COLUMN_NAMES_QUERY)
             column_info = {row[0]: row[1] for row in cursor.fetchall()}
         return column_info
+
+    def get_primary_key_name(self):
+        """
+        Get the name of the primary key column in the 'receipt' table.
+
+        Returns:
+            String representing the name of the primary key column, or None if not found.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(ReceiptRepository.GET_PRIMARY_KEY_NAME_QUERY)
+            row = cursor.fetchone()
+            if row:
+                return row[0]
+            else:
+                return None
