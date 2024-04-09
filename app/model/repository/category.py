@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.category import CategoryDTO
+from app.model.dto.category_drop_list_position import CategoryDropListPositionDTO
 
 
 class CategoryRepository:
@@ -10,10 +11,11 @@ class CategoryRepository:
     """
 
     SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {} {}")
-    SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
+    SELECT_CATEGORY_DROP_LIST_QUERY = sql.SQL("SELECT category_number, category_name FROM category")
+    SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %d")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
-    UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %s")
-    DELETE_CATEGORY_QUERY = sql.SQL("DELETE FROM category WHERE category_number = %s")
+    UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %d")
+    DELETE_CATEGORY_QUERY = sql.SQL("DELETE FROM category WHERE category_number = %d")
     EXISTS_CATEGORY_QUERY = sql.SQL("SELECT category_number FROM category WHERE category_name ILIKE %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -26,6 +28,17 @@ class CategoryRepository:
                                      "ON pkuse.constraint_schema = tc.constraint_schema "
                                      "AND pkuse.constraint_name = tc.constraint_name "
                                      "WHERE cols.table_name = 'category'")
+    GET_PRIMARY_KEY_NAME_QUERY = sql.SQL("SELECT cols.column_name FROM information_schema.columns AS cols "
+                                         "JOIN information_schema.key_column_usage AS pkuse "
+                                         "ON cols.table_schema = pkuse.constraint_schema "
+                                         "AND cols.table_name = pkuse.table_name "
+                                         "AND cols.column_name = pkuse.column_name "
+                                         "JOIN information_schema.table_constraints AS tc "
+                                         "ON pkuse.constraint_schema = tc.constraint_schema "
+                                         "AND pkuse.constraint_name = tc.constraint_name "
+                                         "WHERE cols.table_name = 'category' "
+                                         "AND tc.constraint_type = 'PRIMARY KEY'"
+                                         )
 
     def __init__(self, conn):
         """
@@ -47,6 +60,20 @@ class CategoryRepository:
             cursor.execute(CategoryRepository.SELECT_ALL_CATEGORIES_QUERY.format(sql.Identifier(pageable.column),
                                                                                  sql.SQL(pageable.order)))
             categories = [CategoryDTO(category_data[0], category_data[1]) for category_data in cursor.fetchall()]
+        return tuple(categories)
+
+    def select_categories_drop_list(self):
+        """
+        Select all categories from the database to form drop list.
+
+        Returns:
+            Tuple of CategoryDropListPositionDTO objects representing categories
+            drop list positions.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(CategoryRepository.SELECT_CATEGORY_DROP_LIST_QUERY)
+            categories = [CategoryDropListPositionDTO(category_data[0], category_data[1]) for category_data in
+                          cursor.fetchall()]
         return tuple(categories)
 
     def select_category(self, category_number):
@@ -142,3 +169,18 @@ class CategoryRepository:
             cursor.execute(CategoryRepository.GET_COLUMN_NAMES_QUERY)
             column_info = {row[0]: row[1] for row in cursor.fetchall()}
         return column_info
+
+    def get_primary_key_name(self):
+        """
+        Get the name of the primary key column in the 'category' table.
+
+        Returns:
+            String representing the name of the primary key column, or None if not found.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(CategoryRepository.GET_PRIMARY_KEY_NAME_QUERY)
+            row = cursor.fetchone()
+            if row:
+                return row[0]
+            else:
+                return None
