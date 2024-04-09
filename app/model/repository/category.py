@@ -12,10 +12,10 @@ class CategoryRepository:
 
     SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {} {}")
     SELECT_CATEGORY_DROP_LIST_QUERY = sql.SQL("SELECT category_number, category_name FROM category")
-    SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %d")
+    SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
-    UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %d")
-    DELETE_CATEGORY_QUERY = sql.SQL("DELETE FROM category WHERE category_number = %d")
+    UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %s")
+    DELETE_CATEGORY_QUERY = sql.SQL("DELETE FROM category WHERE category_number = %s")
     EXISTS_CATEGORY_QUERY = sql.SQL("SELECT category_number FROM category WHERE category_name ILIKE %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "

@@ -12,12 +12,12 @@ class ProductRepository:
 
     SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product ORDER BY {} {}")
     SELECT_PRODUCT_DROP_LIST_QUERY = sql.SQL("SELECT id_product, product_name FROM product")
-    SELECT_PRODUCT_QUERY = sql.SQL("SELECT * FROM product WHERE id_product = %d")
+    SELECT_PRODUCT_QUERY = sql.SQL("SELECT * FROM product WHERE id_product = %s")
     INSERT_PRODUCT_QUERY = sql.SQL("INSERT INTO product (category_number, product_name, p_characteristics) "
-                                   "VALUES (%d, %s, %s) RETURNING id_product")
-    UPDATE_PRODUCT_QUERY = sql.SQL("UPDATE product SET category_number = %d, product_name = %s, "
-                                   "p_characteristics = %s WHERE id_product = %d")
-    DELETE_PRODUCT_QUERY = sql.SQL("DELETE FROM product WHERE id_product = %d")
+                                   "VALUES (%s, %s, %s) RETURNING id_product")
+    UPDATE_PRODUCT_QUERY = sql.SQL("UPDATE product SET category_number = %s, product_name = %s, "
+                                   "p_characteristics = %s WHERE id_product = %s")
+    DELETE_PRODUCT_QUERY = sql.SQL("DELETE FROM product WHERE id_product = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
                                      "FROM information_schema.columns AS cols "

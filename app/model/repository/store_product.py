@@ -15,14 +15,14 @@ class StoreProductRepository:
                                                    "FROM store_product as spr "
                                                    "INNER JOIN product as pr "
                                                    "ON spr.id_product = pr.id_product")
-    SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %d")
+    SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %s")
     INSERT_STORE_PRODUCT_QUERY = sql.SQL("INSERT INTO store_product (UPC_prom, id_product, selling_price, "
                                          "products_number, promotional_product) "
-                                         "VALUES (%d, %d, %f, %d, %s) RETURNING UPC")
-    UPDATE_STORE_PRODUCT_QUERY = sql.SQL("UPDATE store_product SET UPC_prom = %d, id_product = %d, "
-                                         "selling_price = %f, products_number = %d, promotional_product = %s "
-                                         "WHERE UPC = %d RETURNING UPC")
-    DELETE_STORE_PRODUCT_QUERY = sql.SQL("DELETE FROM store_product WHERE UPC = %d")
+                                         "VALUES (%s, %s, %s, %s, %s) RETURNING UPC")
+    UPDATE_STORE_PRODUCT_QUERY = sql.SQL("UPDATE store_product SET UPC_prom = %s, id_product = %s, "
+                                         "selling_price = %s, products_number = %s, promotional_product = %s "
+                                         "WHERE UPC = %s RETURNING UPC")
+    DELETE_STORE_PRODUCT_QUERY = sql.SQL("DELETE FROM store_product WHERE UPC = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
                                      "FROM information_schema.columns AS cols "
