@@ -1,8 +1,10 @@
-from flask import Blueprint, request, jsonify
+import json
+
+from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.category_creation import CategoryCreationDTO
+from app.controllers.dtos.create.category_creation import CategoryCreationDTO
 from app.model.repository.category import CategoryRepository
 from app.services.category_service import CategoryService
 
@@ -46,4 +48,9 @@ def get_all_categories():
 
 @category.route('/columns', methods=['GET'])
 def get_columns():
-    return category_service.get_category_columns()
+    return json.dumps(category_service.get_category_columns())
+
+
+# @category.route('/names', methods=['GET'])
+# def get_columns():
+#     return category_service.get_category_names()

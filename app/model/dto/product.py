@@ -23,8 +23,12 @@ class ProductDTO:
 
     def serialize(self):
         return {
-            'id_product': self.__id_product,
-            'category_number': self.__category_number,
-            'product_name': self.__product_name,
-            'p_characteristics': self.__p_characteristics
+            'ID': self.__id_product,
+            'Category ID': self.__category_number,
+            'Name': self.__product_name,
+            'Description': self.__p_characteristics
+            # 'id_product': self.__id_product,
+            # 'category_number': self.__category_number,
+            # 'product_name': self.__product_name,
+            # 'p_characteristics': self.__p_characteristics
         }

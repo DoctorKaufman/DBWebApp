@@ -2,7 +2,7 @@ from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.customer_creation import CustomerCreationDTO
+from app.controllers.dtos.create.customer_creation import CustomerCreationDTO
 from app.model.repository.customer_card import CustomerCardRepository
 from app.services.customer_card_service import CustomerService
 

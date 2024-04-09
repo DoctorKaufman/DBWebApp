@@ -1,8 +1,10 @@
+import json
+
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.product_creation import ProductCreationDTO
+from app.controllers.dtos.create.product_creation import ProductCreationDTO
 from app.model.repository.product import ProductRepository
 from app.services.product_service import ProductService
 
@@ -45,4 +47,4 @@ def get_all_products():
 
 @product.route('/columns', methods=['GET'])
 def get_columns():
-    return product_service.get_product_columns()
+    return json.dumps(product_service.get_product_columns())

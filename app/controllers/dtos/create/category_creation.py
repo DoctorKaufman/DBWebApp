@@ -8,5 +8,5 @@ class CategoryCreationDTO:
 
     @staticmethod
     def deserialize(data):
-        category_name = data.get('category_name')
+        category_name = data.get('Name')
         return CategoryCreationDTO(category_name)
