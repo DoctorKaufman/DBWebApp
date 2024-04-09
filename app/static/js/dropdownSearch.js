@@ -1,30 +1,27 @@
-function dropdownComponent() {
-    return {
+document.addEventListener('alpine:init', () => {
+  // Define the dropdown component
+  Alpine.data('dropdownComponent', (options) => ({
       isOpen: false,
-      search: '',
-      selected: 'Open Dropdown', // Initial text
-      options: [], // Will be populated when component is initialized
-      filteredOptions: [],
-  
-      init() {
-        // Initialize filteredOptions with all options
-        this.filteredOptions = this.options;
+      searchTerm: '',
+      selectedOption: null,
+      options: options,
+      toggleDropdown() {
+        console.log('toggleDropdown');
+          this.isOpen = !this.isOpen;
+          console.log('this.isOpen:', this.isOpen);
       },
-  
-      filterOptions() {
-        this.filteredOptions = this.options.filter((option) =>
-          option.toLowerCase().includes(this.search.toLowerCase())
-        );
-      },
-  
       selectOption(option) {
-        this.selected = option;
-        this.isOpen = false;
+          this.selectedOption = option;
+          this.isOpen = false;
+          this.$dispatch('input', option); // Dispatch an event with the selected option
       },
-    };
-  }
-  
-  document.addEventListener('alpine:init', () => {
-    Alpine.data('dropdownComponent', dropdownComponent);
-  });
-  
+      filteredOptions() {
+          return this.options.filter((option) =>
+              option.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+      },
+      init() {
+          // Initialize the component (if any initial setup is required)
+      }
+  }));
+});
