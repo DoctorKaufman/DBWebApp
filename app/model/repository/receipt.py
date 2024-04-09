@@ -13,6 +13,8 @@ class ReceiptRepository:
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
+    UPDATE_RECEIPT_QUERY = sql.SQL("UPDATE receipt SET id_employee = %s, card_number = %s, print_date = %s, "
+                                   "sum_total = %s, vat = %s WHERE check_number = %s")
     DELETE_RECEIPT_QUERY = sql.SQL("DELETE FROM receipt WHERE check_number = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -84,6 +86,19 @@ class ReceiptRepository:
             return ReceiptDTO(check_number, receipt.id_employee, receipt.card_number, receipt.print_date,
                               receipt.sum_total, receipt.vat)
         return None
+
+    def update_receipt(self, receipt):
+        """
+        Update an existing receipt in the database.
+
+        Parameters:
+            receipt: ReceiptDTO object representing the receipt to update.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(ReceiptRepository.UPDATE_RECEIPT_QUERY,
+                           (receipt.id_employee, receipt.card_number, receipt.print_date,
+                            receipt.sum_total, receipt.vat, receipt.check_number))
+            self.conn.commit()
 
     def delete_receipt(self, check_number):
         """

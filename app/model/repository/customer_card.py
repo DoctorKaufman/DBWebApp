@@ -14,6 +14,9 @@ class CustomerCardRepository:
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
                                          "phone_number, city, street, zip_code, c_percent) "
                                          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING card_number")
+    UPDATE_CUSTOMER_CARD_QUERY = sql.SQL("UPDATE customer_card SET cust_surname = %s, cust_name = %s, "
+                                         "cust_patronymic = %s, phone_number = %s, city = %s, street = %s, "
+                                         "zip_code = %s, c_percent = %s WHERE card_number = %s")
     DELETE_CUSTOMER_CARD_QUERY = sql.SQL("DELETE FROM customer_card WHERE card_number = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -89,6 +92,20 @@ class CustomerCardRepository:
                                    customer_card.cust_patronymic, customer_card.phone_number, customer_card.city,
                                    customer_card.street, customer_card.zip_code, customer_card.c_percent)
         return None
+
+    def update_customer_card(self, customer_card):
+        """
+        Update an existing customer card in the database.
+
+        Parameters:
+            customer_card: CustomerCardDTO object representing the customer card to update.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(CustomerCardRepository.UPDATE_CUSTOMER_CARD_QUERY,
+                           (customer_card.cust_surname, customer_card.cust_name, customer_card.cust_patronymic,
+                            customer_card.phone_number, customer_card.city, customer_card.street,
+                            customer_card.zip_code, customer_card.c_percent, customer_card.card_number))
+            self.conn.commit()
 
     def delete_customer_card(self, card_number):
         """
