@@ -48,9 +48,10 @@ def get_all_categories():
 
 @category.route('/columns', methods=['GET'])
 def get_columns():
-    return json.dumps(category_service.get_category_columns())
+    return json.dumps(category_service.get_category_columns()), 200
 
 
-# @category.route('/names', methods=['GET'])
-# def get_columns():
-#     return category_service.get_category_names()
+@category.route('/droplist', methods=['GET'])
+def get_drop_list():
+    drop_list = category_service.get_drop_list()
+    return json.dumps([c.serialize() for c in drop_list]), 200

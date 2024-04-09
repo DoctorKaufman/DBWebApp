@@ -48,3 +48,9 @@ def get_all_products():
 @product.route('/columns', methods=['GET'])
 def get_columns():
     return json.dumps(product_service.get_product_columns())
+
+
+@product.route('/droplist', methods=['GET'])
+def get_drop_list():
+    drop_list = product_service.get_drop_list()
+    return json.dumps([c.serialize() for c in drop_list]), 200

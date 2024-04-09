@@ -10,3 +10,9 @@ class CategoryDropListPositionDTO:
     @property
     def category_name(self):
         return self.__category_name
+
+    def serialize(self):
+        return {
+            'ID': self.__category_number,
+            'Name': self.__category_name
+        }

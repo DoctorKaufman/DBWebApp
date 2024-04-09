@@ -20,3 +20,6 @@ class StoreProductService:
 
     def get_store_product_columns(self):
         return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())
+
+    def get_drop_list(self):
+        return self.store_product_repository.select_store_products_drop_list()

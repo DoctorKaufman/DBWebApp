@@ -10,3 +10,9 @@ class StoreProductDropListPositionDTO:
     @property
     def product_name(self):
         return self.__product_name
+
+    def serialize(self):
+        return {
+            'UPC': self.__upc,
+            'Name': self.__product_name,
+        }
