@@ -46,6 +46,8 @@ class ProductRepository:
                                          "AND pkuse.constraint_name = tc.constraint_name "
                                          "WHERE cols.table_name = 'product' "
                                          "AND tc.constraint_type = 'PRIMARY KEY'")
+    EXISTS_PRODUCT_QUERY = sql.SQL("SELECT * FROM product "
+                                   "WHERE product_name = %s")
 
     def __init__(self, conn):
         """
@@ -190,3 +192,20 @@ class ProductRepository:
                 return row[0]
             else:
                 return None
+
+    def exists_product(self, product_name):
+        """
+        Check if a product with the given name exists in the database.
+
+        Parameters:
+            product_name: Name of the product to check.
+
+        Returns:
+            True if the product exists, False otherwise.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(ProductRepository.EXISTS_PRODUCT_QUERY, (product_name,))
+            category_number = cursor.fetchone()
+        if category_number:
+            return True
+        return False

@@ -1,4 +1,4 @@
-
+from app.controllers.handler.exceptions import DataDuplicateException
 from app.controllers.mapper.mapper import ProductMapper
 from app.model.dto.product import ProductDTO
 
@@ -14,9 +14,13 @@ class ProductService:
         return self.product_repository.select_all_products(pageable)
 
     def create_product(self, product_creation_dto):
+        if self.product_repository.exists_product(product_creation_dto.product_name):
+            raise DataDuplicateException("Product with such name already exists")
         return self.product_repository.insert_product(product_creation_dto)
 
     def update_product(self, product_dto, id_product):
+        if self.product_repository.exists_product(product_dto.product_name):
+            raise DataDuplicateException("Product with such name already exists")
         product = ProductDTO(id_product, product_dto.category_number, product_dto.product_name,
                              product_dto.p_characteristics)
         self.product_repository.update_product(product)
