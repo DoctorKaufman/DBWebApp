@@ -6,11 +6,13 @@ document.addEventListener('alpine:init', () => {
         // #region initializations
         items: items,
         tableState: null,
+        rawColumns: columns,
         fields: Object.entries(columns).map(([key, value]) => ({ [key]: value })),
 
         init() {
             this.$store.tableState.currentTab = currentTab;
             this.$store.tableState.initializeRows(items);
+            this.$store.tableState.columns = this.rawColumns;
             this.$store.tableState.keyColumn = keyColumn;
 
             this.tableState = this.$store.tableState.globalState;
