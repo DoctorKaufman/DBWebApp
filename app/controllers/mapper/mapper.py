@@ -15,10 +15,6 @@ class CategoryMapper:
         return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
 
     @staticmethod
-    def map_column(column):
-        return CategoryMapper.column_mapping[column]
-
-    @staticmethod
     def map_to_db_column(column):
         keys = [key for key, val in CategoryMapper.column_mapping.items() if val == column]
         return next(iter(keys), 'category_number')

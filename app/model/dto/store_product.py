@@ -36,9 +36,9 @@ class StoreProductDTO:
             'UPC': self.__upc,
             'Price': str(self.__selling_price),
             'Amount': self.__products_number,
-            'UPC_PROM': self.__upc_prom,
-            'ID Product': self.__id_product,
-            'Promotional product': self.__promotional_product
+            'UPC Prom': self.__upc_prom,
+            'Product ID': self.__id_product,
+            'Promotional Product': self.__promotional_product
             # 'upc': self.__upc,
             # 'upc_prom': self.__upc_prom,
             # 'id_product': self.__id_product,

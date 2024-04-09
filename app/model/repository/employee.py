@@ -14,6 +14,10 @@ class EmployeeRepository:
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
                                     "salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) "
                                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_employee")
+    UPDATE_EMPLOYEE_QUERY = sql.SQL("UPDATE employee SET empl_surname = %s, empl_name = %s, empl_patronymic = %s, "
+                                    "empl_role = %s, salary = %s, date_of_birth = %s, date_of_start = %s, "
+                                    "phone_number = %s, city = %s, street = %s, zip_code = %s "
+                                    "WHERE id_employee = %s")
     DELETE_EMPLOYEE_QUERY = sql.SQL("DELETE FROM employee WHERE id_employee = %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -26,6 +30,16 @@ class EmployeeRepository:
                                      "ON pkuse.constraint_schema = tc.constraint_schema "
                                      "AND pkuse.constraint_name = tc.constraint_name "
                                      "WHERE cols.table_name = 'employee'")
+    GET_PRIMARY_KEY_NAME_QUERY = sql.SQL("SELECT cols.column_name FROM information_schema.columns AS cols "
+                                         "JOIN information_schema.key_column_usage AS pkuse "
+                                         "ON cols.table_schema = pkuse.constraint_schema "
+                                         "AND cols.table_name = pkuse.table_name "
+                                         "AND cols.column_name = pkuse.column_name "
+                                         "JOIN information_schema.table_constraints AS tc "
+                                         "ON pkuse.constraint_schema = tc.constraint_schema "
+                                         "AND pkuse.constraint_name = tc.constraint_name "
+                                         "WHERE cols.table_name = 'employee' "
+                                         "AND tc.constraint_type = 'PRIMARY KEY'")
 
     def __init__(self, conn):
         """
@@ -91,6 +105,21 @@ class EmployeeRepository:
                                employee.phone_number, employee.city, employee.street, employee.zip_code)
         return None
 
+    def update_employee(self, employee):
+        """
+        Update an existing employee in the database.
+
+        Parameters:
+            employee: EmployeeDTO object representing the employee to update.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(EmployeeRepository.UPDATE_EMPLOYEE_QUERY,
+                           (employee.empl_surname, employee.empl_name, employee.empl_patronymic,
+                            employee.empl_role, employee.salary, employee.date_of_birth,
+                            employee.date_of_start, employee.phone_number, employee.city,
+                            employee.street, employee.zip_code, employee.id_employee))
+            self.conn.commit()
+
     def delete_employee(self, id_employee):
         """
         Delete an employee from the database.
@@ -121,3 +150,18 @@ class EmployeeRepository:
             cursor.execute(EmployeeRepository.GET_COLUMN_NAMES_QUERY)
             column_info = {row[0]: row[1] for row in cursor.fetchall()}
         return column_info
+
+    def get_primary_key_name(self):
+        """
+        Get the name of the primary key column in the 'employee' table.
+
+        Returns:
+            String representing the name of the primary key column, or None if not found.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(EmployeeRepository.GET_PRIMARY_KEY_NAME_QUERY)
+            row = cursor.fetchone()
+            if row:
+                return row[0]
+            else:
+                return None
