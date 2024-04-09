@@ -5,6 +5,7 @@ from flask import Blueprint, request
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
 from app.controllers.dtos.create.category_creation import CategoryCreationDTO
+from app.controllers.mapper.mapper import CategoryMapper
 from app.model.repository.category import CategoryRepository
 from app.services.category_service import CategoryService
 
@@ -35,15 +36,14 @@ def delete_category(category_id):
 
 @category.route('/<int:category_id>/', methods=['GET'])
 def get_category(category_id):
-    return category_service.get_by_category_number(category_id).serialize(), 200
+    return json.dumps(category_service.get_by_category_number(category_id).serialize()), 200
 
 
 @category.route('/', methods=['GET'])
 def get_all_categories():
     args = request.args
-    pageable = Pageable(args.get('sort', 'category_number', type=str), args.get('order', 'asc', type=str))
-    categories = category_service.get_all_categories(pageable)
-    return [c.serialize() for c in categories], 200
+    categories = category_service.get_all_categories(Pageable.get_pageable(args, CategoryMapper))
+    return json.dumps([c.serialize() for c in categories]), 200
 
 
 @category.route('/columns', methods=['GET'])

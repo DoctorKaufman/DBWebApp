@@ -14,7 +14,7 @@ def goods_in_store():
     user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/store-product/columns')
     data = requests.get('http://127.0.0.1:5000/store-product/')
-    key_column = "upc"
+    key_column = "UPC"
 
     if data.status_code == 200 & columns.status_code == 200:
         items = data.json()
@@ -47,7 +47,7 @@ def goods():
     user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/product/columns')
     data = requests.get('http://127.0.0.1:5000/product/')
-    key_column = "id_product"
+    key_column = "ID"
 
     if data.status_code == 200 & columns.status_code == 200:
         items = data.json()
@@ -77,7 +77,7 @@ def categories():
     user = {'username': 'John Doe'}
     columns = requests.get('http://127.0.0.1:5000/category/columns')
     data = requests.get('http://127.0.0.1:5000/category/')
-    key_column = "category_number"
+    key_column = "ID"
 
     if data.status_code == 200 & columns.status_code == 200:
         items = data.json()

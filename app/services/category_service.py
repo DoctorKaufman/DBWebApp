@@ -1,18 +1,11 @@
-from collections import OrderedDict
-
 from app.controllers.handler.exceptions import DataDuplicateException
+from app.controllers.mapper.mapper import CategoryMapper
 from app.model.dto.category import CategoryDTO
-from app.services.enum.column_type import ColumnType
 
 
 class CategoryService:
     def __init__(self, category_repository):
         self.category_repository = category_repository
-
-        self.column_mapping = {
-            'category_number': 'ID',
-            'category_name': 'Name'
-        }
 
     def get_by_category_number(self, category_number):
         return self.category_repository.select_category(category_number)
@@ -37,9 +30,7 @@ class CategoryService:
         return self.category_repository.delete_category(category_number)
 
     def get_category_columns(self):
-        columns = self.category_repository.get_column_names()
-        prettier_column = ColumnType.map_columns(columns, self.column_mapping)
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        return CategoryMapper.map_columns(self.category_repository.get_column_names())
 
     def get_category_names(self):
         return self.category_repository.get_names()

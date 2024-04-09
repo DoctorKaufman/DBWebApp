@@ -1,3 +1,7 @@
+
+from app.controllers.mapper.mapper import CustomerCardMapper
+
+
 class CustomerService:
     def __init__(self, customer_card_repository):
         self.customer_card_repository = customer_card_repository
@@ -15,4 +19,5 @@ class CustomerService:
         self.customer_card_repository.delete_customer_card(card_number)
 
     def get_customer_columns(self):
-        return self.customer_card_repository.get_column_names()
+        columns = self.customer_card_repository.get_column_names()
+        return CustomerCardMapper.map_columns(columns)
