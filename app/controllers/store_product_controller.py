@@ -47,3 +47,8 @@ def get_columns():
 def get_drop_list():
     drop_list = store_product_service.get_drop_list()
     return json.dumps([c.serialize() for c in drop_list]), 200
+
+
+@store_product.route('/pk', methods=['GET'])
+def get_pk_name():
+    return json.dumps(StoreProductMapper.map_to_front_column(store_product_service.get_pk_name())), 200

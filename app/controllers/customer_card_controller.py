@@ -47,3 +47,8 @@ def get_all_customers():
 @customer.route('/columns', methods=['GET'])
 def get_columns():
     return json.dumps(customer_service.get_customer_columns())
+
+
+@customer.route('/pk', methods=['GET'])
+def get_pk_name():
+    return json.dumps(CustomerCardMapper.map_to_front_column(customer_service.get_pk_name())), 200

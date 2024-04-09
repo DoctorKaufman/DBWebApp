@@ -19,6 +19,10 @@ class CategoryMapper:
         keys = [key for key, val in CategoryMapper.column_mapping.items() if val == column]
         return next(iter(keys), 'category_number')
 
+    @staticmethod
+    def map_to_front_column(column):
+        return CategoryMapper.column_mapping[column]
+
 
 class ProductMapper:
     column_mapping = {
@@ -38,6 +42,10 @@ class ProductMapper:
     def map_to_db_column(column):
         keys = [key for key, val in ProductMapper.column_mapping.items() if val == column]
         return next(iter(keys), 'id_product')
+
+    @staticmethod
+    def map_to_front_column(column):
+        return ProductMapper.column_mapping[column]
 
 
 class CustomerCardMapper:
@@ -63,6 +71,10 @@ class CustomerCardMapper:
         keys = [key for key, val in CustomerCardMapper.column_mapping.items() if val == column]
         return next(iter(keys), 'card_number')
 
+    @staticmethod
+    def map_to_front_column(column):
+        return CustomerCardMapper.column_mapping[column]
+
 
 class StoreProductMapper:
     column_mapping = {
@@ -85,3 +97,7 @@ class StoreProductMapper:
     def map_to_db_column(column):
         keys = [key for key, val in StoreProductMapper.column_mapping.items() if val == column]
         return next(iter(keys), 'upc')
+
+    @staticmethod
+    def map_to_front_column(column):
+        return StoreProductMapper.column_mapping[column]

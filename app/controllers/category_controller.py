@@ -55,3 +55,8 @@ def get_columns():
 def get_drop_list():
     drop_list = category_service.get_drop_list()
     return json.dumps([c.serialize() for c in drop_list]), 200
+
+
+@category.route('/pk', methods=['GET'])
+def get_pk_name():
+    return json.dumps(CategoryMapper.map_to_front_column(category_service.get_pk_name())), 200

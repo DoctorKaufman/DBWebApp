@@ -162,3 +162,4 @@ class CustomerCardRepository:
                 return row[0]
             else:
                 return None
+

@@ -37,3 +37,7 @@ class CategoryService:
 
     def get_drop_list(self):
         return self.category_repository.select_categories_drop_list()
+
+    def get_pk_name(self):
+        return self.category_repository.get_primary_key_name()
+

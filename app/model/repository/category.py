@@ -184,3 +184,4 @@ class CategoryRepository:
                 return row[0]
             else:
                 return None
+

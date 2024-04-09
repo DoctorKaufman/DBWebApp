@@ -209,3 +209,4 @@ class ProductRepository:
         if category_number:
             return True
         return False
+

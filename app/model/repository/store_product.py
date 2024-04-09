@@ -49,7 +49,7 @@ class StoreProductRepository:
                                          "JOIN information_schema.table_constraints AS tc "
                                          "ON pkuse.constraint_schema = tc.constraint_schema "
                                          "AND pkuse.constraint_name = tc.constraint_name "
-                                         "WHERE cols.table_name = 'stor_product' "
+                                         "WHERE cols.table_name = 'store_product' "
                                          "AND tc.constraint_type = 'PRIMARY KEY'")
 
     def __init__(self, conn):
@@ -217,3 +217,4 @@ class StoreProductRepository:
                 return row[0]
             else:
                 return None
+

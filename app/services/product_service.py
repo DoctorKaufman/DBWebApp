@@ -34,3 +34,6 @@ class ProductService:
 
     def get_drop_list(self):
         return self.product_repository.select_products_drop_list()
+
+    def get_pk_name(self):
+        return self.product_repository.get_primary_key_name()

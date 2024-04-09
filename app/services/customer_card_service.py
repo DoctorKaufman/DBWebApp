@@ -21,3 +21,6 @@ class CustomerService:
     def get_customer_columns(self):
         columns = self.customer_card_repository.get_column_names()
         return CustomerCardMapper.map_columns(columns)
+
+    def get_pk_name(self):
+        return self.customer_card_repository.get_primary_key_name()
