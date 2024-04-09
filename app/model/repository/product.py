@@ -3,6 +3,7 @@ from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.product import ProductDTO
 from app.model.dto.product_drop_list_position import ProductDropListPositionDTO
+from app.model.dto.product_extended import ProductExtendedDTO
 
 
 class ProductRepository:
@@ -11,6 +12,12 @@ class ProductRepository:
     """
 
     SELECT_ALL_PRODUCTS_QUERY = sql.SQL("SELECT * FROM product ORDER BY {} {}")
+    SELECT_ALL_PRODUCTS_EXTENDED_QUERY = sql.SQL("SELECT p.id_product, p.category_number, c.category_name,"
+                                                 "p.product_name, p.p_characteristics "
+                                                 "FROM product AS p "
+                                                 "INNER JOIN category AS c "
+                                                 "ON p.category_number = c.category_number "
+                                                 "ORDER BY {} {}")
     SELECT_PRODUCT_DROP_LIST_QUERY = sql.SQL("SELECT id_product, product_name FROM product")
     SELECT_PRODUCT_QUERY = sql.SQL("SELECT * FROM product WHERE id_product = %s")
     INSERT_PRODUCT_QUERY = sql.SQL("INSERT INTO product (category_number, product_name, p_characteristics) "
@@ -60,6 +67,19 @@ class ProductRepository:
             cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_QUERY.format(sql.Identifier(pageable.column),
                                                                               sql.SQL(pageable.order)))
             products = [ProductDTO(*product_data) for product_data in cursor.fetchall()]
+        return tuple(products)
+
+    def select_all_products_extended(self, pageable):
+        """
+        Select all products from the database with additional category_name field.
+
+        Returns:
+            Tuple of ProductExtendedDTO objects representing products.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_EXTENDED_QUERY.format(sql.Identifier(pageable.column),
+                                                                                       sql.SQL(pageable.order)))
+            products = [ProductExtendedDTO(*product_data) for product_data in cursor.fetchall()]
         return tuple(products)
 
     def select_products_drop_list(self):
