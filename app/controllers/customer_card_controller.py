@@ -1,8 +1,11 @@
+import json
+
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.customer_creation import CustomerCreationDTO
+from app.controllers.dtos.create.customer_creation import CustomerCreationDTO
+from app.controllers.mapper.mapper import CustomerCardMapper
 from app.model.repository.customer_card import CustomerCardRepository
 from app.services.customer_card_service import CustomerService
 
@@ -31,17 +34,16 @@ def delete_customer(card_number):
 
 @customer.route('/<int:card_number>/', methods=['GET'])
 def get_customer(card_number):
-    return customer_service.get_customer_card_by_card_number(card_number).serialize(), 200
+    return json.dumps(customer_service.get_customer_card_by_card_number(card_number).serialize()), 200
 
 
 @customer.route('/', methods=['GET'])
 def get_all_customers():
     args = request.args
-    pageable = Pageable(args.get('sort', 'card_number', type=str), args.get('order', 'asc', type=str))
-    customers = customer_service.get_all_customer_cards(pageable)
-    return [c.serialize() for c in customers], 200
+    customers = customer_service.get_all_customer_cards(Pageable.get_pageable(args, CustomerCardMapper))
+    return json.dumps([c.serialize() for c in customers]), 200
 
 
 @customer.route('/columns', methods=['GET'])
 def get_columns():
-    return customer_service.get_customer_columns()
+    return json.dumps(customer_service.get_customer_columns())

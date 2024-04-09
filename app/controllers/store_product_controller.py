@@ -1,8 +1,11 @@
+import json
+
 from flask import Blueprint, request, jsonify
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.store_product_creation import StoreProductCreationDTO
+from app.controllers.dtos.create.store_product_creation import StoreProductCreationDTO
+from app.controllers.mapper.mapper import StoreProductMapper
 from app.model.repository.store_product import StoreProductRepository
 from app.services.store_product_service import StoreProductService
 
@@ -25,17 +28,16 @@ def delete_store_product(upc):
 
 @store_product.route('/<int:upc>', methods=['GET'])
 def get_store_product(upc):
-    return store_product_service.get_store_product_by_upc(upc).serialize(), 200
+    return json.dumps(store_product_service.get_store_product_by_upc(upc).serialize()), 200
 
 
 @store_product.route('/', methods=['GET'])
 def get_all_store_products():
     args = request.args
-    pageable = Pageable(args.get('sort', 'upc', type=str), args.get('order', 'asc', type=str))
-    store_products = store_product_service.get_all_store_products(pageable)
-    return [p.serialize() for p in store_products], 200
+    store_products = store_product_service.get_all_store_products(Pageable.get_pageable(args, StoreProductMapper))
+    return json.dumps([p.serialize() for p in store_products]), 200
 
 
 @store_product.route('/columns', methods=['GET'])
 def get_columns():
-    return store_product_service.get_store_product_columns()
+    return json.dumps(store_product_service.get_store_product_columns())

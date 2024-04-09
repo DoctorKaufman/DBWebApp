@@ -1,3 +1,5 @@
+
+from app.controllers.mapper.mapper import ProductMapper
 from app.model.dto.product import ProductDTO
 
 
@@ -24,4 +26,4 @@ class ProductService:
         self.product_repository.delete_product(product_id)
 
     def get_product_columns(self):
-        return self.product_repository.get_column_names()
+        return ProductMapper.map_columns(self.product_repository.get_column_names())

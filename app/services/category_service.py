@@ -1,4 +1,5 @@
 from app.controllers.handler.exceptions import DataDuplicateException
+from app.controllers.mapper.mapper import CategoryMapper
 from app.model.dto.category import CategoryDTO
 
 
@@ -29,4 +30,7 @@ class CategoryService:
         return self.category_repository.delete_category(category_number)
 
     def get_category_columns(self):
-        return self.category_repository.get_column_names()
+        return CategoryMapper.map_columns(self.category_repository.get_column_names())
+
+    def get_category_names(self):
+        return self.category_repository.get_names()

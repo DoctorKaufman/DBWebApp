@@ -13,6 +13,8 @@ class CategoryDTO:
 
     def serialize(self):
         return {
-            'category_number': self.__category_number,
-            'category_name': self.__category_name
+            'ID': self.__category_number,
+            'Name': self.__category_name
+            # 'category_number': self.__category_number,
+            # 'category_name': self.__category_name
         }

@@ -1,3 +1,6 @@
+from app.controllers.mapper.mapper import StoreProductMapper
+
+
 class StoreProductService:
 
     def __init__(self, store_product_repository):
@@ -16,4 +19,4 @@ class StoreProductService:
         return self.store_product_repository.delete_store_product(upc)
 
     def get_store_product_columns(self):
-        return self.store_product_repository.get_column_names()
+        return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())

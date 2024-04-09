@@ -1,8 +1,11 @@
+import json
+
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
-from app.controllers.dtos.product_creation import ProductCreationDTO
+from app.controllers.dtos.create.product_creation import ProductCreationDTO
+from app.controllers.mapper.mapper import ProductMapper
 from app.model.repository.product import ProductRepository
 from app.services.product_service import ProductService
 
@@ -32,17 +35,16 @@ def delete_product(product_id):
 
 @product.route('/<int:product_id>', methods=["GET"])
 def get_product(product_id):
-    return product_service.get_product_by_id_product(product_id).serialize()
+    return json.dumps(product_service.get_product_by_id_product(product_id).serialize())
 
 
 @product.route('/', methods=['GET'])
 def get_all_products():
     args = request.args
-    pageable = Pageable(args.get('sort', 'id_product', type=str), args.get('order', 'asc', type=str))
-    products = product_service.get_all_products(pageable)
-    return [p.serialize() for p in products], 200
+    products = product_service.get_all_products(Pageable.get_pageable(args, ProductMapper))
+    return json.dumps([p.serialize() for p in products]), 200
 
 
 @product.route('/columns', methods=['GET'])
 def get_columns():
-    return product_service.get_product_columns()
+    return json.dumps(product_service.get_product_columns())

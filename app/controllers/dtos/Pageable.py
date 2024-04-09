@@ -10,4 +10,9 @@ class Pageable:
     @property
     def order(self):
         return self.__order
+
+    @staticmethod
+    def get_pageable(args, mapper):
+        db_column = mapper.map_to_db_column(args.get('sort', 'ID', type=str))
+        return Pageable(db_column, args.get('order', 'asc', type=str))
     
