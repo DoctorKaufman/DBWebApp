@@ -5,14 +5,14 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', (fields) => ({
 
         currentTab: null,
-        fillableFields: null,
+        fillableFields: [],
 
         init() {
             Alpine.store('tableState').globalState = GlobalStates.ADDING;
             this.currentTab = Alpine.store('tableState').currentTab;
             this.fillableFields = fields.reduce((acc, curr) => {
                 const [key, value] = Object.entries(curr)[0];
-                if (value) {
+                if (value === 'ATTRIB') {
                     acc.push(key);
                 }
                 return acc;
@@ -20,42 +20,40 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveCreatedRow() {
-            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
-            let allFilled = true;
-        
-            inputs.forEach(input => {
-                if (input.value.trim() === '') {
-                    allFilled = false;
-                }
+            this.fillableFields.forEach(field => {
+                Alpine.store('tableState').currentElement[field] = document.getElementById(field).value;
             });
+
+            const data = JSON.stringify(Alpine.store('tableState').currentElement);
+            console.log(data);
+
+            let allFilled = true;
+            for (let field in Alpine.store('tableState').currentElement) {
+                if (Alpine.store('tableState').currentElement[field] === '') {
+                    allFilled = false;
+                    break;
+                }
+            }
         
             if (allFilled) {
                 Alpine.store('tableState').globalState = GlobalStates.NONE;
-                this.createRequest();
+                this.createRequest(data);
                 this.selfDelete();
             } else {
                 createToast("error", "Please fill in all fields before saving.");
             }
         },
 
-        createRequest() {
-            let data = {};
-
-            for (let i = 0; i < this.fillableFields.length; i++) {
-                data[this.fillableFields[i]] = document.getElementById(this.fillableFields[i]).value;
-            }
-            console.log(data);
+        createRequest(data) {
             sendRequest('post', this.currentTab, null, data)
                 .then(response => {
-                    // Handle success, e.g., show a success message
                     createToast("success", "Row added successfully");
                     Alpine.store('tableState').refetchData();
-                    // setTimeout(() => window.location.reload(), 800);
                 })
                 .catch(error => {
-                    // Handle error, e.g., showing an error message
                     createToast("error", error);
                 });
+            Alpine.store('tableState').currentElement = {};
         },
 
         cancelCreatingRow() {

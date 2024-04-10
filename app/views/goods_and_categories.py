@@ -14,13 +14,14 @@ def goods_in_store():
     user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/store-product/columns')
     data = requests.get('http://127.0.0.1:5000/store-product/')
-    key_column = "UPC"
+    key_column = requests.get('http://127.0.0.1:5000/store-product/pk')
 
-    if data.status_code == 200 & columns.status_code == 200:
+    if all(response.status_code == 200 for response in [data, columns, key_column]):
         items = data.json()
         items = json.dumps(items)
         columns = columns.json()
         columns_json = json.dumps(columns)
+        key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
                                  columns_json=columns_json, user=user, key_column=key_column)
@@ -35,6 +36,7 @@ def goods_in_store():
             "upc_prom": True
         }
         columns_json = json.dumps(columns)
+        key_column = "UPC"
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
@@ -47,12 +49,13 @@ def goods():
     user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/product/columns')
     data = requests.get('http://127.0.0.1:5000/product/')
-    key_column = "ID"
+    key_column = requests.get('http://127.0.0.1:5000/product/pk')
 
-    if data.status_code == 200 & columns.status_code == 200:
+    if all(response.status_code == 200 for response in [data, columns, key_column]):
         items = data.json()
         columns = columns.json()
         columns_json = json.dumps(columns)
+        key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
                                  columns_json=columns_json, user=user, key_column=key_column)
@@ -65,6 +68,7 @@ def goods():
             "product_name": False
         }
         columns_json = json.dumps(columns)
+        key_column = "ID" 
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
@@ -77,12 +81,13 @@ def categories():
     user = {'username': 'John Doe'}
     columns = requests.get('http://127.0.0.1:5000/category/columns')
     data = requests.get('http://127.0.0.1:5000/category/')
-    key_column = "ID"
+    key_column = requests.get('http://127.0.0.1:5000/category/pk')
 
-    if data.status_code == 200 & columns.status_code == 200:
+    if all(response.status_code == 200 for response in [data, columns, key_column]):
         items = data.json()
         columns = columns.json()
         columns_json = json.dumps(columns)
+        key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
                                  columns_json=columns_json, user=user, key_column=key_column)
@@ -93,6 +98,7 @@ def categories():
             "category_number": False
         }
         columns_json = json.dumps(columns)
+        key_column = "ID"
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
