@@ -38,13 +38,27 @@ document.addEventListener('alpine:init', () => {
             }));
         },
 
-        initializeCurrentElement() {
+        initializeCurrentElement(id = null) {
+            const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
+
             this.fields.forEach(fieldObject => {
                 const fieldName = Object.keys(fieldObject)[0];
                 if (fieldObject[fieldName] !== 'PK') {
-                    this.currentElement[fieldName] = '';
-                }
-            });
+                        if (rowIndex !== -1) {
+                        this.currentElement[fieldName] = this.rowElements[rowIndex][fieldName];
+                        } else {
+                        this.currentElement[fieldName] = '';
+                        }
+                        console.log(this.currentElement[fieldName]);
+                    }
+                });
+
+            // this.fields.forEach(fieldObject => {
+            //     const fieldName = Object.keys(fieldObject)[0];
+            //     if (fieldObject[fieldName] !== 'PK') {
+            //         this.currentElement[fieldName] = this.rowElements[rowIndex][fieldName];
+            //     }
+            // });
             console.log(this.currentElement);
         },
 
@@ -53,7 +67,7 @@ document.addEventListener('alpine:init', () => {
                 createToast("error", `You can't edit another row while in ${this.globalState} mode.`);
             }
             else {
-                this.initializeCurrentElement();
+                this.initializeCurrentElement(id);
                 const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
                 if (rowIndex !== -1) {
                     this.rowElements[rowIndex].editing = newState;

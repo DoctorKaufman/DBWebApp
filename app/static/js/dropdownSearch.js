@@ -40,6 +40,21 @@ document.addEventListener('alpine:init', () => {
             .catch(error => {
                 console.error('GET request to', url, 'failed:', error);
             });
+        
+        if (Alpine.store('tableState').currentElement[columnName] != null){
+          let id = Alpine.store('tableState').currentElement[columnName];
+          url = `http://127.0.0.1:5000${request}${id}`;
+          console.log(url);
+
+          axios.get(url)
+            .then(response => {
+                console.log('GET request to', url, 'successful:', response.data);
+                this.selectedOption = {[id]: response.data[Object.keys(response.data)[1]]};
+            })
+            .catch(error => {
+                console.error('GET request to', url, 'failed:', error);
+            });
+        }
       }
     }));
   });
