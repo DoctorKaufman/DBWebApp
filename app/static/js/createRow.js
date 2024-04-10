@@ -5,27 +5,37 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('createRow', (fields) => ({
 
         currentTab: null,
-        fillableFields: null,
+        fields: fields,
 
         init() {
             Alpine.store('tableState').globalState = GlobalStates.ADDING;
             this.currentTab = Alpine.store('tableState').currentTab;
-            this.fillableFields = fields.reduce((acc, curr) => {
-                const [key, value] = Object.entries(curr)[0];
-                if (value) {
-                    acc.push(key);
-                }
-                return acc;
-            }, []);
+            // this.fillableFields = fields.reduce((acc, curr) => {
+            //     const [key, value] = Object.entries(curr)[0];
+            //     if (value !== 'PK') {
+            //         acc.push(key);
+            //     }
+            //     return acc;
+            // }, []);
         },
 
         saveCreatedRow() {
-            const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
+            // const inputs = document.querySelector('.table-body').querySelectorAll('input[type="text"]');
             let allFilled = true;
-        
-            inputs.forEach(input => {
-                if (input.value.trim() === '') {
-                    allFilled = false;
+
+            this.fields.forEach(fieldObject => {
+                const fieldName = Object.keys(fieldObject)[0];
+
+                if (fieldObject[fieldName] === 'FK') {
+                    const dropdown = document.getElementById(`${fieldName}-creation-dropdown`);
+                    if (dropdown.getAttribute(':id') === null) {
+                        allFilled = false;
+                    }
+                } else if (fieldObject[fieldName] === 'ATTRIB') {
+                    const input = document.getElementById(fieldName);
+                    if (input.value === '') {
+                        allFilled = false;
+                    }
                 }
             });
         
@@ -41,21 +51,31 @@ document.addEventListener('alpine:init', () => {
         createRequest() {
             let data = {};
 
-            for (let i = 0; i < this.fillableFields.length; i++) {
-                data[this.fillableFields[i]] = document.getElementById(this.fillableFields[i]).value;
-            }
-            console.log(data);
-            sendRequest('post', this.currentTab, null, data)
-                .then(response => {
-                    // Handle success, e.g., show a success message
-                    createToast("success", "Row added successfully");
-                    Alpine.store('tableState').refetchData();
-                    // setTimeout(() => window.location.reload(), 800);
-                })
-                .catch(error => {
-                    // Handle error, e.g., showing an error message
-                    createToast("error", error);
-                });
+            this.fields.forEach(fieldObject => {
+                const fieldName = Object.keys(fieldObject)[0];
+
+                if (fieldObject[fieldName] === 'ATTRIB') {
+                    data[fieldName] = document.getElementById(fieldName).value;
+                } else if (fieldObject[fieldName] === 'FK') {
+                    const dropdown = document.getElementById(`${fieldName}-creation-dropdown`);
+                    data[fieldName] = parseInt(dropdown.getAttribute('id'));
+                } else if (fieldObject[fieldName] === 'PK') {
+                // Do nothing
+                }
+            });
+
+            // console.log(data);
+            // sendRequest('post', this.currentTab, null, data)
+            //     .then(response => {
+            //         // Handle success, e.g., show a success message
+            //         createToast("success", "Row added successfully");
+            //         Alpine.store('tableState').refetchData();
+            //         // setTimeout(() => window.location.reload(), 800);
+            //     })
+            //     .catch(error => {
+            //         // Handle error, e.g., showing an error message
+            //         createToast("error", error);
+            //     });
         },
 
         cancelCreatingRow() {
