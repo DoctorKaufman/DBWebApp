@@ -18,13 +18,13 @@ product_service = ProductService(product_repository)
 @product.route('/', methods=['POST'])
 def create_product():
     product_dto = ProductCreationDTO.deserialize(request.get_json())
-    return product_service.create_product(product_dto).serialize(), 201
+    return json.dumps(product_service.create_product(product_dto).serialize()), 201
 
 
 @product.route('/<int:id_product>/', methods=['PUT'])
 def update_product(id_product):
     product_dto = ProductCreationDTO.deserialize(request.get_json())
-    return product_service.update_product(product_dto, id_product).serialize(), 200
+    return json.dumps(product_service.update_product(product_dto, id_product).serialize()), 200
 
 
 @product.route('/<int:product_id>/', methods=['DELETE'])

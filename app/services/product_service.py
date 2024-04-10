@@ -23,6 +23,7 @@ class ProductService:
         if (self.product_name_exists(product_name) and product_name != self.product_repository
                 .select_product(id_product).product_name):
             raise DataDuplicateException("Product with such name already exists")
+
         product = ProductDTO(id_product, product_dto.category_number, product_dto.product_name,
                              product_dto.p_characteristics)
         self.product_repository.update_product(product)

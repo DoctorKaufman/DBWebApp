@@ -18,7 +18,7 @@ customer_service = CustomerService(customer_card_repository)
 @customer.route('/', methods=['POST'])
 def create_customer():
     customer_dto = CustomerCreationDTO.deserialize(request.get_json())
-    return customer_service.create_customer_card(customer_dto).serialize(), 201
+    return json.dumps(customer_service.create_customer_card(customer_dto).serialize()), 201
 
 
 # @customer.route('/<int:card_number>/', methods=['PUT'])

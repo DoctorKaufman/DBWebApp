@@ -1,4 +1,5 @@
 from app.controllers.mapper.mapper import StoreProductMapper
+from app.model.dto.store_product import StoreProductDTO
 
 
 class StoreProductService:
@@ -17,6 +18,13 @@ class StoreProductService:
 
     def delete_store_product(self, upc):
         return self.store_product_repository.delete_store_product(upc)
+
+    def update_store_product(self, upc, store_product_dto):
+        store_product = StoreProductDTO(upc, store_product_dto.upc_prom, store_product_dto.id_product,
+                                        store_product_dto.selling_price, store_product_dto.products_number,
+                                        store_product_dto.promotional_product)
+        self.store_product_repository.update_store_product(store_product)
+        return store_product
 
     def get_store_product_columns(self):
         return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())

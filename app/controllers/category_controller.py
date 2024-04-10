@@ -18,13 +18,13 @@ category_service = CategoryService(category_repository)
 @category.route('/', methods=['POST'])
 def create_category():
     category_dto = CategoryCreationDTO.deserialize(request.get_json())
-    return category_service.create_category(category_dto).serialize(), 201
+    return json.dumps(category_service.create_category(category_dto).serialize()), 201
 
 
 @category.route('/<int:category_number>/', methods=['PUT'])
 def update_category(category_number):
     category_dto = CategoryCreationDTO.deserialize(request.get_json())
-    return category_service.update_category(category_dto, category_number).serialize(), 200
+    return json.dumps(category_service.update_category(category_dto, category_number).serialize()), 200
 
 
 @category.route('/<int:category_id>/', methods=['DELETE'])

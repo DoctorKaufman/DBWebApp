@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable
@@ -18,12 +18,18 @@ store_product_service = StoreProductService(store_product_repository)
 @store_product.route('/', methods=['POST'])
 def create_store_product():
     store_product_dto = StoreProductCreationDTO.deserialize(request.get_json())
-    return store_product_service.create_store_product(store_product_dto), 201
+    return json.dumps(store_product_service.create_store_product(store_product_dto)), 201
+
+
+@store_product.route('/<int:upc>', methods=["PUT"])
+def update_store_product(upc):
+    store_product_dto = StoreProductCreationDTO.deserialize(request.get_json())
+    return json.dumps(store_product_service.update_store_product(upc, store_product_dto).serialize()), 200
 
 
 @store_product.route('/<int:upc>', methods=['DELETE'])
 def delete_store_product(upc):
-    return jsonify(store_product_service.delete_store_product(upc)), 200
+    return json.dumps(store_product_service.delete_store_product(upc)), 200
 
 
 @store_product.route('/<int:upc>', methods=['GET'])

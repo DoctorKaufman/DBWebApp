@@ -43,12 +43,12 @@ class CustomerCreationDTO:
 
     @staticmethod
     def deserialize(data):
-        cust_surname = data['cust_surname']
-        cust_name = data['cust_name']
-        cust_patronymic = data['cust_patronymic']
-        phone_number = data['phone_number']
-        city = data['city']
-        street = data['street']
-        zip_code = data['zip_code']
-        c_percent = float(data['c_percent'])
+        cust_name = data['Name']
+        cust_surname = data['Surname']
+        cust_patronymic = data['Patronymic']
+        phone_number = data['PhoneNum']
+        city = data['City']
+        street = data['Street']
+        zip_code = data['Zip']
+        c_percent = float(data['Percent'])
         return CustomerCreationDTO(cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)
