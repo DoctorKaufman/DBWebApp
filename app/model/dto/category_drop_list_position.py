@@ -13,6 +13,5 @@ class CategoryDropListPositionDTO:
 
     def serialize(self):
         return {
-            'ID': self.__category_number,
-            'Name': self.__category_name
+            self.__category_number: self.__category_name
         }

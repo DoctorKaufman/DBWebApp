@@ -13,6 +13,5 @@ class ProductDropListPositionDTO:
 
     def serialize(self):
         return {
-            'ID': self.__id_product,
-            'Name': self.__product_name
+            self.__id_product: self.__product_name
         }
