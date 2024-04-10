@@ -13,6 +13,7 @@ document.addEventListener('alpine:init', () => {
             this.$store.tableState.currentTab = currentTab;
             this.$store.tableState.initializeRows(items);
             this.$store.tableState.columns = this.rawColumns;
+            this.$store.tableState.fields = this.fields;
             this.$store.tableState.keyColumn = keyColumn;
 
             this.tableState = this.$store.tableState.globalState;
@@ -27,13 +28,6 @@ document.addEventListener('alpine:init', () => {
 
         // #region row creation
         createRowForm() {
-            this.fields.forEach(fieldObject => {
-                const fieldName = Object.keys(fieldObject)[0];
-                if (fieldObject[fieldName] !== 'PK') {
-                    this.$store.tableState.currentElement[fieldName] = '';
-                }
-            });
-            console.log(this.$store.tableState.currentElement);
             
             const table = document.querySelector(".table-body");
             const row = document.createElement("tr"); 

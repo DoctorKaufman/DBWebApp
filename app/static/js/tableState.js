@@ -21,6 +21,7 @@ document.addEventListener('alpine:init', () => {
 
         columns: {},
         keyColumn: null,
+        fields: [],
 
         currentTab: null,
         
@@ -37,11 +38,22 @@ document.addEventListener('alpine:init', () => {
             }));
         },
 
+        initializeCurrentElement() {
+            this.fields.forEach(fieldObject => {
+                const fieldName = Object.keys(fieldObject)[0];
+                if (fieldObject[fieldName] !== 'PK') {
+                    this.currentElement[fieldName] = '';
+                }
+            });
+            console.log(this.currentElement);
+        },
+
         editRow(id, newState) {
             if (this.globalState != GlobalStates.NONE) {
                 createToast("error", `You can't edit another row while in ${this.globalState} mode.`);
             }
             else {
+                this.initializeCurrentElement();
                 const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] === id);
                 if (rowIndex !== -1) {
                     this.rowElements[rowIndex].editing = newState;
@@ -53,16 +65,17 @@ document.addEventListener('alpine:init', () => {
         saveEditedRow(id) {
             const rowIndex = this.rowElements.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
-                let newElement = {};
-                for (let key in this.rowElements[rowIndex]) {
-                    if (key !== this.keyColumn && key !== 'editing') {
-                        newElement[key] = document.getElementById(`${id}-${key}-input`).value;
+                this.fields.forEach(fieldObject => {
+                    const fieldName = Object.keys(fieldObject)[0];
+                    if (fieldObject[fieldName] === 'ATTRIB') {
+                        this.currentElement[fieldName] = document.getElementById(`${id}-${fieldName}-input`).value;
                     }
-                }
-                console.log(newElement);
-                sendRequest('put', this.currentTab, id, newElement)
+                });
+
+                console.log(this.currentElement);
+                let element = this.currentElement;
+                sendRequest('put', this.currentTab, id, this.currentElement)
                     .then(response => {
-                        console.log('Item edited:', response);
                         createToast("success", "Item edited successfully");
                         const scrambleElementsArray = document.querySelector(`[data-key="${id}"]`).querySelectorAll('.text-scramble');
                         let scrambleElements = {};
@@ -71,21 +84,21 @@ document.addEventListener('alpine:init', () => {
                             const key = element.getAttribute('data-key');
                             scrambleElements[key] = element; 
                         });
-                        console.log(scrambleElements);
-                        for (let key in newElement) {
+                        for (let key in element) {
                             const index = this.rowElements[rowIndex][key];
-                            if (index !== newElement[key]) {
-                                this.rowElements[rowIndex][key] =newElement[key];
+                            if (index !== element[key]) {
+                                this.rowElements[rowIndex][key] =element[key];
                                 const scramble = new TextScramble(scrambleElements[key]);
                                 console.log(scrambleElements[key]);
-                                scramble.setText(newElement[key]);
+                                scramble.setText(element[key]);
                             }
                         }
                     })
                     .catch(error => {
                         console.error('Error editing item:', error);
-                        createToast("error", `Error editing item: ${itemId}`);
+                        createToast("error", `Error editing item`);
                     });
+                this.currentElement = {};
                 this.rowElements[rowIndex].editing = false;
                 this.globalState = GlobalStates.NONE;
             }

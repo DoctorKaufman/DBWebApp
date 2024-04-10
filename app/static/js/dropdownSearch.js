@@ -13,9 +13,6 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        // console.log('Column name:', columnName);
-        // console.log('Selected:', Object.keys(option)[0]);
-        // console.log('Current element:', Alpine.store('tableState').currentElement);
         Alpine.store('tableState').currentElement[columnName] = Object.keys(option)[0];
         console.log(Alpine.store('tableState').currentElement);
       },
