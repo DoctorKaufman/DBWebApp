@@ -15,12 +15,16 @@ class CategoryService:
 
     def create_category(self, category_creation_dto):
         # check for duplicate and process
-        if self.category_repository.exists_category(category_creation_dto.category_name):
+        if self.category_name_exists(category_creation_dto.category_name):
             raise DataDuplicateException("Category with such name already exists")
         return self.category_repository.insert_category(category_creation_dto)
 
     def update_category(self, category_dto, category_number):
-        if self.category_repository.exists_category(category_dto.category_name):
+        category_name = category_dto.category_name
+        same_name_as_existing = (self.category_name_exists(category_name) and
+                                 category_name != self.category_repository
+                                 .select_category(category_number).category_name)
+        if same_name_as_existing:
             raise DataDuplicateException("Category with such name already exists")
         updated_category = CategoryDTO(category_number, category_dto.category_name)
         self.category_repository.update_category(updated_category)
@@ -41,3 +45,5 @@ class CategoryService:
     def get_pk_name(self):
         return self.category_repository.get_primary_key_name()
 
+    def category_name_exists(self, category_name):
+        return self.category_repository.exists_category(category_name)

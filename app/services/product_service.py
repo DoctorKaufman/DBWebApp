@@ -14,12 +14,14 @@ class ProductService:
         return self.product_repository.select_all_products(pageable)
 
     def create_product(self, product_creation_dto):
-        if self.product_repository.exists_product(product_creation_dto.product_name):
+        if self.product_name_exists(product_creation_dto.product_name):
             raise DataDuplicateException("Product with such name already exists")
         return self.product_repository.insert_product(product_creation_dto)
 
     def update_product(self, product_dto, id_product):
-        if self.product_repository.exists_product(product_dto.product_name):
+        product_name = product_dto.product_name
+        if (self.product_name_exists(product_name) and product_name != self.product_repository
+                .select_product(id_product).product_name):
             raise DataDuplicateException("Product with such name already exists")
         product = ProductDTO(id_product, product_dto.category_number, product_dto.product_name,
                              product_dto.p_characteristics)
@@ -37,3 +39,6 @@ class ProductService:
 
     def get_pk_name(self):
         return self.product_repository.get_primary_key_name()
+
+    def product_name_exists(self, product_name):
+        return self.product_repository.exists_product(product_name)
