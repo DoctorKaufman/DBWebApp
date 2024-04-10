@@ -17,6 +17,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('tableState', {
 
         rowElements: [],
+        currentElement: {},
 
         columns: {},
         keyColumn: null,

@@ -27,6 +27,14 @@ document.addEventListener('alpine:init', () => {
 
         // #region row creation
         createRowForm() {
+            this.fields.forEach(fieldObject => {
+                const fieldName = Object.keys(fieldObject)[0];
+                if (fieldObject[fieldName] !== 'PK') {
+                    this.$store.tableState.currentElement[fieldName] = '';
+                }
+            });
+            console.log(this.$store.tableState.currentElement);
+            
             const table = document.querySelector(".table-body");
             const row = document.createElement("tr"); 
             row.className = `bg-white border-b dark:bg-gray-800 dark:border-gray-700`; 
