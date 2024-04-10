@@ -21,9 +21,10 @@ def create_customer():
     return json.dumps(customer_service.create_customer_card(customer_dto).serialize()), 201
 
 
-# @customer.route('/<int:card_number>/', methods=['PUT'])
-# def update_customer(card_number):
-#     return ''
+@customer.route('/<int:card_number>/', methods=['PUT'])
+def update_customer(card_number):
+    customer_dto = CustomerCreationDTO.deserialize(request.get_json())
+    return json.dumps(customer_service.update_customer_card(customer_dto, card_number).serialize()), 200
 
 
 @customer.route('/<int:card_number>/', methods=['DELETE'])

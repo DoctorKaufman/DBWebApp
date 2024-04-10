@@ -1,5 +1,6 @@
 
 from app.controllers.mapper.mapper import CustomerCardMapper
+from app.model.dto.customer_card import CustomerCardDTO
 
 
 class CustomerService:
@@ -17,6 +18,13 @@ class CustomerService:
 
     def delete_customer_card(self, card_number):
         self.customer_card_repository.delete_customer_card(card_number)
+
+    def update_customer_card(self, customer_dto, card_number):
+        customer_card = CustomerCardDTO(card_number, customer_dto.cust_surname, customer_dto.cust_name,
+                                        customer_dto.cust_patronymic, customer_dto.phone_number, customer_dto.city,
+                                        customer_dto.street, customer_dto.zip_code, customer_dto.c_percent)
+        self.customer_card_repository.update_customer_card(customer_card)
+        return customer_card
 
     def get_customer_columns(self):
         columns = self.customer_card_repository.get_column_names()
