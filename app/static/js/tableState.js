@@ -78,7 +78,7 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
 
-                console.log(this.currentElement);
+                console.log("Current element sent for edit: "+Object.values(this.currentElement));
                 let element = this.currentElement;
                 sendRequest('put', this.currentTab, id, this.currentElement)
                     .then(response => {

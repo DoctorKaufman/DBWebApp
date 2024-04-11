@@ -1,7 +1,7 @@
 <div x-data="dropdownComponent(key)" class="relative group">
   <button @click="toggleDropdown" :id="`${row.{{key_column}}}-${key}-dropdown-button`" 
   class="inline-flex justify-center w-full h-full text-sm font-medium text-gray-700 
-  bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none
+  bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 
   focus:ring-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 
   dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500">
   <span x-text="selectedOption != null ? Object.values(selectedOption)[0] : 'Select'"></span>
