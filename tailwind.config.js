@@ -37,6 +37,7 @@ export const plugins = [
       },
       '.custom-scrollbar::-webkit-scrollbar-track': {
         background: theme('colors.gray.200'),
+        borderRadius: '50px',
       },
       '.custom-scrollbar::-webkit-scrollbar-thumb': {
         background: theme('colors.gray.400'),
@@ -55,6 +56,14 @@ export const plugins = [
       },
       '.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover': {
         background: theme('colors.gray.400'),
+      },
+
+      '.dotted-line': {
+        // Dotted line configurations
+        height: '2px',
+        backgroundSize: '10px 2px',
+        backgroundRepeat: 'repeat-x',
+        backgroundImage: `radial-gradient(circle, ${theme('colors.gray.500')} 20%, transparent 20%)`,
       },
     });
   }),
