@@ -28,9 +28,9 @@ class StoreProductCreationDTO:
 
     @staticmethod
     def deserialize(data):
-        upc_prom = data.get("UPC_PROM")
-        id_product = data.get("ID Product")
+        upc_prom = data.get("UPC Prom")
+        id_product = data.get("Product ID")
         selling_price = data.get("Price")
         products_number = data.get("Amount")
-        promotional_product = data.get("Promotional product")
+        promotional_product = data.get("Promotional Product")
         return StoreProductCreationDTO(upc_prom, id_product, selling_price, products_number, promotional_product)
