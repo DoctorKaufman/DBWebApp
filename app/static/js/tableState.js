@@ -49,17 +49,9 @@ document.addEventListener('alpine:init', () => {
                         } else {
                         this.currentElement[fieldName] = '';
                         }
-                        console.log(this.currentElement[fieldName]);
                     }
                 });
-
-            // this.fields.forEach(fieldObject => {
-            //     const fieldName = Object.keys(fieldObject)[0];
-            //     if (fieldObject[fieldName] !== 'PK') {
-            //         this.currentElement[fieldName] = this.rowElements[rowIndex][fieldName];
-            //     }
-            // });
-            console.log(this.currentElement);
+            console.log('INITIALIZED ELEMENT: '+this.currentElement);
         },
 
         editRow(id, newState) {
@@ -208,6 +200,22 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error fetching data:', error);
                     createToast("error", "Error fetching data");
                 });
+        },
+
+        smartConvert(input) {
+            if (!isNaN(input)) {
+                // Convert to number if it's a valid number
+                return Number(input);
+            } else if (input.toLowerCase() === "true") {
+                // Convert to boolean true
+                return true;
+            } else if (input.toLowerCase() === "false") {
+                // Convert to boolean false
+                return false;
+            } else {
+                // Return the original string if no conversion is possible
+                return input;
+            }
         },
     });
 
