@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.employee import EmployeeDTO
+from app.model.dto.employee_drop_list_position import EmployeeDropListPositionDTO
 
 
 class EmployeeRepository:
@@ -11,6 +12,7 @@ class EmployeeRepository:
 
     SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee ORDER BY {} {}")
     SELECT_EMPLOYEE_QUERY = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
+    SELECT_EMPLOYEES_DROP_LIST_QUERY = sql.SQL("SELECT id_employee, empl_surname FROM employee")
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
                                     "salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) "
                                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_employee")
@@ -62,6 +64,20 @@ class EmployeeRepository:
                                                                                 sql.SQL(pageable.order)))
             employees = [EmployeeDTO(*employee_data) for employee_data in cursor.fetchall()]
         return tuple(employees)
+
+    def select_employees_drop_list(self):
+        """
+        Select all employees from the database to form drop list
+
+        Returns:
+            Tuple of EmployeeDropListPositionDTO objects representing products
+            drop list positions.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(EmployeeRepository.SELECT_EMPLOYEES_DROP_LIST_QUERY)
+            employee = [EmployeeDropListPositionDTO(employee_data[0], employee_data[1]) for employee_data in
+                        cursor.fetchall()]
+        return tuple(employee)
 
     def select_employee(self, id_employee):
         """
