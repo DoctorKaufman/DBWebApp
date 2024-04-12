@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.customer_card import CustomerCardDTO
+from app.model.dto.customer_card_drop_list_position import CustomerCardDropListPositionDTO
 
 
 class CustomerCardRepository:
@@ -11,6 +12,7 @@ class CustomerCardRepository:
 
     SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card ORDER BY {} {}")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
+    SELECT_CUSTOMER_CARDS_DROP_LIST_QUERY = sql.SQL("SELECT card_number, cust_surname FROM customer_card")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
                                          "phone_number, city, street, zip_code, c_percent) "
                                          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING card_number")
@@ -53,6 +55,9 @@ class CustomerCardRepository:
         """
         Select all customer cards from the database.
 
+        Parameters:
+            pageable: Pageable class object containing parameters for ordering.
+
         Returns:
             Tuple of CustomerCardDTO objects representing customer cards.
         """
@@ -78,6 +83,20 @@ class CustomerCardRepository:
         if customer_card_data:
             return CustomerCardDTO(*customer_card_data)
         return None
+
+    def select_employees_drop_list(self):
+        """
+        Select all customer cards from the database to form drop list
+
+        Returns:
+            Tuple of CustomerCardDropListPositionDTO objects representing products
+            drop list positions.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(CustomerCardRepository.SELECT_CUSTOMER_CARDS_DROP_LIST_QUERY)
+            employee = [CustomerCardDropListPositionDTO(employee_data[0], employee_data[1]) for employee_data in
+                        cursor.fetchall()]
+        return tuple(employee)
 
     def insert_customer_card(self, customer_card):
         """
