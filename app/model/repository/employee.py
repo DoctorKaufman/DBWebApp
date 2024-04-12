@@ -56,6 +56,9 @@ class EmployeeRepository:
         """
         Select all employees from the database.
 
+        Parameters:
+            pageable: Pageable class object containing parameters for ordering.
+
         Returns:
             Tuple of EmployeeDTO objects representing employees.
         """

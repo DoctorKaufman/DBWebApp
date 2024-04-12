@@ -53,6 +53,9 @@ class CategoryRepository:
         """
         Select all categories from the database.
 
+        Parameters:
+            pageable: Pageable class object containing parameters for ordering.
+
         Returns:
             Tuple of CategoryDTO objects representing categories.
         """

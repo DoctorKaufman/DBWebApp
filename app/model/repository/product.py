@@ -62,6 +62,9 @@ class ProductRepository:
         """
         Select all products from the database.
 
+        Parameters:
+            pageable: Pageable class object containing parameters for ordering.
+
         Returns:
             Tuple of ProductDTO objects representing products.
         """
