@@ -17,35 +17,24 @@
           <p class="text-gray-600 dark:text-gray-200 text-xs">Date: 30.03.24</p>
           <p class="text-gray-600 dark:text-gray-200 text-xs">Order Number: 0000000001</p>
         </div>
-        <hr class="my-4">
+        <hr class="mt-4">
         <div class="dark:text-gray-200">
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-base">Potatoes</span><span class="text-base font-medium">$2.69</span>
-          </div>
-          <div class="mb-4 flex justify-between items-center">
-            <span>*Quantity:</span><span class="">2 kg</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-base">Gauda cheese (200 g)</span><span class="text-base font-medium">$2.50</span>
-          </div>
-          <div class="mb-4 flex justify-between items-center">
-            <span>*Quantity:</span><span class="">1</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-base">Chicken wings</span><span class="text-base font-medium">$4.40</span>
-          </div>
-          <div class="mb-4 flex justify-between items-center">
-            <span>*Quantity:</span><span class="">700 g</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-base">Milk "Yahotynske"</span><span
-              class="text-base font-medium">$3.00</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span>*Quantity:</span><span class="">3</span>
-          </div>
+          <ul class="h-52 pr-1.5 overflow-y-scroll custom-scrollbar space-y-3 my-4">
+            {% for i in range(5) %}
+            <li>
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-base">Potatoes</span>
+                <span class="text-base font-medium">$2.69</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span>*Quantity:</span>
+                <span>2 kg</span>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
           
-          <hr class="my-4">
+          <hr class="mb-4">
 
           <div class="flex justify-between items-center">
             <span>Promotion reduction:</span><span class="">-$0.00</span>
