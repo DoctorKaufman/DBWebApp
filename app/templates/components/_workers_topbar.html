@@ -21,14 +21,10 @@
     <div class="flex flex-col my-4 mx-8">
         <div class="flex flex-row">
             <div class="text-xl w-3/4 dark:text-gray-300">
-                Our workers
-                <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                    Meet the heart and soul of our supermarket—our dedicated team of employees and workers. 
-                    Each member brings their passion for service and a wealth of expertise, 
-                    ensuring your shopping experience is nothing short of exceptional. Committed to excellence, 
-                    they embody our values of quality, integrity, and community. 
-                </p>
-                <div class="py-5 bg-white dark:bg-gray-800">
+                <span x-text="activeTab === 'workers' ? 'Our workers' : 'Our clients'"></span>
+                <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" x-html="activeTab === 'workers' ? 'The variety and fullness of our categories cater to every taste and need. From organic fruits and vegetables to artisanal cheeses, from gluten-free products to international delicacies, our range is meticulously curated to cater to every palate and dietary requirement.' : 'Our supermarket offers a wide range of products. Explore our selection, where the finest goods are curated with care, ensuring that every choice is a step towards unparalleled culinary experiences. Discover the difference with us, where quality isn\'t just a promise—it\'s our guarantee.'"></p>
+
+                <div class="flex py-5 bg-white dark:bg-gray-800 justify-center">
                     {% include 'components/_search_input_by_category.html' %}
                 </div>
             </div>

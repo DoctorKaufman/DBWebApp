@@ -28,7 +28,7 @@ def workers():
 
 @staff_and_clients.route('/customers')
 def clients():
-    clients = [
+    workers = [
         {
             "name": f"Customer {i}",
             "card number": generate_unique_id(),
@@ -39,4 +39,4 @@ def clients():
     ]
     active_tab = 'clients'
     user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', clients=clients, active_tab=active_tab, user=user)
+    return render_template('pages/staff_and_clients.html', workers=workers, active_tab=active_tab, user=user)
