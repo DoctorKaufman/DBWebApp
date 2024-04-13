@@ -4,6 +4,7 @@ document.addEventListener('alpine:init', () => {
       searchTerm: '',
       selectedOption: null,
       options: [],
+      correspondingAttributeName: null,
       toggleDropdown() {
         this.isOpen = !this.isOpen;
       },
@@ -12,7 +13,8 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        Alpine.store('tableState').currentElement[columnName] = Object.keys(option)[0];
+        Alpine.store('tableState').currentElement[this.correspondingAttributeName] = Object.keys(option)[0];
+        Alpine.store('tableState').currentElement[columnName] = Object.values(option)[0];
         console.log(Alpine.store('tableState').currentElement);
       },
       filteredOptions() {
@@ -25,10 +27,12 @@ document.addEventListener('alpine:init', () => {
         let request = ''
         if (columnName == "Category"){
             request = '/category/'
+            this.correspondingAttributeName = 'Category ID';
         } else if (columnName == "UPC Prom"){
             request = '/store-product/'
-        } else if (columnName == "Product ID"){
+        } else if (columnName == "Product Name"){
             request = '/product/'
+            this.correspondingAttributeName = 'Product ID';
         }
         let url = `http://127.0.0.1:5000${request}droplist`;
         axios.get(url)

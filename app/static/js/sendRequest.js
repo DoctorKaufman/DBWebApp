@@ -27,7 +27,7 @@ export async function sendRequest({
 
     let url = new URL(`${baseUrl}${endpoint}`);
 
-    if (action.toLowerCase() === 'delete' && id !== null) {
+    if (['put', 'delete'].includes(action.toLowerCase()) && id !== null){
         url.pathname += id;
     } else {
         if (sortBy) {

@@ -5,6 +5,7 @@ class ColumnType(Enum):
     PK = auto()  # Primary Key
     FK = auto()  # Foreign Key
     ATTRIB = auto()  # Attribute
+    HIDDEN = auto()  # Hidden
 
     def serialize(self):
         """Serialize the Enum value to a string."""

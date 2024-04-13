@@ -27,11 +27,11 @@ document.addEventListener('alpine:init', () => {
             searchColumn: null,
             searchValue: null,
         },
+        sortState: {},
 
         currentTab: null,
         
         globalState: GlobalStates.NONE,
-        sortState: {},
 
         selectedItems: [],
         selectAll: false,
@@ -83,8 +83,8 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
 
-                console.log("Current element sent for edit: "+Object.values(this.currentElement));
                 let element = this.currentElement;
+                console.log('Saving edited row:', element);
                 sendRequest({
                     action: 'put',
                     currentPage: this.currentTab, 
@@ -101,6 +101,8 @@ document.addEventListener('alpine:init', () => {
                             scrambleElements[key] = element; 
                         });
                         for (let key in element) {
+                            if (this.columns[key] === 'HIDDEN') 
+                                continue;
                             const index = this.rowElements[rowIndex][key];
                             if (index !== element[key]) {
                                 this.rowElements[rowIndex][key] =element[key];
