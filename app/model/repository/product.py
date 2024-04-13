@@ -196,6 +196,17 @@ class ProductRepository:
             column_info = {row[0]: row[1] for row in cursor.fetchall()}
         return column_info
 
+    def get_column_names_extended(self):
+        """
+        Get column names of the extended select query in the database.
+
+        Returns:
+            Dictionary where keys are column names and values indicate if the column is a primary key.
+        """
+        column_info = self.get_column_names()
+        column_info['category_name'] = False
+        return column_info
+
     def get_primary_key_name(self):
         """
         Get the name of the primary key column in the 'product' table.
