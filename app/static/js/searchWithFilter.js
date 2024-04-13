@@ -1,12 +1,14 @@
 import { createToast, removeToast } from './toastNotifications.js';
+import { sendRequest } from "./sendRequest.js";
 
 document.addEventListener('alpine:init', () => {
-    Alpine.data('searchWithFilter', () => ({
+    Alpine.data('searchWithFilter', (currentPage) => ({
         showDropdown: false,
         searchTerm: '',
         mapper: 'Search by',
         selectedOption: null,
         options: ['Name', 'Category'],
+
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
         },
@@ -23,14 +25,20 @@ document.addEventListener('alpine:init', () => {
             const baseUrl = "http://127.0.0.1:5000"; // You'll need to replace this with your actual base URL
             const dropdownValue = encodeURIComponent(this.selectedOption);
             const textSearchValue = encodeURIComponent(this.searchTerm);
-            const url = `${baseUrl}/product?sort=ID&order=desc&search-column=${dropdownValue}&search-value=${textSearchValue}`;
 
-            console.log('Search URL:', url);
-            axios.get(url)
+            Alpine.store('tableState').currentFilters.searchColumn = dropdownValue;
+            Alpine.store('tableState').currentFilters.searchValue = textSearchValue;
+
+            sendRequest({
+                action: 'get',
+                currentPage: currentPage,
+                searchColumn: dropdownValue,
+                searchValue: textSearchValue
+            })
                 .then(response => {
-                    console.log('Search successful:', response.data);
+                    console.log('Search successful:', response);
                     createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
-                    Alpine.store('tableState').initializeRows(response.data);
+                    Alpine.store('tableState').initializeRows(response);
                 })
                 .catch(error => {
                     console.error('Search error:', error);

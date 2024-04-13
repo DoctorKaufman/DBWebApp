@@ -1,6 +1,3 @@
-import { sendRequest } from './sendRequest.js';
-import { createToast, removeToast } from './toastNotifications.js';
-
 document.addEventListener('alpine:init', () => {
     Alpine.data('tableInteractions', (currentTab, items, columns, keyColumn) => ({
         // #region initializations
@@ -15,6 +12,10 @@ document.addEventListener('alpine:init', () => {
             this.$store.tableState.columns = this.rawColumns;
             this.$store.tableState.fields = this.fields;
             this.$store.tableState.keyColumn = keyColumn;
+            this.$store.currentFilters = {
+                searchColumn: null,
+                searchValue: null,
+            },
 
             this.tableState = this.$store.tableState.globalState;
 
