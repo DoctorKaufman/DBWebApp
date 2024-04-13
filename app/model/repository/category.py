@@ -12,7 +12,7 @@ class CategoryRepository:
 
     SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {} {}")
     SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM category "
-                                    "WHERE SIMILARITY({0}, %s) > 0.4 "
+                                    "WHERE SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
     SELECT_CATEGORY_DROP_LIST_QUERY = sql.SQL("SELECT category_number, category_name FROM category")
     SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
