@@ -12,6 +12,9 @@ class StoreProductRepository:
     """
 
     SELECT_ALL_STORE_PRODUCTS_QUERY = sql.SQL("SELECT * FROM store_product ORDER BY {} {}")
+    FULL_TEXT_SEARCH_QUERY = sql.SQL("SELECT * FROM store_product "
+                                     "WHERE to_tsvector('english', {}) @@ to_tsquery('english', %s) "
+                                     "ORDER BY {} {}")
     SELECT_ALL_STORE_PRODUCTS_EXTENDED_QUERY = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
                                                        "sp.selling_price, sp.products_number, sp.promotional_product "
                                                        "FROM store_product AS sp "
@@ -66,15 +69,24 @@ class StoreProductRepository:
         Select all store products from the database.
 
         Parameters:
-            pageable: Pageable class object containing parameters for ordering.
+            pageable: Pageable class object containing parameters for ordering,
+                      as well as parameters for full-text search.
 
         Returns:
             Tuple of StoreProductDTO objects representing store products.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(
-                StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_QUERY.format(sql.Identifier(pageable.column),
-                                                                              sql.SQL(pageable.order)))
+            if pageable.search_column and pageable.search_value:
+                query = StoreProductRepository.FULL_TEXT_SEARCH_QUERY.format(
+                    sql.Identifier(pageable.search_column),
+                    sql.Identifier(pageable.column),
+                    sql.SQL(pageable.order)
+                )
+                cursor.execute(query, (pageable.search_value,))
+            else:
+                cursor.execute(
+                    StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_QUERY.format(sql.Identifier(pageable.column),
+                                                                                  sql.SQL(pageable.order)))
             store_products = []
             for store_product_data in cursor.fetchall():
                 store_products.append(StoreProductDTO(store_product_data[0], store_product_data[1],
@@ -85,6 +97,9 @@ class StoreProductRepository:
     def select_all_store_products_extended(self, pageable):
         """
         Select all store products from the database with additional 'product_name' field.
+
+        Parameters:
+            pageable: Pageable class object containing parameters for ordering.
 
         Returns:
             Tuple of StoreProductExtendedDTO objects representing store products.
