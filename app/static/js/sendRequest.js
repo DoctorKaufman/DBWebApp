@@ -1,9 +1,16 @@
-export async function sendRequest(action, currentPage, id = null, data = null, sortBy = null, sortOrder = null) {
-    // Base URL for the API
+export async function sendRequest({
+    action,
+    currentPage,
+    id = null,
+    data = null,
+    sortBy = null,
+    sortOrder = null,
+    searchColumn = null,
+    searchValue = null
+} = {}) {
     const baseUrl = 'http://127.0.0.1:5000';
+    let endpoint;
 
-    // Determine the endpoint based on the currentPage
-    let endpoint = '';
     switch (currentPage) {
         case 'categories':
             endpoint = '/category/';
@@ -15,40 +22,39 @@ export async function sendRequest(action, currentPage, id = null, data = null, s
             endpoint = '/store-product/';
             break;
         default:
-            console.error('Unknown currentPage:', currentPage);
-            return Promise.reject(new Error('Unknown currentPage'));
+            throw new Error(`Unknown currentPage: ${currentPage}`);
     }
 
-    // Construct the URL
-    let url = `${baseUrl}${endpoint}`;
-    if (['delete', 'put'].includes(action.toLowerCase()) && id !== null) {
-        url += `${id}`; // For DELETE and PUT, append id to the URL
-    } else if (sortBy) {
-        url += `?sort=${sortBy}&order=${sortOrder}`; // Append sorting query parameter if sort is provided
-    }
-    console.log('URL:', url);
+    let url = new URL(`${baseUrl}${endpoint}`);
 
-    // Configure the request options
+    if (action.toLowerCase() === 'delete' && id !== null) {
+        url.pathname += id;
+    } else {
+        if (sortBy) {
+            url.searchParams.append('sort', sortBy);
+            url.searchParams.append('order', sortOrder ?? 'asc');
+        }
+        if (searchColumn && searchValue) {
+            url.searchParams.append('search-column', searchColumn);
+            url.searchParams.append('search-value', searchValue);
+        }
+    }
+
+    console.log('URL:', url.href);
+
     const options = {
         method: action,
-        url: url,
+        url: url.href,
+        headers: { 'Content-Type': 'application/json' },
+        ...(data && { data })
     };
 
-    // For methods other than DELETE that require data, include it in the request
-    if (['post', 'put', 'patch'].includes(action.toLowerCase()) && data) {
-        options.data = data;
-        // Axios POST, PUT, PATCH requests expect 'data' field, not 'body'
-        options.headers = { 'Content-Type': 'application/json' };
+    try {
+        const response = await axios(options);
+        console.log(`${action.toUpperCase()} request to ${url.href} successful:`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`${action.toUpperCase()} request to ${url.href} failed:`, error);
+        throw error;
     }
-
-    // Perform the request using axios
-    return axios(options)
-        .then(response => {
-            console.log(`${action.toUpperCase()} request to ${url} successful:`, response.data);
-            return response.data; // Resolve the promise with response data
-        })
-        .catch(error => {
-            console.error(`${action.toUpperCase()} request to ${url} failed:`, error);
-            throw error; // Reject the promise with the error
-        });
 }

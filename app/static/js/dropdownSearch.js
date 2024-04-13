@@ -1,5 +1,4 @@
 document.addEventListener('alpine:init', () => {
-    // Define the dropdown component
     Alpine.data('dropdownComponent', (columnName) => ({
       isOpen: false,
       searchTerm: '',
