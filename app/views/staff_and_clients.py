@@ -10,7 +10,7 @@ staff_and_clients = Blueprint('staff_and_clients', __name__)
 def workers():
     active_tab = 'workers'
     positions = ["Manager", "Cashier", "Cleaner", "Consultant", "Security"]
-    workers = [
+    people = [
         {
             "name": f"Worker {i}",
             "id": generate_unique_id(),
@@ -23,12 +23,12 @@ def workers():
         } for i in range(1, 13)
     ]
     user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, workers=workers, user=user)
+    return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, people=people, user=user)
 
 
 @staff_and_clients.route('/customers')
 def clients():
-    workers = [
+    people = [
         {
             "name": f"Customer {i}",
             "card number": generate_unique_id(),
@@ -39,4 +39,4 @@ def clients():
     ]
     active_tab = 'clients'
     user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', workers=workers, active_tab=active_tab, user=user)
+    return render_template('pages/staff_and_clients.html', people=people, active_tab=active_tab, user=user)
