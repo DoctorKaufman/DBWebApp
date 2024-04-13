@@ -45,7 +45,11 @@ document.addEventListener('alpine:init', () => {
         },
 
         createRequest(data) {
-            sendRequest('post', this.currentTab, null, data)
+            sendRequest({
+                action: 'post',
+                currentPage: this.currentTab,
+                data: data
+            })
                 .then(response => {
                     createToast("success", "Row added successfully");
                     Alpine.store('tableState').refetchData();

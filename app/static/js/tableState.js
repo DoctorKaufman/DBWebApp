@@ -23,6 +23,11 @@ document.addEventListener('alpine:init', () => {
         keyColumn: null,
         fields: [],
 
+        currentFilters: {
+            searchColumn: null,
+            searchValue: null,
+        },
+
         currentTab: null,
         
         globalState: GlobalStates.NONE,
@@ -80,7 +85,12 @@ document.addEventListener('alpine:init', () => {
 
                 console.log("Current element sent for edit: "+Object.values(this.currentElement));
                 let element = this.currentElement;
-                sendRequest('put', this.currentTab, id, this.currentElement)
+                sendRequest({
+                    action: 'put',
+                    currentPage: this.currentTab, 
+                    id: id, 
+                    data: this.currentElement
+                })
                     .then(response => {
                         createToast("success", "Item edited successfully");
                         const scrambleElementsArray = document.querySelector(`[data-key="${id}"]`).querySelectorAll('.text-scramble');
@@ -132,11 +142,14 @@ document.addEventListener('alpine:init', () => {
             const items = this.selectedItems;
             console.log('Removing items:', items);
             items.forEach(async itemId => {
-                await sendRequest('delete', this.currentTab, itemId, null)
+                sendRequest({
+                    action: 'delete', 
+                    currentPage: this.currentTab, 
+                    id: itemId, 
+                })
                     .then(response => {
                         console.log('Item deleted:', response);
                         createToast("success", "Item deleted successfully");
-                        // this.handleSuccessfullDeletion(itemId);  is it necessary??
                         this.refetchData();
                     })
                     .catch(error => {
@@ -190,7 +203,14 @@ document.addEventListener('alpine:init', () => {
             // Update the sortState with the new sortOrder
             this.sortState[sortBy] = sortOrder;
 
-            sendRequest('get', this.currentTab, null, null, sortBy, sortOrder)
+            sendRequest({
+                action: 'get', 
+                currentPage: this.currentTab, 
+                sortBy: sortBy, 
+                sortOrder: sortOrder,
+                searchColumn: this.currentFilters.searchColumn,
+                searchValue: this.currentFilters.searchValue
+            })
                 .then(response => {
                     console.log('Data fetched:', response);
                     this.initializeRows(response);
