@@ -217,7 +217,7 @@ class StoreProductRepository:
             Dictionary where keys are column names and values indicate if the column is a primary key.
         """
         column_info = self.get_column_names()
-        column_info['product_name'] = False
+        column_info['product_name'] = True
         return column_info
 
     def get_primary_key_name(self):
