@@ -11,6 +11,9 @@ class CategoryRepository:
     """
 
     SELECT_ALL_CATEGORIES_QUERY = sql.SQL("SELECT * FROM category ORDER BY {} {}")
+    SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM category "
+                                    "WHERE SIMILARITY({0}, %s) > 0.2 "
+                                    "ORDER BY {1} {2}")
     SELECT_CATEGORY_DROP_LIST_QUERY = sql.SQL("SELECT category_number, category_name FROM category")
     SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
@@ -54,14 +57,26 @@ class CategoryRepository:
         Select all categories from the database.
 
         Parameters:
-            pageable: Pageable class object containing parameters for ordering.
+            pageable: Pageable class object containing parameters for ordering and search.
 
         Returns:
             Tuple of CategoryDTO objects representing categories.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(CategoryRepository.SELECT_ALL_CATEGORIES_QUERY.format(sql.Identifier(pageable.column),
-                                                                                 sql.SQL(pageable.order)))
+            if pageable.search_column and pageable.search_value:
+                search_query = self.SEARCH_QUERY_TEMPLATE.format(
+                    sql.Identifier(pageable.search_column),
+                    sql.Identifier(pageable.column),
+                    sql.SQL(pageable.order)
+                )
+                cursor.execute(search_query, (pageable.search_value,))
+            else:
+                cursor.execute(
+                    CategoryRepository.SELECT_ALL_CATEGORIES_QUERY.format(
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order))
+                )
+
             categories = [CategoryDTO(category_data[0], category_data[1]) for category_data in cursor.fetchall()]
         return tuple(categories)
 

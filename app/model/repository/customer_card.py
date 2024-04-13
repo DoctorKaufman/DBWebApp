@@ -11,6 +11,9 @@ class CustomerCardRepository:
     """
 
     SELECT_ALL_CUSTOMER_CARDS_QUERY = sql.SQL("SELECT * FROM customer_card ORDER BY {} {}")
+    SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM customer_card "
+                                    "WHERE SIMILARITY({0}, %s) > 0.2 "
+                                    "ORDER BY {1} {2}")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
     SELECT_CUSTOMER_CARDS_DROP_LIST_QUERY = sql.SQL("SELECT card_number, cust_surname FROM customer_card")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
@@ -56,14 +59,26 @@ class CustomerCardRepository:
         Select all customer cards from the database.
 
         Parameters:
-            pageable: Pageable class object containing parameters for ordering.
+            pageable: Pageable class object containing parameters for ordering and search.
 
         Returns:
             Tuple of CustomerCardDTO objects representing customer cards.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(CustomerCardRepository.SELECT_ALL_CUSTOMER_CARDS_QUERY.format(sql.Identifier(pageable.column),
-                                                                                         sql.SQL(pageable.order)))
+            if pageable.search_column and pageable.search_value:
+                search_query = self.SEARCH_QUERY_TEMPLATE.format(
+                    sql.Identifier(pageable.search_column),
+                    sql.Identifier(pageable.column),
+                    sql.SQL(pageable.order)
+                )
+                cursor.execute(search_query, (pageable.search_value,))
+            else:
+                cursor.execute(
+                    CustomerCardRepository.SELECT_ALL_CUSTOMER_CARDS_QUERY.format(
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order))
+                )
+
             customer_cards = [CustomerCardDTO(*customer_card_data) for customer_card_data in cursor.fetchall()]
         return tuple(customer_cards)
 
