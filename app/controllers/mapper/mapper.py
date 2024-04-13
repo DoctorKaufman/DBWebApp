@@ -36,7 +36,7 @@ class ProductMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, ProductMapper.column_mapping)
-        prettier_column['Category ID'] = ColumnType.FK.serialize()
+        prettier_column['Category ID'] = ColumnType.HIDDEN.serialize()
         prettier_column['Category'] = ColumnType.FK.serialize()
         return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
 
@@ -93,7 +93,7 @@ class StoreProductMapper:
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, StoreProductMapper.column_mapping)
         prettier_column['UPC Prom'] = ColumnType.FK.serialize()
-        prettier_column['Product ID'] = ColumnType.FK.serialize()
+        prettier_column['Product ID'] = ColumnType.HIDDEN.serialize()
         prettier_column['Product Name'] = ColumnType.FK.serialize()
         return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
 

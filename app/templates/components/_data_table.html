@@ -24,6 +24,7 @@
 
             {% for header in columns.keys() %}
             
+            {% if columns[header] != 'HIDDEN' %}
             <th scope="col" class="px-6 py-3">
                 <div class="flex items-center">
                     {{ header|capitalize }}
@@ -32,6 +33,7 @@
                     </svg></a>
                 </div>
             </th>
+            {% endif %}
 
             {% endfor %}
             
@@ -57,7 +59,7 @@
                 </td>
 
                 <template x-for="[key, value] in Object.entries(row)" :key="key">
-                    <template x-if="key !== 'editing'">
+                    <template x-if="key !== 'editing' && rawColumns[key] !== 'HIDDEN'">
                         <td class="px-6 py-4">
                             <span x-show="!row.editing" x-text="value" class="text-scramble" :data-key="key"></span>
                             <template x-if="rawColumns[key] === 'PK' && row.editing">
