@@ -11,6 +11,9 @@ class EmployeeRepository:
     """
 
     SELECT_ALL_EMPLOYEES_QUERY = sql.SQL("SELECT * FROM employee ORDER BY {} {}")
+    SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM employee WHERE "
+                                    "SIMILARITY({0}, %s) > 0.2 "
+                                    "ORDER BY {1} {2}")
     SELECT_EMPLOYEE_QUERY = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
     SELECT_EMPLOYEES_DROP_LIST_QUERY = sql.SQL("SELECT id_employee, empl_surname FROM employee")
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
@@ -57,14 +60,26 @@ class EmployeeRepository:
         Select all employees from the database.
 
         Parameters:
-            pageable: Pageable class object containing parameters for ordering.
+            pageable: Pageable class object containing parameters for ordering and search.
 
         Returns:
             Tuple of EmployeeDTO objects representing employees.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(EmployeeRepository.SELECT_ALL_EMPLOYEES_QUERY.format(sql.Identifier(pageable.column),
-                                                                                sql.SQL(pageable.order)))
+            if pageable.search_column and pageable.search_value:
+                search_query = self.SEARCH_QUERY_TEMPLATE.format(
+                    sql.Identifier(pageable.search_column),
+                    sql.Identifier(pageable.column),
+                    sql.SQL(pageable.order)
+                )
+                cursor.execute(search_query, (pageable.search_value,))
+            else:
+                cursor.execute(
+                    EmployeeRepository.SELECT_ALL_EMPLOYEES_QUERY.format(
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order))
+                )
+
             employees = [EmployeeDTO(*employee_data) for employee_data in cursor.fetchall()]
         return tuple(employees)
 
