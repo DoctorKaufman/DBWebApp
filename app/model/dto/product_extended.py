@@ -25,3 +25,12 @@ class ProductExtendedDTO:
     @property
     def p_characteristics(self):
         return self.__p_characteristics
+
+    def serialize(self):
+        return {
+            'ID': self.__id_product,
+            'Name': self.__product_name,
+            'Category': self.__category_name,
+            'Category ID': self.__category_number,
+            'Description': self.__p_characteristics
+        }

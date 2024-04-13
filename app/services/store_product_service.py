@@ -11,7 +11,8 @@ class StoreProductService:
         return self.store_product_repository.select_store_product(upc)
 
     def get_all_store_products(self, pageable):
-        return self.store_product_repository.select_all_store_products(pageable)
+        # return self.store_product_repository.select_all_store_products(pageable)
+        return self.store_product_repository.select_all_store_products_extended(pageable)
 
     def create_store_product(self, store_product_dto):
         return self.store_product_repository.insert_store_product(store_product_dto)
@@ -27,7 +28,8 @@ class StoreProductService:
         return store_product
 
     def get_store_product_columns(self):
-        return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())
+        # return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())
+        return StoreProductMapper.map_columns(self.store_product_repository.get_column_names_extended())
 
     def get_drop_list(self):
         return self.store_product_repository.select_store_products_drop_list()

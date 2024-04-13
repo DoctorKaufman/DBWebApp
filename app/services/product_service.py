@@ -8,10 +8,12 @@ class ProductService:
         self.product_repository = product_repository
 
     def get_product_by_id_product(self, id_product):
+        # return self.product_repository.select_product(id_product)
         return self.product_repository.select_product(id_product)
 
     def get_all_products(self, pageable):
-        return self.product_repository.select_all_products(pageable)
+        # return self.product_repository.select_all_products(pageable)
+        return self.product_repository.select_all_products_extended(pageable)
 
     def create_product(self, product_creation_dto):
         if self.product_name_exists(product_creation_dto.product_name):
@@ -33,7 +35,8 @@ class ProductService:
         self.product_repository.delete_product(product_id)
 
     def get_product_columns(self):
-        return ProductMapper.map_columns(self.product_repository.get_column_names())
+        # return ProductMapper.map_columns(self.product_repository.get_column_names())
+        return ProductMapper.map_columns(self.product_repository.get_column_names_extended())
 
     def get_drop_list(self):
         return self.product_repository.select_products_drop_list()
