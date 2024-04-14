@@ -15,6 +15,13 @@ class ProductRepository:
     SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM product "
                                     "WHERE SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
+    SEARCH_QUERY_TEMPLATE_EXT = sql.SQL("SELECT p.id_product, p.category_number, c.category_name,"
+                                                 "p.product_name, p.p_characteristics "
+                                                 "FROM product AS p "
+                                                 "INNER JOIN category AS c "
+                                                 "ON p.category_number = c.category_number "
+                                                 "WHERE SIMILARITY({0}, %s) > 0.2 "
+                                                 "ORDER BY {1} {2}")
     SELECT_ALL_PRODUCTS_EXTENDED_QUERY = sql.SQL("SELECT p.id_product, p.category_number, c.category_name,"
                                                  "p.product_name, p.p_characteristics "
                                                  "FROM product AS p "
@@ -97,8 +104,20 @@ class ProductRepository:
             Tuple of ProductExtendedDTO objects representing products.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_EXTENDED_QUERY.format(sql.Identifier(pageable.column),
-                                                                                       sql.SQL(pageable.order)))
+            if pageable.search_column and pageable.search_value:
+                search_query = self.SEARCH_QUERY_TEMPLATE_EXT.format(
+                    sql.Identifier(pageable.search_column),
+                    sql.Identifier(pageable.column),
+                    sql.SQL(pageable.order)
+                )
+                cursor.execute(search_query, (pageable.search_value,))
+            else:
+                cursor.execute(
+                    ProductRepository.SELECT_ALL_PRODUCTS_EXTENDED_QUERY.format(sql.Identifier(pageable.column),
+                                                                                sql.SQL(pageable.order)))
+
+            # cursor.execute(ProductRepository.SELECT_ALL_PRODUCTS_EXTENDED_QUERY.format(sql.Identifier(pageable.column),
+            #                                                                            sql.SQL(pageable.order)))
             products = [ProductExtendedDTO(*product_data) for product_data in cursor.fetchall()]
         return tuple(products)
 
