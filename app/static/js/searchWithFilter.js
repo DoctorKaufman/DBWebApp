@@ -18,8 +18,8 @@ document.addEventListener('alpine:init', () => {
             this.showDropdown = false;
         },
         search() {
-            if (!this.selectedOption || !this.searchTerm) {
-                alert('Please select a search option and enter a search term.');
+            if (!this.selectedOption) {
+                createToast('error', 'Please select a search option.');
                 return;
             }
             const baseUrl = "http://127.0.0.1:5000"; // You'll need to replace this with your actual base URL
