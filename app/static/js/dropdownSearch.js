@@ -13,7 +13,7 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        Alpine.store('tableState').currentElement[this.correspondingAttributeName] = Object.keys(option)[0];
+        Alpine.store('tableState').currentElement[this.correspondingAttributeName] = Number(Object.keys(option)[0]);
         Alpine.store('tableState').currentElement[columnName] = Object.values(option)[0];
         console.log(Alpine.store('tableState').currentElement);
       },
