@@ -3,8 +3,8 @@ import json
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
+from app.controllers.dtos.create.employee_creation import EmployeeCreationDTO
 from app.controllers.dtos.login import LoginDTO
-from app.controllers.dtos.registration import RegistrationDTO
 from app.model.repository.employee import EmployeeRepository
 from app.model.repository.employee_account import EmployeeAccountRepository
 from app.services.auth_service import AuthService
@@ -27,6 +27,9 @@ def login():
 
 @auth.route('/register', methods=['POST'])
 def register():
-    registration_data = RegistrationDTO.deserialize(request.get_json())
-    authenticated = auth_service.authenticate(registration_data)
+    employee_data = EmployeeCreationDTO.deserialize(request.get_json())
+    login_data = LoginDTO.deserialize(request.get_json())
+    authenticated = auth_service.register_user(employee_data, login_data)
+    return authenticated.serialize(), 201
+
 

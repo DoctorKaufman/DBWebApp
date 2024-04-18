@@ -1,7 +1,10 @@
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from app.controllers.dtos.create.employee_account_creation import EmployeeAccountCreation
 from app.model.dto.authorised_user import AuthorisedUserDTO
+from app.model.dto.employee import EmployeeDTO
+from app.model.dto.employee_account import EmployeeAccountDTO
 
 
 class AuthService:
@@ -19,8 +22,14 @@ class AuthService:
         return AuthorisedUserDTO(employee.id_employee, f'{employee.empl_name} {employee.empl_surname}',
                                  employee.empl_role)
 
-    # def register_user(self, login_data):
-    #     employee = self.auth_repository.get_employee_account_by_login(login_data.login)
-    #     if employee is not None
-    #         return None
-    #
+    def register_user(self, register_data, login_data):
+        employee = self.auth_repository.get_employee_account_by_login(login_data.login)
+        if employee is not None:
+            return None
+        # employee dto
+        db_employee = self.employee_repository.insert_employee(register_data)
+        account = EmployeeAccountCreation(login_data.login, generate_password_hash(login_data.password),
+                                          db_employee.id_employee)
+        self.auth_repository.insert_employee_account(account)
+        session["user_id"] = db_employee.id_employee
+        return db_employee
