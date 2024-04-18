@@ -16,9 +16,9 @@ class AuthService:
         employee = self.auth_repository.get_employee_account_by_login(login_data.login)
         if employee is None or not check_password_hash(employee.password_hash, login_data.password):
             return None
-        session["user_id"] = employee.id_employee
-        session["user"] = employee
         employee = self.employee_repository.select_employee(employee.id_employee)
+        session["user_id"] = employee.id_employee
+        session["user"] = employee.serialize()
         return AuthorisedUserDTO(employee.id_employee, f'{employee.empl_name} {employee.empl_surname}',
                                  employee.empl_role)
 
