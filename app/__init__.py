@@ -1,5 +1,6 @@
 from flask import Flask
-# from flask_cors import CORS
+from flask_cors import CORS
+from flask_session import Session
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.controllers.handler.exceptions import DataDuplicateException
@@ -13,7 +14,11 @@ API_URL = '/static/swagger.json'  # Our API url (can of course be a local resour
 def create_app(config_filename=None):
     app = Flask(__name__, instance_relative_config=True)
     
-    # CORS(app)
+    CORS(app)
+
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
 
     # Load configuration from 'config.py' file or parameter
     if config_filename is not None:
@@ -38,6 +43,7 @@ def create_app(config_filename=None):
     from app.controllers.customer_card_controller import customer
     from app.controllers.check_controller import check
     from app.controllers.store_product_controller import store_product
+    from app.controllers.authentication_controller import auth
 
     app.register_blueprint(employee)
     app.register_blueprint(category)
@@ -45,6 +51,7 @@ def create_app(config_filename=None):
     app.register_blueprint(customer)
     app.register_blueprint(check)
     app.register_blueprint(store_product)
+    app.register_blueprint(auth)
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
