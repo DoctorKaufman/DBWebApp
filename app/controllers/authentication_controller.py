@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.create.employee_creation import EmployeeCreationDTO
@@ -33,3 +33,7 @@ def register():
     return authenticated.serialize(), 201
 
 
+@auth.route('/logout')
+def logout():
+    session.clear()
+    return ""
