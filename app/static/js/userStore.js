@@ -8,7 +8,7 @@ document.addEventListener('alpine:init', () => {
 
     window.Roles = Roles;
 
-    Alpine.store('tableState', {
+    Alpine.store('userStore', {
         currentUser : null,
         currentRole : Roles.NONE,
     });

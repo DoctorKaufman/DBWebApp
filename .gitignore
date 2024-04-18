@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .idea
+flask_session/
 
 # C extensions
 *.so
