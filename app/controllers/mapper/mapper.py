@@ -105,3 +105,39 @@ class StoreProductMapper:
     @staticmethod
     def map_to_front_column(column):
         return StoreProductMapper.column_mapping[column]
+
+
+class EmployeeMapper:
+    column_mapping = {
+        'id_employee': 'ID',
+        'empl_name': 'Name',
+        'empl_surname': 'Surname',
+        'empl_patronymic': 'Patronymic',
+        'empl_role': 'Role',
+        'salary': 'Salary',
+        'date_of_birth': 'Birth Date',
+        'date_of_start': 'Start Date',
+        'phone_number': 'Phone Number',
+        'city': 'City',
+        'street': 'Street',
+        'zip_code': 'Zip',
+        'login': 'Login',
+        'password': 'Password',
+    }
+
+    @staticmethod
+    def map_columns(columns):
+        prettier_column = ColumnType.map_columns(columns, EmployeeMapper.column_mapping)
+        # prettier_column['UPC Prom'] = ColumnType.FK.serialize()
+        # prettier_column['Product ID'] = ColumnType.HIDDEN.serialize()
+        # prettier_column['Product Name'] = ColumnType.FK.serialize()
+        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+
+    @staticmethod
+    def map_to_db_column(column):
+        keys = [key for key, val in EmployeeMapper.column_mapping.items() if val == column]
+        return next(iter(keys), 'upc')
+
+    @staticmethod
+    def map_to_front_column(column):
+        return StoreProductMapper.column_mapping[column]
