@@ -51,6 +51,8 @@ def create_app(config_filename=None):
     app.register_blueprint(staff_and_clients_blueprint, url_prefix='/staff-and-clients')
     app.register_blueprint(receipts)
 
+    app.context_processor(inject_user)
+
     swaggerui_blueprint = get_swaggerui_blueprint(
         SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
         API_URL,
@@ -73,3 +75,7 @@ def create_app(config_filename=None):
 
     app.errorhandler(DataDuplicateException)(handle_data_duplicate_exception)
     return app
+
+def inject_user():
+    user = ""
+    return dict(user=user)

@@ -18,5 +18,4 @@ def checks():
         } for i in range(1, 5)
     ]
     active_tab = 'receipts'
-    user = {'username': 'John Doe'} 
-    return render_template('pages/receipts.html', receipts=receipts, active_tab=active_tab, user=user)
+    return render_template('pages/receipts.html', receipts=receipts, active_tab=active_tab)

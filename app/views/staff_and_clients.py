@@ -22,8 +22,7 @@ def workers():
             "address": f"City, Street, {random.randint(1, 100)}",
         } for i in range(1, 13)
     ]
-    user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, people=people, user=user)
+    return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, people=people)
 
 
 @staff_and_clients.route('/customers')
@@ -38,5 +37,4 @@ def clients():
         } for i in range(1, 21)
     ]
     active_tab = 'clients'
-    user = {'username': 'John Doe'} 
-    return render_template('pages/staff_and_clients.html', people=people, active_tab=active_tab, user=user)
+    return render_template('pages/staff_and_clients.html', people=people, active_tab=active_tab)
