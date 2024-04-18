@@ -3,13 +3,17 @@ import { createToast, removeToast } from './toastNotifications.js';
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('navbar', (user) => ({
-        user: user,
-        notSignedIn: user == undefined,
-        isManager: user?.position === 'manager',
+        signedIn: user !== undefined,
+        user: null,
         init() {
-            console.log(this.user);
-            console.log(this.notSignedIn);
-            console.log(this.isManager);
+            if (this.signedIn) {
+                this.user = user;
+                Alpine.store('userStore').currentUser = user;
+                
+                user.position === 'manager' ? 
+                Alpine.store('userStore').currentRole = Roles.MANAGER : 
+                Alpine.store('userStore').currentRole = Roles.CASHIER;
+            }
         },
     }));
 });

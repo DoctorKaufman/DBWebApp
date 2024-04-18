@@ -77,5 +77,5 @@ def create_app(config_filename=None):
     return app
 
 def inject_user():
-    user = ""
+    user = ''
     return dict(user=user)
