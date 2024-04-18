@@ -128,9 +128,6 @@ class EmployeeMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, EmployeeMapper.column_mapping)
-        # prettier_column['UPC Prom'] = ColumnType.FK.serialize()
-        # prettier_column['Product ID'] = ColumnType.HIDDEN.serialize()
-        # prettier_column['Product Name'] = ColumnType.FK.serialize()
         return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
 
     @staticmethod
@@ -140,4 +137,4 @@ class EmployeeMapper:
 
     @staticmethod
     def map_to_front_column(column):
-        return StoreProductMapper.column_mapping[column]
+        return EmployeeMapper.column_mapping[column]
