@@ -10,3 +10,6 @@ class EmployeeService:
 
     def get_employee_columns(self):
         return EmployeeMapper.map_columns(self.employee_repository.get_column_names())
+
+    def get_pk_name(self):
+        return self.employee_repository.get_primary_key_name()
