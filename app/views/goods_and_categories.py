@@ -11,7 +11,6 @@ goods_and_categories = Blueprint('goods_and_categories', __name__)
 @goods_and_categories.route('/goods-in-store')
 def goods_in_store():
     active_tab = 'goods_in_store'
-    user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/store-product/columns')
     data = requests.get('http://127.0.0.1:5000/store-product/')
     key_column = requests.get('http://127.0.0.1:5000/store-product/pk')
@@ -24,7 +23,7 @@ def goods_in_store():
         key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
-                                 columns_json=columns_json, user=user, key_column=key_column)
+                                 columns_json=columns_json, key_column=key_column)
     else:
         items = []
         columns = {
@@ -40,13 +39,12 @@ def goods_in_store():
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
-                               columns_json=columns_json, user=user, error_message=error_message)
+                               columns_json=columns_json, error_message=error_message)
 
 
 @goods_and_categories.route('/goods')
 def goods():
     active_tab = 'goods'
-    user = {'username': 'John Doe'} 
     columns = requests.get('http://127.0.0.1:5000/product/columns')
     data = requests.get('http://127.0.0.1:5000/product/')
     key_column = requests.get('http://127.0.0.1:5000/product/pk')
@@ -58,7 +56,7 @@ def goods():
         key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
-                                 columns_json=columns_json, user=user, key_column=key_column)
+                                 columns_json=columns_json, key_column=key_column)
     else:
         items = []
         columns = {
@@ -72,13 +70,12 @@ def goods():
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
-                               columns_json=columns_json, user=user, error_message=error_message)
+                               columns_json=columns_json, error_message=error_message)
 
 
 @goods_and_categories.route('/categories')
 def categories():
     active_tab = 'categories'
-    user = {'username': 'John Doe'}
     columns = requests.get('http://127.0.0.1:5000/category/columns')
     data = requests.get('http://127.0.0.1:5000/category/')
     key_column = requests.get('http://127.0.0.1:5000/category/pk')
@@ -90,7 +87,7 @@ def categories():
         key_column = key_column.json()
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns,
-                                 columns_json=columns_json, user=user, key_column=key_column)
+                                 columns_json=columns_json, key_column=key_column)
     else:
         items = []
         columns = {
@@ -102,4 +99,4 @@ def categories():
         error_message = "Failed to fetch categories"
         return render_template('pages/goods_and_categories.html',
                                active_tab=active_tab, items=items, columns=columns, key_column=key_column, 
-                               columns_json=columns_json, user=user, error_message=error_message)
+                               columns_json=columns_json, error_message=error_message)

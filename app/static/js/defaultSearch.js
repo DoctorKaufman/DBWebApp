@@ -6,7 +6,6 @@ document.addEventListener('alpine:init', () => {
 
         searchTerm: '',
         search() {
-            const baseUrl = "http://127.0.0.1:5000"; // Replace with actual base URL
             const textSearchValue = encodeURIComponent(this.searchTerm);
             
             // Assuming 'Name' is always the search column

@@ -5,9 +5,11 @@ document.addEventListener('alpine:init', () => {
       selectedOption: null,
       options: [],
       correspondingAttributeName: null,
+
       toggleDropdown() {
         this.isOpen = !this.isOpen;
       },
+
       selectOption(option) {
         this.selectedOption = option;
         this.isOpen = false;
@@ -17,12 +19,14 @@ document.addEventListener('alpine:init', () => {
         Alpine.store('tableState').currentElement[columnName] = Object.values(option)[0];
         console.log(Alpine.store('tableState').currentElement);
       },
+
       filteredOptions() {
         if (!this.options) return [];
         return this.options.filter((option) =>
           Object.values(option)[0].toLowerCase().includes(this.searchTerm.toLowerCase())
         );
       },
+      
       init() {
         let request = ''
         if (columnName == "Category"){
