@@ -155,7 +155,7 @@ class StoreProductRepository:
             self.conn.commit()
         cursor.close()
         if upc:
-            return StoreProductDTO(upc, store_product.UPC_prom, store_product.id_product,
+            return StoreProductDTO(upc, store_product.upc_prom, store_product.id_product,
                                    store_product.selling_price, store_product.products_number,
                                    store_product.promotional_product)
         return None
