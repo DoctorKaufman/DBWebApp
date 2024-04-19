@@ -151,12 +151,11 @@ class StoreProductRepository:
             cursor.execute(StoreProductRepository.INSERT_STORE_PRODUCT_QUERY,
                            (store_product.upc_prom, store_product.id_product, store_product.selling_price,
                             store_product.products_number, store_product.promotional_product))
-            # store_product_data = cursor.fetchone()
             upc = cursor.fetchone()[0]
             self.conn.commit()
         cursor.close()
         if upc:
-            return StoreProductDTO(upc[0], store_product.UPC_prom, store_product.id_product,
+            return StoreProductDTO(upc, store_product.UPC_prom, store_product.id_product,
                                    store_product.selling_price, store_product.products_number,
                                    store_product.promotional_product)
         return None
