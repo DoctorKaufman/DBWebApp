@@ -1,10 +1,59 @@
-<div class="flex flex-row">
-    <div class="text-xl w-3/4">
+<div class="flex flex-row" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
+    <div class="text-xl w-3/4" :class="{ 'flex content-center justify-center flex-col w-full text-center': user.Role !== 'Manager' }">
         
         <span x-text="activeTab === 'categories' ? 'Our categories' : 'Our products'"></span>
-        <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" x-html="activeTab === 'categories' ? 'The variety and fullness of our categories cater to every taste and need. From organic fruits and vegetables to artisanal cheeses, from gluten-free products to international delicacies, our range is meticulously curated to cater to every palate and dietary requirement.' : 'Our supermarket offers a wide range of products. Explore our selection, where the finest goods are curated with care, ensuring that every choice is a step towards unparalleled culinary experiences. Discover the difference with us, where quality isn\'t just a promise—it\'s our guarantee.'"></p>
+        
+        <template x-if="activeTab === 'goods_in_store' && user.Role !== 'Manager'">
+            <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                At 'Zlagoda', we take immense pride in offering the finest selection 
+                of products on the market, ensuring that every item on our shelves represents 
+                the pinnacle of quality and freshness. Our partnerships with local farmers and 
+                producers mean that our produce, meats, and dairy are delivered to our stores 
+                with astonishing speed, keeping them as fresh as the day they were harvested 
+                or made. We guarantee the longevity of our fresh goods without the use of 
+                chemicals, relying instead on natural preservation methods and innovative, 
+                eco-friendly technologies. Shop with us and experience the difference of 
+                truly premium products that set new standards for taste and health.
+            </p>
+        </template>
+        <template x-if="activeTab === 'goods_in_store' && user.Role === 'Manager'">
+            <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                At our supermarket, we proudly offer the highest quality products on the market,
+                sourced directly from local farms and artisans. Our rapid delivery system ensures 
+                that all items remain fresh and vibrant, reaching our shelves faster than ever—with 
+                no chemical preservatives. Experience the freshness and exceptional taste of our 
+                naturally preserved goods when you shop with us. This is the main reason we 
+                are the go-to destination for discerning shoppers who demand the best.
+            </p>
+        </template>
+        <template x-if="activeTab === 'goods' && user.Role !== 'Manager'">
+            <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                This is the supermarket, where we're dedicated to bringing you top-quality products
+                at unbeatable prices. Each item on our shelves is carefully selected to ensure 
+                excellence, whether it's fresh produce, gourmet cheeses, or pantry staples. 
+                We leverage strong relationships with suppliers to keep our costs low, 
+                passing the savings directly to you. Shop with us and discover the perfect 
+                blend of quality and affordability that only we can offer.
+            </p>
+        </template>
+        <template x-if="activeTab === 'goods' && user.Role === 'Manager'">
+            <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                Our supermarket offers a wide range of products. Explore our selection, 
+                where the finest goods are curated with care, ensuring that every choice 
+                is a step towards unparalleled culinary experiences. Discover the difference 
+                with us, where quality isn't just a promise—it's our guarantee.
+            </p>
+        </template>
+        <template x-if="activeTab === 'categories'">
+            <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                The variety and fullness of our categories cater to every taste and need. 
+                From organic fruits and vegetables to artisanal cheeses, from gluten-free 
+                products to international delicacies, our range is meticulously curated to 
+                cater to every palate and dietary requirement.
+            </p>
+        </template>
 
-        <div class="py-5 bg-white dark:bg-gray-800">
+        <div x-show="activeTab !=='goods_in_store'" class="py-5 bg-white dark:bg-gray-800" :class="{ 'flex justify-center': user.Role !== 'Manager' }">
             {% if (active_tab == 'categories')%}
                 {% include 'components/_default_search_input.html' %}
             {% elif (active_tab == 'goods') %}
@@ -12,7 +61,7 @@
             {% endif %}
         </div>
     </div>
-    <div x-show="tableState != GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center items-center">
+    <div x-show="tableState != GlobalStates.SELECTING && user.Role === 'Manager'" class="w-1/4 flex flex-col justify-center items-center">
             <button
                 :id="activeTab === 'categories' ? 'addCategory' : 'addProduct'"
                 @click="createRowForm()"
