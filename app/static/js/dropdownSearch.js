@@ -15,8 +15,8 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        Alpine.store('tableState').currentElement[this.correspondingAttributeName] = Number(Object.keys(option)[0]);
         Alpine.store('tableState').currentElement[columnName] = Object.values(option)[0];
+        Alpine.store('tableState').currentElement[this.correspondingAttributeName] = Number(Object.keys(option)[0]);
         console.log(Alpine.store('tableState').currentElement);
       },
 
@@ -34,6 +34,7 @@ document.addEventListener('alpine:init', () => {
             this.correspondingAttributeName = 'Category ID';
         } else if (columnName == "UPC Prom"){
             request = '/store-product/'
+            this.correspondingAttributeName = 'UPC Prom';
         } else if (columnName == "Product Name"){
             request = '/product/'
             this.correspondingAttributeName = 'Product ID';

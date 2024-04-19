@@ -104,11 +104,12 @@ document.addEventListener('alpine:init', () => {
                             if (this.columns[key] === 'HIDDEN') 
                                 continue;
                             const index = this.rowElements[rowIndex][key];
-                            if (index !== element[key]) {
-                                this.rowElements[rowIndex][key] =element[key];
+                            if (String(index) != String(element[key])) {
+                                this.rowElements[rowIndex][key] = element[key];
                                 const scramble = new TextScramble(scrambleElements[key]);
-                                console.log(scrambleElements[key]);
-                                scramble.setText(element[key]);
+                                console.log("Current ELEMENT:", scrambleElements[key]);
+                                console.log("Current NEW VALUE:", String(element[key]));
+                                scramble.setText(String(element[key]));
                             }
                         }
                     })
