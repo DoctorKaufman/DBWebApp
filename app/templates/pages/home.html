@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="absolute flex h-screen top-0 bottom-0 left-0 right-0 flex-col overflow-hidden">
+<div x-data="homePage()" class="absolute flex h-screen top-0 bottom-0 left-0 right-0 flex-col overflow-hidden">
         
         <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-clip blur-3xl sm:-top-80" aria-hidden="true">
             <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr

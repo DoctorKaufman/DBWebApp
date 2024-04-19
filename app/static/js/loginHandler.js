@@ -6,11 +6,19 @@ document.addEventListener('alpine:init', () => {
 
         user: null,
 
+        init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('logged_out') === 'true') {
+                createToast('success', 'You have been logged out');
+            }
+        },
+
         loginRequest() {
             const baseUrl = window.location.origin;
-            console.log(baseUrl);
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
+
+
 
             const data = {
                 "login": login,
@@ -26,13 +34,19 @@ document.addEventListener('alpine:init', () => {
                 data.position === 'manager' ? 
                 Alpine.store('userStore').currentRole = Roles.MANAGER : 
                 Alpine.store('userStore').currentRole = Roles.CASHIER;
-                // window.location.href = `${baseUrl}/`;
-                createToast('success', `Login successful. Welcome, ${data.username}!`);
+                window.location.href = `${baseUrl}/?logged_in=true&username=${data.username}`;
+
+                // const value = `; ${response.cookie}`;
+                // const parts = value.split(`; user=`);
+                // if (parts.length === 2) {
+                //     console.log(parts.pop().split(';').shift());
+                // }
             })
             .catch(error => {
                 console.error('Request failed:', error);
                 createToast('error', 'Invalid credentials');
             });
         },
+
     }));
 });
