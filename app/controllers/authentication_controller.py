@@ -1,6 +1,8 @@
 import json
 
-from flask import Blueprint, request, session
+import flask
+from flask import Blueprint, request, session, jsonify, make_response
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.create.employee_creation import EmployeeCreationDTO
@@ -21,7 +23,17 @@ def login():
     login_data = LoginDTO.deserialize(request.get_json())
     authenticated = auth_service.authenticate(login_data)
     if authenticated is not None:
-        return authenticated.serialize(), 200
+        access_token = create_access_token(identity=authenticated.id)
+        refresh_token = create_refresh_token(identity=authenticated.id)
+
+        response = make_response()
+        set_access_cookies(response, access_token)
+        set_refresh_cookies(response, refresh_token)
+        # response.set_cookie('user', str(authenticated.serialize()))
+        response.set_cookie('id', 'abc')
+        response.set_cookie('user123', authenticated.username)
+        response.set_cookie('role', authenticated.position)
+        return response, 200
     return "", 401
 
 

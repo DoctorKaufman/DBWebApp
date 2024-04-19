@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.controllers.dtos.create.employee_account_creation import EmployeeAccountCreation
 from app.model.dto.authorised_user import AuthorisedUserDTO
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
 from app.model.dto.employee import EmployeeDTO
 from app.model.dto.employee_account import EmployeeAccountDTO
 
@@ -17,8 +18,8 @@ class AuthService:
         if employee is None or not check_password_hash(employee.password_hash, login_data.password):
             return None
         employee = self.employee_repository.select_employee(employee.id_employee)
-        session["user_id"] = employee.id_employee
-        session["user"] = employee.serialize()
+        # session["user_id"] = employee.id_employee
+        # session["user"] = employee.serialize()
         return AuthorisedUserDTO(employee.id_employee, f'{employee.empl_name} {employee.empl_surname}',
                                  employee.empl_role)
 

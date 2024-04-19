@@ -1,5 +1,7 @@
+import jwt
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from flask_session import Session
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -13,12 +15,15 @@ API_URL = '/static/swagger.json'  # Our API url (can of course be a local resour
 
 def create_app(config_filename=None):
     app = Flask(__name__, instance_relative_config=True)
-    
+    jwt = JWTManager()
+
     CORS(app)
 
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
-    Session(app)
+    jwt.init_app(app)
+    # Session(app)
+
 
     # Load configuration from 'config.py' file or parameter
     if config_filename is not None:
