@@ -1,3 +1,5 @@
+import json
+import requests
 from app.views.main import generate_phone_number, generate_unique_id, generate_unique_upc
 from flask import Blueprint, render_template
 import random
@@ -10,31 +12,52 @@ staff_and_clients = Blueprint('staff_and_clients', __name__)
 def workers():
     active_tab = 'workers'
     positions = ["Manager", "Cashier", "Cleaner", "Consultant", "Security"]
-    people = [
-        {
-            "name": f"Worker {i}",
-            "id": generate_unique_id(),
-            "position": random.choice(["Manager", "Cashier", "Cleaner", "Consultant", "Security"]),
-            "salary": f"${random.uniform(500, 900):.0f}",
-            "employment_date": f"2021-{random.randint(10, 12)}-{random.randint(10, 28)}",
-            "birth_date": f"{random.randint(1980, 2005)}-{random.randint(10, 12)}-{random.randint(10, 28)}",
-            "phone_number": generate_phone_number(),
-            "address": f"City, Street, {random.randint(1, 100)}",
-        } for i in range(1, 13)
-    ]
-    return render_template('pages/staff_and_clients.html', active_tab=active_tab, positions=positions, people=people)
+    data = requests.get('http://127.0.0.1:5000/employee/')
+    columns = requests.get('http://127.0.0.1:5000/employee/columns')
+    key_column = requests.get('http://127.0.0.1:5000/employee/pk')
+
+    if all(response.status_code == 200 for response in [data, columns, key_column]):
+        people = data.json()
+        columns = columns.json()
+        columns_json = json.dumps(columns)
+        key_column = key_column.json()
+        return render_template('pages/staff_and_clients.html',
+                               active_tab=active_tab, people=people, columns=columns,
+                                 columns_json=columns_json, key_column=key_column, positions=positions)
+    else:
+        people = []
+        columns = {
+        }
+        columns_json = json.dumps(columns)
+        key_column = "ID"
+        error_message = "Failed to fetch workers"
+        return render_template('pages/goods_and_categories.html',
+                               active_tab=active_tab, people=people, columns=columns, key_column=key_column, 
+                               columns_json=columns_json, error_message=error_message, positions=positions)
 
 
 @staff_and_clients.route('/customers')
 def clients():
-    people = [
-        {
-            "name": f"Customer {i}",
-            "card number": generate_unique_id(),
-            "percent": f"{random.randint(1, 100)}%",
-            "phone_number": generate_phone_number(),
-            "address": f"City, Street, {random.randint(1, 100)}",
-        } for i in range(1, 21)
-    ]
     active_tab = 'clients'
-    return render_template('pages/staff_and_clients.html', people=people, active_tab=active_tab)
+    data = requests.get('http://127.0.0.1:5000/customer/')
+    columns = requests.get('http://127.0.0.1:5000/customer/columns')
+    key_column = requests.get('http://127.0.0.1:5000/customer/pk')
+
+    if all(response.status_code == 200 for response in [data, columns, key_column]):
+        people = data.json()
+        columns = columns.json()
+        columns_json = json.dumps(columns)
+        key_column = key_column.json()
+        return render_template('pages/staff_and_clients.html',
+                               active_tab=active_tab, people=people, columns=columns,
+                                 columns_json=columns_json, key_column=key_column)
+    else:
+        people = []
+        columns = {
+        }
+        columns_json = json.dumps(columns)
+        key_column = "ID"
+        error_message = "Failed to fetch customers"
+        return render_template('pages/goods_and_categories.html',
+                               active_tab=active_tab, people=people, columns=columns, key_column=key_column, 
+                               columns_json=columns_json, error_message=error_message)
