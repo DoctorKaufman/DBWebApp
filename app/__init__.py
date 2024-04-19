@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import jwt
 from flask import Flask
 from flask_cors import CORS
@@ -23,7 +25,7 @@ def create_app(config_filename=None):
     app.config["SESSION_TYPE"] = "filesystem"
     jwt.init_app(app)
     # Session(app)
-
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
     # Load configuration from 'config.py' file or parameter
     if config_filename is not None:
@@ -32,7 +34,7 @@ def create_app(config_filename=None):
         app.config.from_object('config.DefaultConfig')
 
     # Initialize database (if using Flask-SQLAlchemy for Models)
-        
+
     # from .models import db
     # db.init_app(app)
 
@@ -87,6 +89,7 @@ def create_app(config_filename=None):
 
     app.errorhandler(DataDuplicateException)(handle_data_duplicate_exception)
     return app
+
 
 def inject_user():
     user = ''
