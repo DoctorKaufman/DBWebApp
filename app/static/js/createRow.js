@@ -45,6 +45,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         createRequest(data) {
+            console.log("Data for request:", data);
             sendRequest({
                 action: 'post',
                 currentPage: this.currentTab,

@@ -18,7 +18,7 @@ store_product_service = StoreProductService(store_product_repository)
 @store_product.route('/', methods=['POST'])
 def create_store_product():
     store_product_dto = StoreProductCreationDTO.deserialize(request.get_json())
-    return json.dumps(store_product_service.create_store_product(store_product_dto)), 201
+    return json.dumps(store_product_service.create_store_product(store_product_dto).serialize()), 201
 
 
 @store_product.route('/<int:upc>', methods=["PUT"])

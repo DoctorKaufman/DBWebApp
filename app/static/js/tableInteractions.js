@@ -52,10 +52,11 @@ document.addEventListener('alpine:init', () => {
                     <div x-data="dropdownComponent('${fieldName}')" class="relative group">
                     <button @click="toggleDropdown" 
                     class="inline-flex justify-center w-full h-full text-sm font-medium text-gray-700 
-                    bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none
+                    bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 
                     focus:ring-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 
                     dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500">
-                    <span x-text="selectedOption != null ? Object.values(selectedOption)[0] : 'Select'"></span>
+                    <span x-text="selectedOption != null ? 
+                                    ('${fieldName}'=='UPC Prom'? Object.keys(selectedOption)[0] : Object.values(selectedOption)[0]) : 'Select'"></span>
                     <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
@@ -72,7 +73,7 @@ document.addEventListener('alpine:init', () => {
                             <a @click="selectOption(option)" href="javascript:void(0);" class="px-4 py-2 text-gray-700 dark:text-white 
                             cursor-pointer rounded-md inline-flex w-full hover:bg-gray-100 dark:hover:bg-gray-600 
                             dark:hover:text-white">
-                                <span x-text="Object.values(option)[0]"></span>
+                                <span x-text="'${fieldName}'=='UPC Prom'? Object.keys(option)[0] : Object.values(option)[0]"></span>
                             </a>
                         </template>
                     </div>

@@ -33,4 +33,5 @@ class AuthService:
                                           db_employee.id_employee)
         self.auth_repository.insert_employee_account(account)
         session["user_id"] = db_employee.id_employee
+        session["user"] = db_employee.serialize()
         return db_employee
