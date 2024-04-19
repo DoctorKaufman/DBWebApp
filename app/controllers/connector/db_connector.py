@@ -13,5 +13,6 @@ def get_connection():
         dbname="DB_Zlagoda",
         user="DB_Zlagoda_owner",
         password="85rkPbEFmuDM",
-        host="ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech"
+        host="ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
+        connect_timeout=25
     )
