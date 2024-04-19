@@ -3,7 +3,7 @@
 {% block title %}Goods and categories{% endblock %}
 
 {% block content %}
-<div class="flex flex-col" x-data="{ activeTab: '{{active_tab}}' }">
+<div class="flex flex-col" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
 
     <div class="fixed inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
         <div class="relative left-1/6 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-400 via-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem] bg-[length:300%_auto] animate-blobs" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
@@ -32,8 +32,12 @@
                 </li>
                 <li class="w-full">
                     <a id="categories-tab" href="{{ url_for('goods_and_categories.categories') }}" data-tabs-target="#categories" aria-controls="categories" 
+                    :class="{ 'cursor-default pointer-events-none opacity-50': user.Role !== 'Manager' }"
                     aria-selected="{{ 'true' if active_tab == 'categories' else 'false' }}" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 rounded-se-lg 
-                    bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:!text-cyan-500">Categories</a>
+                    bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:!text-cyan-500">
+                    Categories
+                    <i x-show="user.Role !== 'Manager'" class="fa-solid fa-lock"></i>
+                </a>
                 </li>
             </ul>
             <div id="fullWidthTabContent" class="border-t border-gray-200 dark:border-gray-600">

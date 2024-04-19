@@ -37,7 +37,7 @@
 
             {% endfor %}
             
-            <th x-show="tableState != GlobalStates.SELECTING" scope="col" class="px-6 py-3 max-w-28">
+            <th x-show="tableState != GlobalStates.SELECTING && user.Role === 'Manager'" scope="col" class="px-6 py-3 max-w-28">
                 <span class="sr-only">Edit</span>
             </th>
         </tr>
@@ -79,7 +79,7 @@
                                         
                 
                 <!-- Actions -->
-                <td x-show="$store.tableState.globalState != GlobalStates.SELECTING" class="px-6 py-4 text-right max-w-28">
+                <td x-show="$store.tableState.globalState != GlobalStates.SELECTING && user.Role === 'Manager'" class="px-6 py-4 text-right max-w-28">
                     <template x-if="!row.editing">
                         <button @click="$store.tableState.editRow(row.{{key_column}}, true)" class="font-medium text-sky-600 dark:text-cyan-500 hover:underline">
                             Edit

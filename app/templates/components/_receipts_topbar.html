@@ -7,16 +7,33 @@
     </div>
     <div class="flex flex-col my-4 mx-8">
         <div class="flex flex-row">
-            <div class="text-xl w-3/4 dark:text-gray-300">
+            <div class="text-xl w-3/4 dark:text-gray-300" :class="{ 'flex content-center justify-center flex-col w-full text-center': user.Role !== 'Cashier' }">
                 Control system
-                <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                    Our supermarket proudly maintains a cutting-edge receipts database, ensuring every transaction is accurately recorded and monitored.
-                    This meticulous approach showcases our commitment to transparency and operational excellence, setting new standards in the retail industry.                </p>
+
+                <template x-if="user.Role !== 'Cashier'">
+                    <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                        At our supermarket, we proudly maintain a cutting-edge receipts 
+                        database that ensures every transaction is accurately recorded and 
+                        closely monitored. This state-of-the-art system exemplifies our 
+                        dedication to precision and accountability, underpinning our 
+                        commitment to transparency in all our operations. By implementing 
+                        such meticulous data management practices, we set new standards in 
+                        the retail industry, demonstrating operational excellence at every 
+                        turn. Our approach not only builds trust with our customers but also 
+                        enhances our overall efficiency, making us a leader in the marketplace.
+                    </p>
+                </template>
+                <template x-if="user.Role === 'Cashier'">
+                    <p class="mt-1 text-base font-normal text-gray-500 dark:text-gray-400" >
+                        Our supermarket proudly maintains a cutting-edge receipts database, ensuring every transaction is accurately recorded and monitored.
+                        This meticulous approach showcases our commitment to transparency and operational excellence, setting new standards in the retail industry.   
+                    </p>
+                </template>
                 <div class="flex py-5 bg-white dark:bg-gray-800 justify-center">
                     {% include 'components/_default_search_input.html' %}
                 </div>
             </div>
-            <div class="w-1/4 flex flex-col justify-center items-center">
+            <div x-show="user.Role === 'Cashier'" class="w-1/4 flex flex-col justify-center items-center">
                 <button class="text-white w-3/4 h-1/3 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
                 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-4 dark:bg-cyan-800 dark:hover:bg-cyan-900 focus:outline-none
                 dark:focus:ring-cyan-950">

@@ -67,7 +67,7 @@ document.addEventListener('alpine:init', () => {
                     text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
                     dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
                     dark:focus:ring-cyan-500 dark:focus:border-cyan-500" placeholder="Search items" autocomplete="off">
-                    <div class="overflow-auto max-h-40">
+                    <div class="overflow-auto max-h-40 custom-scrollbar">
                         <template x-for="option in filteredOptions()" :key="Object.keys(option)[0]">
                             <a @click="selectOption(option)" href="javascript:void(0);" class="px-4 py-2 text-gray-700 dark:text-white 
                             cursor-pointer rounded-md inline-flex w-full hover:bg-gray-100 dark:hover:bg-gray-600 
@@ -79,7 +79,7 @@ document.addEventListener('alpine:init', () => {
                     </div>
                   </div>
                   </td>`;
-                } else {
+                } else if (fieldObject[fieldName] === 'ATTRIB') {
                     innerHTML += `<td class="px-6 py-4">
                                     <input type="text" id="${fieldName}"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 

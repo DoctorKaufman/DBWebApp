@@ -3,7 +3,7 @@
 {% block title %}Staff and clients{% endblock %}
 
 {% block content %}
-<div class="flex flex-col" x-data="{ activeTab: '{{active_tab}}' }">
+<div class="flex flex-col" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
     
     <div class="flex flex-col w-full pt-5 pb-8 items-center justify-center">
         <div class="fixed inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
