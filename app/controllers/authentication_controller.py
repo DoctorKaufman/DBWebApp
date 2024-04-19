@@ -2,7 +2,8 @@ import json
 
 import flask
 from flask import Blueprint, request, session, jsonify, make_response
-from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
+    unset_jwt_cookies
 
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.create.employee_creation import EmployeeCreationDTO
@@ -26,7 +27,7 @@ def login():
         access_token = create_access_token(identity=authenticated.id)
         refresh_token = create_refresh_token(identity=authenticated.id)
 
-        response = make_response()
+        response = make_response(authenticated.serialize())
         set_access_cookies(response, access_token)
         set_refresh_cookies(response, refresh_token)
         # response.set_cookie('user', str(authenticated.serialize()))
@@ -48,4 +49,6 @@ def register():
 @auth.route('/logout')
 def logout():
     session.clear()
+    response = jsonify()
+    unset_jwt_cookies(response)
     return ""
