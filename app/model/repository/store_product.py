@@ -151,7 +151,7 @@ class StoreProductRepository:
             cursor.execute(StoreProductRepository.INSERT_STORE_PRODUCT_QUERY,
                            (store_product.upc_prom, store_product.id_product, store_product.selling_price,
                             store_product.products_number, store_product.promotional_product))
-            store_product_data = cursor.fetchone()
+            # store_product_data = cursor.fetchone()
             upc = cursor.fetchone()[0]
             self.conn.commit()
         cursor.close()

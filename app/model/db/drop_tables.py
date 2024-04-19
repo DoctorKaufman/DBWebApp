@@ -1,12 +1,19 @@
 import psycopg2
 
-
 conn_params = {
+    'dbname': "Supermarket_Zlagoda",
+    'user': "postgres",
+    'password': "qawsed_Kli",
+    'host': "localhost",
+    'port': "5432"
+}
+
+'''conn_params = {
     "host": "ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
     "database": "DB_Zlagoda",
     "user": "DB_Zlagoda_owner",
     "password": "85rkPbEFmuDM"
-}
+}'''
 
 # Drop all tables
 def drop_tables():
