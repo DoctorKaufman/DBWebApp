@@ -9,7 +9,8 @@ class SaleRepository:
     Repository class for managing sales in the database.
     """
 
-    SELECT_SALE_QUERY = sql.SQL("SELECT * FROM sale WHERE check_number = %s")
+    SELECT_SALE_QUERY = sql.SQL("SELECT * FROM sale WHERE UPC = %s AND check_number = %s")
+    SELECT_CHECK_SALES_QUERY = sql.SQL("SELECT * FROM sale WHERE check_number = %s")
     SELECT_ALL_SALES_QUERY = sql.SQL("SELECT * FROM sale")
     INSERT_SALE_QUERY = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) "
                                 "VALUES (%s, %s, %s, %s)")
@@ -35,23 +36,38 @@ class SaleRepository:
         """
         self.conn = conn
 
-    def select_sale(self, check_number):
+    def select_sale(self, upc, check_number):
         """
         Select a sale by its UPC and check number.
 
         Parameters:
+            upc: UPC of the sale.
             check_number: Check number of the sale.
 
         Returns:
             SaleDTO object representing the selected sale, or None if not found.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(SaleRepository.SELECT_SALE_QUERY, (check_number,))
-            sale_data = cursor.fetchall()
-            sales = [SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3]) for sale_data in cursor.fetchall()]
+            cursor.execute(SaleRepository.SELECT_SALE_QUERY, (upc, check_number))
+            sale_data = cursor.fetchone()
         if sale_data:
-            return tuple(sales)
+            return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
         return None
+
+    def select_check_sales(self, check_number):
+        """
+        Select sales pack by their check number.
+
+        Parameters:
+            check_number: Check number of the sale.
+
+        Returns:
+            SaleDTO objects tuple representing the selected sales, or None if not found.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(SaleRepository.SELECT_CHECK_SALES_QUERY, (check_number,))
+            sales = [SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3]) for sale_data in cursor.fetchall()]
+        return tuple(sales)
 
     def select_all_sales(self):
         """
