@@ -7,14 +7,14 @@ document.addEventListener('alpine:init', () => {
         searchTerm: '',
         mapper: 'Search by',
         selectedOption: null,
-        options: ['Name', 'Category'],
+        options: currentPage === 'goods' ? [{'Name' : 'Name'}, {'Category' : 'Category'}] : [{'Promotional Product' : 'prom_product'}],
 
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
         },
         selectOption(option) {
-            this.selectedOption = option;
-            this.mapper = option;
+            this.selectedOption = Object.values(option)[0];
+            this.mapper = Object.values(option)[0];
             this.showDropdown = false;
         },
         search() {

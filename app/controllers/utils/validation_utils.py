@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 
 def is_adult(birth_date_str):
@@ -23,7 +24,7 @@ def validate_phone_number(phone_number):
     MAX_LENGTH = 13
     if not phone_number or len(phone_number) > MAX_LENGTH:
         return False
-    valid_characters = set('0123456789+')
-    if not all(char in valid_characters for char in phone_number):
+    pattern = re.compile(r'^\+\d{12}$')
+    if not pattern.match(phone_number):
         return False
     return True

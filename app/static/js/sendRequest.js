@@ -21,6 +21,12 @@ export async function sendRequest({
         case 'goods_in_store':
             endpoint = '/store-product/';
             break;
+        case 'clients':
+            endpoint = '/customer/';
+            break;
+        case 'workers':
+            endpoint = '/employee/';
+            break;
         default:
             throw new Error(`Unknown currentPage: ${currentPage}`);
     }
