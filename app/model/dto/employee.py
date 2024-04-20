@@ -74,5 +74,5 @@ class EmployeeDTO:
             'Phone Number': self.__phone_number,
             'City': self.__city,
             'Street': self.__street,
-            'Zip Code': self.__zip_code
+            'Zip': self.__zip_code
         }

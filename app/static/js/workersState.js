@@ -58,12 +58,13 @@ document.addEventListener('alpine:init', () => {
                 const rowIndex = this.people.findIndex(element => element[this.keyColumn] === id);
                 if (rowIndex !== -1) {
                     this.people[rowIndex].editing = newState;
+                    this.people[rowIndex].showDropdown = false;
                     this.globalState = GlobalStates.EDITING;
                 }
             }
         },
 
-        saveEditedRow(id) {
+        saveEditedCard(id) {
             const rowIndex = this.people.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
                 this.fields.forEach(fieldObject => {
@@ -85,11 +86,13 @@ document.addEventListener('alpine:init', () => {
                         createToast("success", "Item edited successfully");
                         const scrambleElementsArray = document.querySelector(`[data-key="${id}"]`).querySelectorAll('.text-scramble');
                         let scrambleElements = {};
+                        console.log('Scramble elements array:', scrambleElementsArray);
 
                         scrambleElementsArray.forEach(element => {
                             const key = element.getAttribute('data-key');
                             scrambleElements[key] = element; 
                         });
+                        console.log('Scramble elements:', scrambleElements);
                         for (let key in element) {
                             if (this.columns[key] === 'HIDDEN') 
                                 continue;
