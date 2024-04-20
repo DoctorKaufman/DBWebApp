@@ -14,6 +14,9 @@ class StoreProductService:
         # return self.store_product_repository.select_all_store_products(pageable)
         return self.store_product_repository.select_all_store_products_extended(pageable)
 
+    def get_promotional_products(self, is_promotional):
+        return self.store_product_repository.select_promotional_products(is_promotional)
+
     def create_store_product(self, store_product_dto):
         return self.store_product_repository.insert_store_product(store_product_dto)
 

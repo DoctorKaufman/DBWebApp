@@ -52,3 +52,11 @@ def logout():
     response = jsonify()
     unset_jwt_cookies(response)
     return ""
+
+
+@auth.route('/update_password', methods=['PUT'])
+# @login_required
+def update_password():
+    login_data = LoginDTO.deserialize(request.get_json())
+    auth_service.update_password(login_data)
+    return "", 200
