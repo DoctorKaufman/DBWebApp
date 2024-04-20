@@ -122,6 +122,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         deleteCard(id) {
+            console.log('Deleting card:', id);
+            console.log('Current tab:', this.currentTab);
             sendRequest({
                 action: 'delete', 
                 currentPage: this.currentTab, 
