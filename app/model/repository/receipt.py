@@ -1,6 +1,8 @@
 import psycopg2
 from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
+
+from app.model.dto.cashier_sales import CashierSalesDTO
 from app.model.dto.receipt import ReceiptDTO
 
 
@@ -16,6 +18,17 @@ class ReceiptRepository:
     UPDATE_RECEIPT_QUERY = sql.SQL("UPDATE receipt SET id_employee = %s, card_number = %s, print_date = %s, "
                                    "sum_total = %s, vat = %s WHERE check_number = %s")
     DELETE_RECEIPT_QUERY = sql.SQL("DELETE FROM receipt WHERE check_number = %s")
+    GET_CASHIER_SALES_PRICE = sql.SQL("SELECT e.id_employee, e.empl_surname, e.empl_name, "
+                                      "COALESCE(SUM(r.sum_total), 0) AS total_sales "
+                                      "FROM employee e "
+                                      "LEFT JOIN receipt r ON e.id_employee = r.id_employee "
+                                      "AND DATE(r.print_date) >= %s "
+                                      "AND DATE(r.print_date) <= %s "
+                                      "WHERE e.id_employee = %s "
+                                      "GROUP BY e.id_employee, e.empl_surname, e.empl_name")
+    GET_TOTAL_SALES = sql.SQL("SELECT COALESCE(SUM(sum_total), 0) AS total_sales "
+                              "FROM receipt "
+                              "WHERE DATE(print_date) >= %s AND DATE(print_date) <= %s")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
                                      "FROM information_schema.columns AS cols "
@@ -132,6 +145,43 @@ class ReceiptRepository:
                 self.conn.rollback()
                 return False
         return True
+
+    def calculate_total_sales_by_cashier(self, sales_input):
+        """
+        Calculate the total sales amount of products from receipts created by a specific cashier within a specified time period.
+
+        Parameters:
+            sales_input: SalesInputDTO object containing the input data.
+
+        Returns:
+            CashierSalesDTO object representing the result.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(ReceiptRepository.GET_CASHIER_SALES_PRICE,
+                           (sales_input.start_date, sales_input.end_date, sales_input.cashier_id))
+            result = cursor.fetchone()
+            if result:
+                return CashierSalesDTO(result[0], result[1], result[2], result[3])
+            else:
+                return None
+
+    def calculate_total_sales_all_cashiers(self, sales_input):
+        """
+        Calculate the total sales amount of products from receipts created by all cashiers within a specified time
+        period.
+
+        Parameters:
+            sales_input: SalesInputDTO object containing the input data.
+
+        Returns:
+            Total sum of checks for the given period.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute("""
+                
+            """, (sales_input.start_date, sales_input.end_date))
+            results = cursor.fetchone()
+            return results
 
     def get_column_names(self):
         """

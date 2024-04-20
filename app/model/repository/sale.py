@@ -10,6 +10,7 @@ class SaleRepository:
     """
 
     SELECT_SALE_QUERY = sql.SQL("SELECT * FROM sale WHERE UPC = %s AND check_number = %s")
+    SELECT_CHECK_SALES_QUERY = sql.SQL("SELECT * FROM sale WHERE check_number = %s")
     SELECT_ALL_SALES_QUERY = sql.SQL("SELECT * FROM sale")
     INSERT_SALE_QUERY = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) "
                                 "VALUES (%s, %s, %s, %s)")
@@ -52,6 +53,21 @@ class SaleRepository:
         if sale_data:
             return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
         return None
+
+    def select_check_sales(self, check_number):
+        """
+        Select sales pack by their check number.
+
+        Parameters:
+            check_number: Check number of the sale.
+
+        Returns:
+            SaleDTO objects tuple representing the selected sales, or None if not found.
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(SaleRepository.SELECT_CHECK_SALES_QUERY, (check_number,))
+            sales = [SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3]) for sale_data in cursor.fetchall()]
+        return tuple(sales)
 
     def select_all_sales(self):
         """
