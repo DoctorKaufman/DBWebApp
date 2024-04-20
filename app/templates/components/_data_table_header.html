@@ -22,8 +22,7 @@
                 sourced directly from local farms and artisans. Our rapid delivery system ensures 
                 that all items remain fresh and vibrant, reaching our shelves faster than ever—with 
                 no chemical preservatives. Experience the freshness and exceptional taste of our 
-                naturally preserved goods when you shop with us. This is the main reason we 
-                are the go-to destination for discerning shoppers who demand the best.
+                naturally preserved goods when you shop with us.
             </p>
         </template>
         <template x-if="activeTab === 'goods' && user.Role !== 'Manager'">
@@ -53,10 +52,10 @@
             </p>
         </template>
 
-        <div x-show="activeTab !=='goods_in_store'" class="py-5 bg-white dark:bg-gray-800" :class="{ 'flex justify-center': user.Role !== 'Manager' }">
+        <div class="py-5 bg-white dark:bg-gray-800" :class="{ 'flex justify-center': user.Role !== 'Manager' }">
             {% if (active_tab == 'categories')%}
                 {% include 'components/_default_search_input.html' %}
-            {% elif (active_tab == 'goods') %}
+            {% else %}
                 {% include 'components/_search_input_with_filter.html' %}
             {% endif %}
         </div>
