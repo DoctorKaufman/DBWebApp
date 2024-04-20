@@ -2,6 +2,7 @@ from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.controllers.dtos.create.employee_account_creation import EmployeeAccountCreation
+from app.controllers.handler.exceptions import DataDuplicateException
 from app.model.dto.authorised_user import AuthorisedUserDTO
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
 from app.model.dto.employee import EmployeeDTO
@@ -26,7 +27,7 @@ class AuthService:
     def register_user(self, register_data, login_data):
         employee = self.auth_repository.get_employee_account_by_login(login_data.login)
         if employee is not None:
-            return None
+            raise DataDuplicateException("Employee with such login already exists")
         # employee dto
         db_employee = self.employee_repository.insert_employee(register_data)
         account = EmployeeAccountCreation(login_data.login, generate_password_hash(login_data.password),
