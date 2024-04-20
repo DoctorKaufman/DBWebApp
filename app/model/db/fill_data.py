@@ -5,13 +5,13 @@ import random
 from datetime import datetime, timedelta
 
 # Connect to your PostgreSQL database
-conn_params = {
+'''conn_params = {
     'dbname': "Supermarket_Zlagoda",
     'user': "postgres",
     'password': "qawsed_Kli",
     'host': "localhost",
     'port': "5432"
-}
+}'''
 
 '''conn = psycopg2.connect(
     dbname="zlagoda",
@@ -37,12 +37,12 @@ class UkrainePhoneNumberProvider(Provider):
     def ukraine_phone_number(self):
         return f'+380{self.random_number(digits=9)}'
 
-'''conn_params = {
+conn_params = {
     "host": "ep-aged-recipe-a2f1iyj1.eu-central-1.aws.neon.tech",
     "database": "DB_Zlagoda",
     "user": "DB_Zlagoda_owner",
     "password": "85rkPbEFmuDM"
-}'''
+}
 
 conn = psycopg2.connect(**conn_params)
 
