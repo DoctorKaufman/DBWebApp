@@ -43,6 +43,7 @@ def get_all_store_products():
     store_products = store_product_service.get_all_store_products(Pageable.get_pageable(args, StoreProductMapper))
     return json.dumps([p.serialize() for p in store_products]), 200
 
+
 @store_product.route('/columns', methods=['GET'])
 def get_columns():
     return json.dumps(store_product_service.get_store_product_columns())
