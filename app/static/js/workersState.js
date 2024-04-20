@@ -6,8 +6,8 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.store('workersState', {
 
-        cards: [],
-        currentCard: {},
+        people: [],
+        currentPerson: {},
 
         columns: {},
         keyColumn: null,
@@ -26,27 +26,27 @@ document.addEventListener('alpine:init', () => {
         selectedItems: [],
         selectAll: false,
 
-        initializeRows(items) {
-            this.cards = items.map(item => ({
+        initializeCards(items) {
+            this.people = items.map(item => ({
                 ...item,
                 editing: false, 
             }));
         },
 
         initializeCurrentElement(id = null) {
-            const rowIndex = this.cards.findIndex(element => element[this.keyColumn] === id);
+            const rowIndex = this.people.findIndex(element => element[this.keyColumn] === id);
 
             this.fields.forEach(fieldObject => {
                 const fieldName = Object.keys(fieldObject)[0];
                 if (fieldObject[fieldName] !== 'PK') {
                         if (rowIndex !== -1) {
-                        this.currentCard[fieldName] = this.cards[rowIndex][fieldName];
+                        this.currentPerson[fieldName] = this.people[rowIndex][fieldName];
                         } else {
-                        this.currentCard[fieldName] = '';
+                        this.currentPerson[fieldName] = '';
                         }
                     }
                 });
-            console.log('INITIALIZED ELEMENT: '+this.currentCard);
+            console.log('INITIALIZED ELEMENT: '+this.currentPerson);
         },
 
         editRow(id, newState) {
@@ -55,31 +55,31 @@ document.addEventListener('alpine:init', () => {
             }
             else {
                 this.initializeCurrentElement(id);
-                const rowIndex = this.cards.findIndex(element => element[this.keyColumn] === id);
+                const rowIndex = this.people.findIndex(element => element[this.keyColumn] === id);
                 if (rowIndex !== -1) {
-                    this.cards[rowIndex].editing = newState;
+                    this.people[rowIndex].editing = newState;
                     this.globalState = GlobalStates.EDITING;
                 }
             }
         },
 
         saveEditedRow(id) {
-            const rowIndex = this.cards.findIndex(element => element[this.keyColumn] == id);
+            const rowIndex = this.people.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
                 this.fields.forEach(fieldObject => {
                     const fieldName = Object.keys(fieldObject)[0];
                     if (fieldObject[fieldName] === 'ATTRIB') {
-                        this.currentCard[fieldName] = document.getElementById(`${id}-${fieldName}-input`).value;
+                        this.currentPerson[fieldName] = document.getElementById(`${id}-${fieldName}-input`).value;
                     }
                 });
 
-                let element = this.currentCard;
+                let element = this.currentPerson;
                 console.log('Saving edited row:', element);
                 sendRequest({
                     action: 'put',
                     currentPage: this.currentTab, 
                     id: id, 
-                    data: this.currentCard
+                    data: this.currentPerson
                 })
                     .then(response => {
                         createToast("success", "Item edited successfully");
@@ -93,9 +93,9 @@ document.addEventListener('alpine:init', () => {
                         for (let key in element) {
                             if (this.columns[key] === 'HIDDEN') 
                                 continue;
-                            const index = this.cards[rowIndex][key];
+                            const index = this.people[rowIndex][key];
                             if (String(index) != String(element[key])) {
-                                this.cards[rowIndex][key] = element[key];
+                                this.people[rowIndex][key] = element[key];
                                 const scramble = new TextScramble(scrambleElements[key]);
                                 console.log("Current ELEMENT:", scrambleElements[key]);
                                 console.log("Current NEW VALUE:", String(element[key]));
@@ -107,28 +107,37 @@ document.addEventListener('alpine:init', () => {
                         console.error('Error editing item:', error);
                         createToast("error", `Error editing item`);
                     });
-                this.currentCard = {};
-                this.cards[rowIndex].editing = false;
+                this.currentPerson = {};
+                this.people[rowIndex].editing = false;
                 this.globalState = GlobalStates.NONE;
             }
         },
 
         cancelEditingRow(id){
-            const rowIndex = this.cards.findIndex(element => element[this.keyColumn] == id);
+            const rowIndex = this.people.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
-                this.cards[rowIndex].editing = false;
+                this.people[rowIndex].editing = false;
                 this.globalState = GlobalStates.NONE;
             }
         },
 
-        startSelecting() {
-            this.globalState = GlobalStates.SELECTING;
-        },
-
-        stopSelecting() {
-            this.globalState = GlobalStates.NONE;
-            this.selectedItems = [];
-            this.selectAll = false;
+        deleteCard(id) {
+            console.log('Deleting card:', id);
+            console.log('Current tab:', this.currentTab);
+            sendRequest({
+                action: 'delete', 
+                currentPage: this.currentTab, 
+                id: id, 
+            })
+                .then(response => {
+                    console.log('Item deleted:', response);
+                    createToast("success", "Item deleted successfully");
+                    this.refetchData();
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                    createToast("error", `Error deleting item: ${id}`);
+                });
         },
 
         deleteSelected() {
@@ -156,7 +165,7 @@ document.addEventListener('alpine:init', () => {
         toggleSelectAll() {
             this.selectAll = !this.selectAll;
             if (this.selectAll) {
-                this.selectedItems = this.cards.map(item => {
+                this.selectedItems = this.people.map(item => {
                     return item[this.keyColumn];
                 });
             } else {
@@ -197,7 +206,7 @@ document.addEventListener('alpine:init', () => {
             })
                 .then(response => {
                     console.log('Data fetched:', response);
-                    this.initializeRows(response);
+                    this.initializeCards(response);
                     createToast("success", `Data sorted by ${sortBy} in ${sortOrder} order`);
                 })
                 .catch(error => {
