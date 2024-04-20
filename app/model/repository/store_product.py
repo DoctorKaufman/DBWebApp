@@ -4,6 +4,7 @@ from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 from app.model.dto.store_product import StoreProductDTO
 from app.model.dto.store_product_drop_list_position import StoreProductDropListPositionDTO
 from app.model.dto.store_product_extended import StoreProductExtendedDTO
+from app.model.dto.store_product_sales import StoreProductSalesDTO
 
 
 class StoreProductRepository:
@@ -30,6 +31,13 @@ class StoreProductRepository:
                                          "selling_price = %s, products_number = %s, promotional_product = %s "
                                          "WHERE UPC = %s RETURNING UPC")
     DELETE_STORE_PRODUCT_QUERY = sql.SQL("DELETE FROM store_product WHERE UPC = %s")
+    GET_PRODUCT_SALES_QUERY = sql.SQL("SELECT sp.UPC, p.product_name, SUM(s.product_number) AS total_quantity_sold "
+                                      "FROM Sale s "
+                                      "INNER JOIN Store_Product sp ON s.UPC = sp.UPC "
+                                      "INNER JOIN Product p ON sp.id_product = p.id_product "
+                                      "INNER JOIN Receipt r ON s.check_number = r.check_number "
+                                      "WHERE sp.id_product = %s AND r.print_date >= %s AND r.print_date <= %s "
+                                      "GROUP BY sp.UPC, p.product_name")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
                                      "FROM information_schema.columns AS cols "
@@ -195,6 +203,33 @@ class StoreProductRepository:
                 self.conn.rollback()
                 return False
         return True
+
+    def get_product_sales_over_period(self, product_sales_input_dto):
+        """
+        Get the total quantity of a product sold over a certain period.
+
+        Parameters:
+            product_sales_input_dto: The ProductSalesInputDTO containing product ID, start date, and end date.
+
+        Returns:
+            ProductSalesDTO object containing the UPC, product name, and total quantity sold over the period.
+        """
+        product_id = product_sales_input_dto.product_id
+        start_date = product_sales_input_dto.start_date
+        end_date = product_sales_input_dto.end_date
+
+        with self.conn.cursor() as cursor:
+            cursor.execute(StoreProductRepository.GET_PRODUCT_SALES_QUERY, (
+                product_id,
+                start_date,
+                end_date
+            ))
+            row = cursor.fetchone()
+            if row:
+                upc, product_name, total_quantity_sold = row
+                return StoreProductSalesDTO(upc, product_name, total_quantity_sold)
+            else:
+                return None
 
     def get_column_names(self):
         """

@@ -16,12 +16,12 @@ class ProductRepository:
                                     "WHERE SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
     SEARCH_QUERY_TEMPLATE_EXT = sql.SQL("SELECT p.id_product, p.category_number, c.category_name,"
-                                                 "p.product_name, p.p_characteristics "
-                                                 "FROM product AS p "
-                                                 "INNER JOIN category AS c "
-                                                 "ON p.category_number = c.category_number "
-                                                 "WHERE SIMILARITY({0}, %s) > 0.2 "
-                                                 "ORDER BY {1} {2}")
+                                        "p.product_name, p.p_characteristics "
+                                        "FROM product AS p "
+                                        "INNER JOIN category AS c "
+                                        "ON p.category_number = c.category_number "
+                                        "WHERE SIMILARITY({0}, %s) > 0.2 "
+                                        "ORDER BY {1} {2}")
     SELECT_ALL_PRODUCTS_EXTENDED_QUERY = sql.SQL("SELECT p.id_product, p.category_number, c.category_name,"
                                                  "p.product_name, p.p_characteristics "
                                                  "FROM product AS p "
@@ -257,4 +257,3 @@ class ProductRepository:
         if category_number:
             return True
         return False
-
