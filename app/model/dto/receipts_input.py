@@ -1,8 +1,4 @@
-class SalesInputDTO:
-    """
-    DTO class for input data related to sales calculations.
-    """
-
+class ReceiptsInputDTO:
     def __init__(self, cashier_id=None, start_date=None, end_date=None):
         self.__cashier_id = cashier_id
         self.__start_date = start_date
