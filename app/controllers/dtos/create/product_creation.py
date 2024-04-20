@@ -1,3 +1,6 @@
+from app.controllers.handler.exceptions import ValidationException
+
+
 class ProductCreationDTO:
     def __init__(self, category_number, product_name, p_characteristics):
         self.__category_number = category_number
@@ -21,4 +24,10 @@ class ProductCreationDTO:
         category_number = data.get('Category ID')
         product_name = data.get('Name')
         p_characteristics = data.get('Description')
+        if category_number is None:
+            raise ValidationException('Category ID is missing')
+        if product_name is None or len(product_name) == 0:
+            raise ValidationException('Name cannot be empty')
+        if p_characteristics is None or len(p_characteristics) == 0:
+            raise ValidationException('Description of product cannot be empty')
         return ProductCreationDTO(category_number, product_name, p_characteristics)

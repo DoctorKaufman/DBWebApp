@@ -24,6 +24,12 @@ class StoreProductRepository:
                                                    "INNER JOIN product as pr "
                                                    "ON spr.id_product = pr.id_product")
     SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %s")
+    SELECT_STORE_PRODUCT_PROMOTIONAL_QUERY = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
+                                                       "sp.selling_price, sp.products_number, sp.promotional_product "
+                                                       "FROM store_product AS sp "
+                                                       "INNER JOIN product AS p "
+                                                       "ON sp.id_product = p.id_product "
+                                                       "WHERE promotional_product = %s")
     INSERT_STORE_PRODUCT_QUERY = sql.SQL("INSERT INTO store_product (UPC_prom, id_product, selling_price, "
                                          "products_number, promotional_product) "
                                          "VALUES (%s, %s, %s, %s, %s) RETURNING UPC")
@@ -111,6 +117,17 @@ class StoreProductRepository:
                                                               store_product_data[4], store_product_data[5],
                                                               store_product_data[6]))
         return tuple(store_products)
+
+    def select_promotional_products(self, is_promotional):
+        with self.conn.cursor() as cursor:
+            cursor.execute(StoreProductRepository.SELECT_STORE_PRODUCT_PROMOTIONAL_QUERY, (is_promotional,))
+            store_products = []
+            for store_product_data in cursor.fetchall():
+                store_products.append(StoreProductExtendedDTO(store_product_data[0], store_product_data[1],
+                                                              store_product_data[2], store_product_data[3],
+                                                              store_product_data[4], store_product_data[5],
+                                                              store_product_data[6]))
+            return tuple(store_products)
 
     def select_store_products_drop_list(self):
         """

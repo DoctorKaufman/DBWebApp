@@ -1,3 +1,7 @@
+from app.controllers.handler.exceptions import ValidationException
+from app.controllers.utils.validation_utils import validate_phone_number
+
+
 class CustomerCreationDTO:
     def __init__(self, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent):
         self.__cust_surname = cust_surname
@@ -51,4 +55,12 @@ class CustomerCreationDTO:
         street = data['Street']
         zip_code = data['Zip']
         c_percent = float(data['Percent'])
+        if cust_surname is None or cust_name is None or cust_patronymic is None or phone_number is None or city is None or street is None:
+            raise ValidationException("Customer data can't be empty")
+        if c_percent < 0:
+            raise ValidationException("Percent can't be negative")
+        if c_percent > 100:
+            raise ValidationException("Percent can't be greater than 100")
+        if not validate_phone_number(phone_number):
+            raise ValidationException('Phone number must be valid. Should contain 13 symbols (with +)')
         return CustomerCreationDTO(cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code, c_percent)

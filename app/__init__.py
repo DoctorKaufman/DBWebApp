@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_session import Session
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.controllers.handler.exceptions import DataDuplicateException
+from app.controllers.handler.exceptions import DataDuplicateException, ValidationException
 from app.controllers.handler.error_handler import handle_data_duplicate_exception
 
 SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
@@ -88,6 +88,7 @@ def create_app(config_filename=None):
     # Optionally, initialize Flask extensions like Flask-Login, Flask-Migrate, etc.
 
     app.errorhandler(DataDuplicateException)(handle_data_duplicate_exception)
+    app.errorhandler(ValidationException)(handle_data_duplicate_exception)
     return app
 
 

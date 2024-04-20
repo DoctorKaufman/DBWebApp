@@ -1,3 +1,6 @@
+from app.controllers.handler.exceptions import ValidationException
+
+
 class StoreProductCreationDTO:
     def __init__(self, upc_prom, id_product, selling_price, products_number, promotional_product):
         self.__upc_prom = upc_prom
@@ -30,7 +33,13 @@ class StoreProductCreationDTO:
     def deserialize(data):
         upc_prom = data.get("UPC Prom")
         id_product = data.get("Product ID")
-        selling_price = data.get("Price")
-        products_number = data.get("Amount")
-        promotional_product = data.get("Promotional Product")
+        selling_price = float(data.get("Price"))
+        products_number = float(data.get("Amount"))
+        promotional_product = bool(data.get("Promotional Product"))
+        if id_product is None:
+            raise ValidationException("ID is not provided")
+        if selling_price <= 0:
+            raise ValidationException("Selling price must be greater than 0")
+        if products_number <= 0:
+            raise ValidationException("Product number must be greater than 0")
         return StoreProductCreationDTO(upc_prom, id_product, selling_price, products_number, promotional_product)
