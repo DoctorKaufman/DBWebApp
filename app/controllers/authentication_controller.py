@@ -1,6 +1,3 @@
-import json
-
-import flask
 from flask import Blueprint, request, session, jsonify, make_response
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
     unset_jwt_cookies
@@ -36,14 +33,6 @@ def login():
         response.set_cookie('role', authenticated.position)
         return response, 200
     return "", 401
-
-
-@auth.route('/register', methods=['POST'])
-def register():
-    employee_data = EmployeeCreationDTO.deserialize(request.get_json())
-    login_data = LoginDTO.deserialize(request.get_json())
-    authenticated = auth_service.register_user(employee_data, login_data)
-    return authenticated.serialize(), 201
 
 
 @auth.route('/logout')
