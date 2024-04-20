@@ -20,30 +20,30 @@ class StoreProductRepository:
                                                        "ON sp.id_product = p.id_product "
                                                        "ORDER BY {} {}")
     SELECT_QUERY_TEMPLATE_EXT = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
-                                                       "sp.selling_price, sp.products_number, sp.promotional_product "
-                                                       "FROM store_product AS sp "
-                                                       "INNER JOIN product AS p "
-                                                       "ON sp.id_product = p.id_product "
-                                                       "WHERE SIMILARITY({0}, %s) > 0.2 "
-                                                       "ORDER BY {1} {2}")
-    SELECT_QUERY_TEMPLATE_EXT_BOOL = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
                                         "sp.selling_price, sp.products_number, sp.promotional_product "
                                         "FROM store_product AS sp "
                                         "INNER JOIN product AS p "
                                         "ON sp.id_product = p.id_product "
-                                        "WHERE sp.promotional_product = %s "
-                                        "ORDER BY {0} {1}")
+                                        "WHERE SIMILARITY({0}, %s) > 0.2 "
+                                        "ORDER BY {1} {2}")
+    SELECT_QUERY_TEMPLATE_EXT_BOOL = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
+                                             "sp.selling_price, sp.products_number, sp.promotional_product "
+                                             "FROM store_product AS sp "
+                                             "INNER JOIN product AS p "
+                                             "ON sp.id_product = p.id_product "
+                                             "WHERE sp.promotional_product = %s "
+                                             "ORDER BY {0} {1}")
     SELECT_STORE_PRODUCT_DROP_LIST_QUERY = sql.SQL("SELECT spr.upc, pr.product_name "
                                                    "FROM store_product as spr "
                                                    "INNER JOIN product as pr "
                                                    "ON spr.id_product = pr.id_product")
     SELECT_STORE_PRODUCT_QUERY = sql.SQL("SELECT * FROM store_product WHERE UPC = %s")
     SELECT_STORE_PRODUCT_PROMOTIONAL_QUERY = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
-                                                       "sp.selling_price, sp.products_number, sp.promotional_product "
-                                                       "FROM store_product AS sp "
-                                                       "INNER JOIN product AS p "
-                                                       "ON sp.id_product = p.id_product "
-                                                       "WHERE promotional_product = %s")
+                                                     "sp.selling_price, sp.products_number, sp.promotional_product "
+                                                     "FROM store_product AS sp "
+                                                     "INNER JOIN product AS p "
+                                                     "ON sp.id_product = p.id_product "
+                                                     "WHERE promotional_product = %s")
     INSERT_STORE_PRODUCT_QUERY = sql.SQL("INSERT INTO store_product (UPC_prom, id_product, selling_price, "
                                          "products_number, promotional_product) "
                                          "VALUES (%s, %s, %s, %s, %s) RETURNING UPC")
@@ -56,7 +56,9 @@ class StoreProductRepository:
                                       "INNER JOIN Store_Product sp ON s.UPC = sp.UPC "
                                       "INNER JOIN Product p ON sp.id_product = p.id_product "
                                       "INNER JOIN Receipt r ON s.check_number = r.check_number "
-                                      "WHERE sp.id_product = %s AND r.print_date >= %s AND r.print_date <= %s "
+                                      "WHERE sp.id_product = %s "
+                                      "AND DATE(r.print_date) >= %s "
+                                      "AND DATE(r.print_date) <= %s "
                                       "GROUP BY sp.UPC, p.product_name")
     GET_COLUMN_NAMES_QUERY = sql.SQL("SELECT cols.column_name, "
                                      "CASE WHEN tc.constraint_type = 'PRIMARY KEY' THEN FALSE ELSE TRUE END "
@@ -128,17 +130,18 @@ class StoreProductRepository:
                         sql.SQL(pageable.column),
                         sql.SQL(pageable.order)
                     )
-                    cursor.execute(search_query, (pageable.search_value, ))
+                    cursor.execute(search_query, (pageable.search_value,))
                 else:
                     search_query = self.SELECT_QUERY_TEMPLATE_EXT_BOOL.format(
                         sql.SQL(pageable.column),
                         sql.SQL(pageable.order)
                     )
-                    cursor.execute(search_query, (pageable.search_value, ))
+                    cursor.execute(search_query, (pageable.search_value,))
             else:
                 cursor.execute(
-                    StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_EXTENDED_QUERY.format(sql.Identifier(pageable.column),
-                                                                                           sql.SQL(pageable.order)))
+                    StoreProductRepository.SELECT_ALL_STORE_PRODUCTS_EXTENDED_QUERY.format(
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order)))
             store_products = []
             for store_product_data in cursor.fetchall():
                 store_products.append(StoreProductExtendedDTO(store_product_data[0], store_product_data[1],

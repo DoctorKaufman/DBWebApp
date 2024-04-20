@@ -13,6 +13,13 @@ class ReceiptRepository:
 
     SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY {} {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
+    SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
+                                               "WHERE DATE(print_date) >= %s "
+                                               "AND DATE(print_date) <= %s")
+    SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
+                                                       "WHERE id_employee = %s "
+                                                       "AND DATE(print_date) >= %s "
+                                                       "AND DATE(print_date) <= %s ")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
     UPDATE_RECEIPT_QUERY = sql.SQL("UPDATE receipt SET id_employee = %s, card_number = %s, print_date = %s, "
@@ -22,9 +29,9 @@ class ReceiptRepository:
                                       "COALESCE(SUM(r.sum_total), 0) AS total_sales "
                                       "FROM employee e "
                                       "LEFT JOIN receipt r ON e.id_employee = r.id_employee "
+                                      "WHERE e.id_employee = %s "
                                       "AND DATE(r.print_date) >= %s "
                                       "AND DATE(r.print_date) <= %s "
-                                      "WHERE e.id_employee = %s "
                                       "GROUP BY e.id_employee, e.empl_surname, e.empl_name")
     GET_TOTAL_SALES = sql.SQL("SELECT COALESCE(SUM(sum_total), 0) AS total_sales "
                               "FROM receipt "
@@ -73,6 +80,26 @@ class ReceiptRepository:
         with self.conn.cursor() as cursor:
             cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY.format(sql.Identifier(pageable.column),
                                                                               sql.SQL(pageable.order)))
+            receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
+        return tuple(receipts)
+
+    def select_cashier_receipts(self, receipts_input):
+        """
+        Select cashier's receipts for a specified period of time from the database.
+
+        Parameters:
+            receipts_input: ReceiptsInputDTO class object containing parameters for ordering.
+
+        Returns:
+            Tuple of ReceiptDTO objects representing cashier's receipts for specified period.
+        """
+        with self.conn.cursor() as cursor:
+            if receipts_input.cashier_id:
+                cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY,
+                               (receipts_input.cashier_id, receipts_input.start_date, receipts_input.end_date))
+            else:
+                cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY,
+                               (receipts_input.start_date, receipts_input.end_date))
             receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
         return tuple(receipts)
 
@@ -146,19 +173,20 @@ class ReceiptRepository:
                 return False
         return True
 
-    def calculate_total_sales_by_cashier(self, sales_input):
+    def calculate_total_sales_by_cashier(self, receipts_input):
         """
-        Calculate the total sales amount of products from receipts created by a specific cashier within a specified time period.
+        Calculate the total sales amount of products from receipts created by a specific cashier within a specified
+        time period.
 
         Parameters:
-            sales_input: SalesInputDTO object containing the input data.
+            receipts_input: ReceiptsInputDTO object containing the input data.
 
         Returns:
             CashierSalesDTO object representing the result.
         """
         with self.conn.cursor() as cursor:
             cursor.execute(ReceiptRepository.GET_CASHIER_SALES_PRICE,
-                           (sales_input.start_date, sales_input.end_date, sales_input.cashier_id))
+                           (receipts_input.start_date, receipts_input.end_date, receipts_input.cashier_id))
             result = cursor.fetchone()
             if result:
                 return CashierSalesDTO(result[0], result[1], result[2], result[3])
