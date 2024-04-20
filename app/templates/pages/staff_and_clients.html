@@ -17,10 +17,10 @@
 
 
             <template x-for="card in $store.workersState.people" :key="card[key_column]">
-                <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <div class="flex justify-end px-4 pt-4">
+                <div class="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 items-center">
+                    <div class="w-full flex px-4 pt-4 justify-end">
                         <!-- Dropdown button -->
-                        <div class="relative">
+                        <div class="relative" x-cloak x-show="!card.editing">
                             <button @click="card.showDropdown = !card.showDropdown" 
                                     class="inline-block text-gray-500 dark:text-gray-400 
                                     hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 
@@ -35,24 +35,59 @@
                             <!-- Dropdown menu -->
                             <div x-show="card.showDropdown" @click.away="card.showDropdown = false" class="absolute mt-2 z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                                 <ul class="py-2">
-                                    <li><a href="javascript:void(0);" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a></li>
+                                    <li><a href="javascript:void(0);" @click="$store.workersState.editCard(card[key_column], true)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a></li>
                                     <li><a href="javascript:void(0);" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a></li>
                                     <li><a href="javascript:void(0);" @click="$store.workersState.deleteCard(card[key_column])" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a></li>
                                 </ul>
                             </div>
                         </div>
+                        <div x-cloak x-show="card.editing">
+                            <p class="text-gray-500 dark:text-gray-400">Editing...</p>
+                        </div>
                     </div>
                     <!-- Person details -->
-                    <div class="flex flex-col items-center px-10 pb-10">
+                    <div class="w-full flex flex-col items-center px-10 pb-10">
                         <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="https://i.ibb.co/f93t1mB/user.png" alt="person image"/>
-                        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white" x-text="`${card.Name} ${card.Patronymic} ${card.Surname}`"></h5>
-                        <template x-for="[key, value] in Object.entries(card)" :key="key">
-                            <div x-show="!['Name', 'Surname', 'Patronymic', 'editing', 'showDropdown'].includes(key)" class="flex items-center w-full my-0.5 text-base text-gray-500 dark:text-gray-400">
-                                <span class="font-bold dark:text-gray-300" x-text="key + ':'"></span>
-                                <span class="mx-2 flex-1 dotted-line"></span>
-                                <span x-text="value"></span>
-                            </div>
-                        </template>
+                        <div x-cloak x-show="!card.editing" class="w-full text-center">
+                            <h5 class="my-2 mb-4 text-xl font-medium text-gray-900 dark:text-white" x-text="`${card.Name} ${card.Patronymic} ${card.Surname}`"></h5>
+                            <template x-for="[key, value] in Object.entries(card)" :key="key">
+                                <div x-show="!['Name', 'Surname', 'Patronymic', 'editing', 'showDropdown'].includes(key)" class="mt-2 flex items-center w-full my-0.5 text-base text-gray-500 dark:text-gray-400">
+                                    <span class="font-bold dark:text-gray-300" x-text="key + ':'"></span>
+                                    <span class="mx-2 flex-1 dotted-line"></span>
+                                    <span x-text="value"></span>
+                                </div>
+                            </template>
+                        </div>
+                        <div x-cloak x-show="card.editing" class="w-full">
+                            <ul class="mt-3 h-40 overflow-y-scroll divide-y bg-white py-2 px-3 text-gray-600 hover:text-gray-700 dark:bg-gray-800 dark:divide-gray-500 dark:text-gray-200 custom-scrollbar">
+                                <template x-for="[key, value] in Object.entries(card)" :key="key">
+                                    <template x-if="!['editing', 'showDropdown'].includes(key)">
+                                        <li class="flex items-center py-3 text-sm">
+                                            <span x-text="key + ':'" class="font-bold"></span>
+                                            <input type="text" :id="`${card[key_column]}-${key}-input`" class="ml-auto w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500" :value="value" />
+                                        </li>
+                                    </template>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="w-2/3 flex px-4 pb-4 justify-between" x-cloak x-show="card.editing">
+                        <button @click="$store.workersState.cancelEditingCard(card[key_column])"
+                        class="text-gray-900 gap-2 px-5 py-2.5 me-2 mb-4 focus:outline-none bg-white font-medium  rounded-lg text-sm border
+                        border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
+                        dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
+                        dark:hover:bg-gray-700">
+                            Cancel
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button @click="$store.workersState.cancelEditingCard(card[key_column])"
+                        class="text-white gap-2 bg-cyan-600 hover:bg-sky-600 
+                        focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm 
+                        px-5 py-2.5 me-2 mb-4 dark:bg-cyan-800 dark:hover:bg-cyan-900 
+                        focus:outline-none dark:focus:ring-cyan-950">
+                            Save
+                            <i class="fa-solid fa-check"></i>
+                        </button>
                     </div>
                 </div>
             </template>

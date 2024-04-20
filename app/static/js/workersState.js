@@ -49,9 +49,9 @@ document.addEventListener('alpine:init', () => {
             console.log('INITIALIZED ELEMENT: '+this.currentPerson);
         },
 
-        editRow(id, newState) {
+        editCard(id, newState) {
             if (this.globalState != GlobalStates.NONE) {
-                createToast("error", `You can't edit another row while in ${this.globalState} mode.`);
+                createToast("error", `You can't edit another card while in ${this.globalState} mode.`);
             }
             else {
                 this.initializeCurrentElement(id);
@@ -113,7 +113,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        cancelEditingRow(id){
+        cancelEditingCard(id){
             const rowIndex = this.people.findIndex(element => element[this.keyColumn] == id);
             if (rowIndex !== -1) {
                 this.people[rowIndex].editing = false;
@@ -138,50 +138,6 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error deleting item:', error);
                     createToast("error", `Error deleting item: ${id}`);
                 });
-        },
-
-        deleteSelected() {
-            const items = this.selectedItems;
-            console.log('Removing items:', items);
-            items.forEach(async itemId => {
-                sendRequest({
-                    action: 'delete', 
-                    currentPage: this.currentTab, 
-                    id: itemId, 
-                })
-                    .then(response => {
-                        console.log('Item deleted:', response);
-                        createToast("success", "Item deleted successfully");
-                        this.refetchData();
-                    })
-                    .catch(error => {
-                        console.error('Error deleting item:', error);
-                        createToast("error", `Error deleting item: ${itemId}`);
-                    });
-            });
-            this.stopSelecting();
-        },
-
-        toggleSelectAll() {
-            this.selectAll = !this.selectAll;
-            if (this.selectAll) {
-                this.selectedItems = this.people.map(item => {
-                    return item[this.keyColumn];
-                });
-            } else {
-                this.selectedItems = [];
-            }
-
-            console.log("Selected items:", this.selectedItems);
-        },
-
-        toggleItemSelection(itemId) {
-            const index = this.selectedItems.indexOf(itemId);
-            if (index > -1) {
-                this.selectedItems.splice(index, 1);
-            } else {
-                this.selectedItems.push(itemId);
-            }
         },
 
         refetchData(sortBy = null) {
