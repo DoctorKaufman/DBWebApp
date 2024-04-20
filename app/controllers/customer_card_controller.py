@@ -29,8 +29,10 @@ def update_customer(card_number):
 
 @customer.route('/<int:card_number>/', methods=['DELETE'])
 def delete_customer(card_number):
-    customer_service.delete_customer_card(card_number)
-    return '', 204
+    if customer_service.delete_customer_card(card_number):
+        return '', 204
+    else:
+        return '', 404
 
 
 @customer.route('/<int:card_number>/', methods=['GET'])

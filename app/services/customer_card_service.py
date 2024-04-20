@@ -19,6 +19,7 @@ class CustomerService:
     def delete_customer_card(self, card_number):
         self.customer_card_repository.delete_customer_card(card_number)
 
+
     def update_customer_card(self, customer_dto, card_number):
         customer_card = CustomerCardDTO(card_number, customer_dto.cust_surname, customer_dto.cust_name,
                                         customer_dto.cust_patronymic, customer_dto.phone_number, customer_dto.city,

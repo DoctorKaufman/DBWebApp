@@ -86,7 +86,7 @@ class StoreProductMapper:
         'selling_price': 'Price',
         'products_number': 'Amount',
         'promotional_product': 'Promotional Product',
-        'product_name': 'Product Name'
+        'product_name': 'Product Name',
     }
 
     @staticmethod
@@ -100,7 +100,7 @@ class StoreProductMapper:
     @staticmethod
     def map_to_db_column(column):
         keys = [key for key, val in StoreProductMapper.column_mapping.items() if val == column]
-        return next(iter(keys), 'upc')
+        return next(iter(keys), 'promotional_product' if column == 'prom_product' else 'upc')
 
     @staticmethod
     def map_to_front_column(column):
