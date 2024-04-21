@@ -19,7 +19,7 @@ CREATE TABLE Employee_Account (
     login VARCHAR(50) PRIMARY KEY,
     id_employee INT UNIQUE,
     password_hash VARCHAR(255), -- Storing password hash instead of plain password for security
-    FOREIGN KEY (id_employee) REFERENCES Employee(id_employee)
+    FOREIGN KEY (id_employee) REFERENCES Employee(id_employee) ON DELETE CASCADE
 );
 
 -- Create table Customer_Card
