@@ -38,7 +38,7 @@ def get_pk_name():
     return json.dumps(EmployeeMapper.map_to_front_column(employee_service.get_pk_name())), 200
 
 
-@employee.route('/register', methods=['POST'])
+@employee.route('/', methods=['POST'])
 def register():
     employee_data = EmployeeCreationDTO.deserialize(request.get_json())
     login_data = LoginDTO.deserialize(request.get_json())

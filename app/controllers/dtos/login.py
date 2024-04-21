@@ -13,4 +13,4 @@ class LoginDTO:
 
     @staticmethod
     def deserialize(data):
-        return LoginDTO(data.get('login'), data.get('password'))
+        return LoginDTO(data.get('Login'), data.get('Password'))
