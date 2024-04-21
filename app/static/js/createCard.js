@@ -8,9 +8,10 @@ document.addEventListener('alpine:init', () => {
         fillableFields: [],
 
         init() {
-            Alpine.store('workersState').globalState = GlobalStates.ADDING;
             this.currentTab = Alpine.store('workersState').currentTab;
-            this.fillableFields = fields.reduce((acc, curr) => {
+            let parsedFields = JSON.stringify(fields);
+            parsedFields = JSON.parse(parsedFields);
+            this.fillableFields = parsedFields.reduce((acc, curr) => {
                 const [key, value] = Object.entries(curr)[0];
                 if (value === 'ATTRIB') {
                     acc.push(key);
