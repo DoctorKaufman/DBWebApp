@@ -30,7 +30,7 @@ def get_all_employees():
 @employee.route('/columns', methods=['GET'])
 def get_columns():
     # return json.dumps(employee_service.get_employee_columns())
-    return employee_service.get_employee_columns()
+    return json.dumps(employee_service.get_employee_columns())
 
 
 @employee.route('/pk', methods=['GET'])

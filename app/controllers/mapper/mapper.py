@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from app.services.enum.column_type import ColumnType
 
 
@@ -12,7 +10,7 @@ class CategoryMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, CategoryMapper.column_mapping)
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        return prettier_column
 
     @staticmethod
     def map_to_db_column(column):
@@ -38,7 +36,7 @@ class ProductMapper:
         prettier_column = ColumnType.map_columns(columns, ProductMapper.column_mapping)
         prettier_column['Category ID'] = ColumnType.HIDDEN.serialize()
         prettier_column['Category'] = ColumnType.FK.serialize()
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        return prettier_column
 
     @staticmethod
     def map_to_db_column(column):
@@ -66,7 +64,7 @@ class CustomerCardMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, CustomerCardMapper.column_mapping)
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        return prettier_column
 
     @staticmethod
     def map_to_db_column(column):
@@ -95,7 +93,7 @@ class StoreProductMapper:
         prettier_column['UPC Prom'] = ColumnType.FK.serialize()
         prettier_column['Product ID'] = ColumnType.HIDDEN.serialize()
         prettier_column['Product Name'] = ColumnType.FK.serialize()
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        return prettier_column
 
     @staticmethod
     def map_to_db_column(column):
@@ -128,7 +126,9 @@ class EmployeeMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, EmployeeMapper.column_mapping)
-        return OrderedDict(sorted(prettier_column.items(), key=lambda item: len(item[0])))
+        prettier_column['Login'] = ColumnType.HIDDEN.serialize()
+        prettier_column['Password'] = ColumnType.HIDDEN.serialize()
+        return prettier_column
 
     @staticmethod
     def map_to_db_column(column):

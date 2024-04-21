@@ -24,8 +24,8 @@ class ProductDTO:
     def serialize(self):
         return {
             'ID': self.__id_product,
-            'Name': self.__product_name,
             'Category ID': self.__category_number,
+            'Name': self.__product_name,
             'Description': self.__p_characteristics
             # 'id_product': self.__id_product,
             # 'category_number': self.__category_number,

@@ -64,8 +64,8 @@ class EmployeeDTO:
     def serialize(self):
         return {
             'ID': self.__id_employee,
-            'Name': self.__empl_name,
             'Surname': self.__empl_surname,
+            'Name': self.__empl_name,
             'Patronymic': self.__empl_patronymic,
             'Role': self.__empl_role,
             'Salary': str(self.__salary),

@@ -50,14 +50,14 @@ class CustomerCardDTO:
     def serialize(self):
         return {
             "ID": self.__card_number,
-            "Zip": self.__zip_code,
+            "Surname": self.__cust_surname,
             "Name": self.__cust_name,
+            "Patronymic": self.__cust_patronymic,
+            "PhoneNum": self.__phone_number,
             "City": self.__city,
             "Street": self.__street,
-            "Surname": self.__cust_surname,
+            "Zip": self.__zip_code,
             "Percent": self.__c_percent,
-            "PhoneNum": self.__phone_number,
-            "Patronymic": self.__cust_patronymic
             # "card_number": self.__card_number,
             # "cust_surname": self.__cust_surname,
             # "cust_name": self.__cust_name,
