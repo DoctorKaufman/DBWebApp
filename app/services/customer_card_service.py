@@ -1,4 +1,3 @@
-
 from app.controllers.mapper.mapper import CustomerCardMapper
 from app.model.dto.customer_card import CustomerCardDTO
 
@@ -17,8 +16,7 @@ class CustomerService:
         return self.customer_card_repository.insert_customer_card(customer_dto)
 
     def delete_customer_card(self, card_number):
-        self.customer_card_repository.delete_customer_card(card_number)
-
+        return self.customer_card_repository.delete_customer_card(card_number)
 
     def update_customer_card(self, customer_dto, card_number):
         customer_card = CustomerCardDTO(card_number, customer_dto.cust_surname, customer_dto.cust_name,

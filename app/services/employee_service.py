@@ -23,6 +23,5 @@ class EmployeeService:
         self.employee_repository.update_employee(employee)
         return employee
 
-
     def delete_employee(self, employee_id):
         return self.employee_repository.delete_employee(employee_id)
