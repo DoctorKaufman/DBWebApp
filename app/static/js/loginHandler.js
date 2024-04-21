@@ -21,8 +21,8 @@ document.addEventListener('alpine:init', () => {
 
 
             const data = {
-                "login": login,
-                "password": password,
+                "Login": login,
+                "Password": password,
             };
             console.log(data);
             console.log(`${baseUrl}/auth/login`);

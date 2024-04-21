@@ -27,6 +27,7 @@ document.addEventListener('alpine:init', () => {
         selectAll: false,
 
         initializeCards(items) {
+            console.log('Initializing cards:', items);
             this.people = items.map(item => ({
                 ...item,
                 editing: false, 
@@ -69,7 +70,7 @@ document.addEventListener('alpine:init', () => {
             if (rowIndex !== -1) {
                 this.fields.forEach(fieldObject => {
                     const fieldName = Object.keys(fieldObject)[0];
-                    if (fieldObject[fieldName] === 'ATTRIB') {
+                    if (fieldObject[fieldName] !== 'PK') {
                         if (fieldName.toLowerCase().includes('date')) {
                             const dateString = document.getElementById(`${id}-${fieldName}-input`).value;
                             this.currentPerson[fieldName] = this.reformatDateToDB(dateString)
