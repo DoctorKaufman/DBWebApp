@@ -19,7 +19,7 @@
             aria-selected="{{ 'true' if active_tab == 'workers' else 'false' }}" class="inline-block w-full p-4 aria-selected:text-cyan-600 focus:text-cyan-600 hover:!text-cyan-700 bg-gray-50 
             hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:!text-cyan-500">
             Workers
-            <i x-show="user.Role !== 'Manager'" class="fa-solid fa-lock"></i>
+            <i x-cloak x-show="user.Role !== 'Manager'" class="fa-solid fa-lock"></i>
         </a>
         </li>
     </ul>

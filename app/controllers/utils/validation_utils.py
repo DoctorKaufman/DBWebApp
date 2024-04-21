@@ -20,7 +20,7 @@ def is_adult(birth_date_str):
 
 def parse_date(date_string):
     try:
-        birth_date = datetime.strptime(date_string, '%Y/%m/%d').date()
+        birth_date = datetime.strptime(date_string, '%Y-%m-%d').date()
         return birth_date
     except ValueError:
         print("Invalid birth date format of birth date. Please use YYYY-MM-DD.")
