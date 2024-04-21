@@ -23,8 +23,8 @@ def parse_date(date_string):
         birth_date = datetime.strptime(date_string, '%Y-%m-%d').date()
         return birth_date
     except ValueError:
-        print("Invalid birth date format of birth date. Please use YYYY-MM-DD.")
-        raise ValidationException("Invalid birth date format of birth date. Please use YYYY-MM-DD.")
+        print("Invalid birth date format of birth date. Please use YYYY/MM/DD.")
+        raise ValidationException("Invalid birth date format of birth date. Please use YYYY/MM/DD.")
 
 
 def validate_phone_number(phone_number):
