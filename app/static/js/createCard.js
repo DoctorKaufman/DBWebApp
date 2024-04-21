@@ -13,7 +13,7 @@ document.addEventListener('alpine:init', () => {
             parsedFields = JSON.parse(parsedFields);
             this.fillableFields = parsedFields.reduce((acc, curr) => {
                 const [key, value] = Object.entries(curr)[0];
-                if (value === 'ATTRIB') {
+                if (value !== 'PK') {
                     acc.push(key);
                 }
                 return acc;
