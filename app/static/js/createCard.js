@@ -8,9 +8,10 @@ document.addEventListener('alpine:init', () => {
         fillableFields: [],
 
         init() {
-            Alpine.store('workersState').globalState = GlobalStates.ADDING;
             this.currentTab = Alpine.store('workersState').currentTab;
-            this.fillableFields = fields.reduce((acc, curr) => {
+            let parsedFields = JSON.stringify(fields);
+            parsedFields = JSON.parse(parsedFields);
+            this.fillableFields = parsedFields.reduce((acc, curr) => {
                 const [key, value] = Object.entries(curr)[0];
                 if (value === 'ATTRIB') {
                     acc.push(key);
@@ -21,7 +22,12 @@ document.addEventListener('alpine:init', () => {
 
         saveCreatedCard() {
             this.fillableFields.forEach(field => {
-                Alpine.store('workersState').currentPerson[field] = document.getElementById(field).value;
+                if (field.toLowerCase().includes('date')) {
+                    const dateString = document.getElementById(field).value;
+                    Alpine.store('workersState').currentPerson[field] = this.reformatDateToDB(dateString);
+                } else {
+                    Alpine.store('workersState').currentPerson[field] = document.getElementById(field).value;
+                }
             });
 
             const data = JSON.stringify(Alpine.store('workersState').currentPerson);
@@ -70,6 +76,11 @@ document.addEventListener('alpine:init', () => {
 
         selfDelete(){
             document.getElementById('card-creation-form').remove();
+        },
+
+        reformatDateToDB(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
     }));
 });
