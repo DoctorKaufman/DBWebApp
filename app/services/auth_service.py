@@ -37,6 +37,6 @@ class AuthService:
         session["user"] = db_employee.serialize()
         return db_employee
 
-    def update_password(self, login_data):
-        self.auth_repository.update_employee_account_password(login_data.login, generate_password_hash(login_data.password))
+    def update_password(self, user_id, password_dto):
+        self.auth_repository.update_employee_account_password(user_id, generate_password_hash(password_dto.password))
 

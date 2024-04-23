@@ -11,7 +11,7 @@ class EmployeeAccountRepository:
 
     INSERT_EMPLOYEE_ACCOUNT_QUERY = sql.SQL("INSERT INTO employee_account (login, id_employee, password_hash) "
                                             "VALUES (%s, %s, %s)")
-    UPDATE_EMPLOYEE_ACCOUNT_PASSWORD_QUERY = sql.SQL("UPDATE employee_account SET password_hash = %s WHERE login = %s")
+    UPDATE_EMPLOYEE_ACCOUNT_PASSWORD_QUERY = sql.SQL("UPDATE employee_account SET password_hash = %s WHERE id_employee = %s")
     DELETE_EMPLOYEE_ACCOUNT_QUERY = sql.SQL("DELETE FROM employee_account WHERE login = %s")
     SELECT_EMPLOYEE_ACCOUNT_BY_LOGIN_QUERY = sql.SQL("SELECT * FROM employee_account WHERE login = %s")
 
@@ -36,7 +36,7 @@ class EmployeeAccountRepository:
                            (employee_account.login, employee_account.id_employee, employee_account.password_hash))
             self.conn.commit()
 
-    def update_employee_account_password(self, login, new_password_hash):
+    def update_employee_account_password(self, id_employee, new_password_hash):
         """
         Update an employee account's password in the database.
 
@@ -46,7 +46,7 @@ class EmployeeAccountRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(EmployeeAccountRepository.UPDATE_EMPLOYEE_ACCOUNT_PASSWORD_QUERY,
-                           (new_password_hash, login))
+                           (new_password_hash, id_employee))
             self.conn.commit()
 
     def delete_employee_account(self, login):

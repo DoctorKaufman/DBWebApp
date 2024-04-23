@@ -5,6 +5,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, set_ac
 from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.create.employee_creation import EmployeeCreationDTO
 from app.controllers.dtos.login import LoginDTO
+from app.controllers.dtos.update_password import PasswordDTO
 from app.model.repository.employee import EmployeeRepository
 from app.model.repository.employee_account import EmployeeAccountRepository
 from app.services.auth_service import AuthService
@@ -43,9 +44,9 @@ def logout():
     return ""
 
 
-@auth.route('/update_password', methods=['PUT'])
+@auth.route('/update_password/<int:user_id>/', methods=['PUT'])
 # @login_required
-def update_password():
-    login_data = LoginDTO.deserialize(request.get_json())
-    auth_service.update_password(login_data)
+def update_password(user_id):
+    password_dto = PasswordDTO.deserialize(request.get_json())
+    auth_service.update_password(user_id, password_dto)
     return "", 200
