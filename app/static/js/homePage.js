@@ -9,6 +9,9 @@ document.addEventListener('alpine:init', () => {
                 const username = urlParams.get('username');
                 createToast('success', `Login successful. Welcome, ${username}!`);
             }
+            if (urlParams.get('changed_password') === 'true') {
+                createToast('success', 'Password updated successfully.');
+            }
         }
     }));
 });
