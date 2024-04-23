@@ -1,10 +1,8 @@
 from datetime import timedelta
 
-import jwt
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_session import Session
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.controllers.handler.exceptions import DataDuplicateException, ValidationException
@@ -25,7 +23,7 @@ def create_app(config_filename=None):
     app.config["SESSION_TYPE"] = "filesystem"
     jwt.init_app(app)
     # Session(app)
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=300)
 
     # Load configuration from 'config.py' file or parameter
     if config_filename is not None:

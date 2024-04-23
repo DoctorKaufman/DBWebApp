@@ -14,6 +14,9 @@ class CustomerCardRepository:
     SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM customer_card "
                                     "WHERE SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
+    SEARCH_QUERY_TEMPLATE_BY_COL = sql.SQL("SELECT * FROM customer_card "
+                                    "WHERE {0} = %s "
+                                    "ORDER BY {1} {2}")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
     SELECT_CUSTOMER_CARDS_DROP_LIST_QUERY = sql.SQL("SELECT card_number, cust_surname FROM customer_card")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
@@ -45,6 +48,8 @@ class CustomerCardRepository:
                                          "WHERE cols.table_name = 'customer_card' "
                                          "AND tc.constraint_type = 'PRIMARY KEY'")
 
+    non_string_columns = {'card_number', 'zip_code', 'c_percent'}
+
     def __init__(self, conn):
         """
         Initialize CustomerCardRepository with a database connection.
@@ -66,12 +71,20 @@ class CustomerCardRepository:
         """
         with self.conn.cursor() as cursor:
             if pageable.search_column and pageable.search_value:
-                search_query = self.SEARCH_QUERY_TEMPLATE.format(
-                    sql.Identifier(pageable.search_column),
-                    sql.Identifier(pageable.column),
-                    sql.SQL(pageable.order)
-                )
-                cursor.execute(search_query, (pageable.search_value,))
+                if pageable.search_column not in self.non_string_columns:
+                    search_query = self.SEARCH_QUERY_TEMPLATE.format(
+                        sql.Identifier(pageable.search_column),
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order)
+                    )
+                    cursor.execute(search_query, (pageable.search_value,))
+                else:
+                    search_query = self.SEARCH_QUERY_TEMPLATE_BY_COL.format(
+                        sql.Identifier(pageable.search_column),
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order)
+                    )
+                    cursor.execute(search_query, (pageable.search_value,))
             else:
                 cursor.execute(
                     CustomerCardRepository.SELECT_ALL_CUSTOMER_CARDS_QUERY.format(
