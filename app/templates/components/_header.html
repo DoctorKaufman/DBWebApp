@@ -1,4 +1,4 @@
-<nav x-data="navbar({{session['user']}})" class="sticky top-0 z-50 border-gray-200 bg-gray-100 dark:bg-gray-600 transition-transform duration-300">
+<nav x-data="navbar({{session['user']}})" class="sticky top-0 z-40 border-gray-200 bg-gray-100 dark:bg-gray-600 transition-transform duration-300">
   <div class="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
     <div class="flex items-center gap-20">
       <a href="{{ url_for('main.home') }}" class="flex items-center space-x-5 rtl:space-x-reverse">
@@ -82,7 +82,7 @@
                   <a href="javascript:void(0);" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
                 </li>
                 <li>
-                  <a href="javascript:void(0);" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+                  <a href="javascript:void(0);" data-modal-target="static-modal" data-modal-toggle="static-modal" type="button" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit password</a>
                 </li>
                 <li>
                   <a href="javascript:void(0);" @click="logOut()" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log out</a>
