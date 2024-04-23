@@ -26,7 +26,7 @@ document.addEventListener('alpine:init', () => {
         selectedItems: [],
         selectAll: false,
 
-        initializeCards(items) {
+        initializeElements(items) {
             console.log('Initializing cards:', items);
             this.people = items.map(item => ({
                 ...item,
@@ -171,7 +171,7 @@ document.addEventListener('alpine:init', () => {
             })
                 .then(response => {
                     console.log('Data fetched:', response);
-                    this.initializeCards(response);
+                    this.initializeElements(response);
                     createToast("success", `Data sorted by ${sortBy} in ${sortOrder} order`);
                 })
                 .catch(error => {

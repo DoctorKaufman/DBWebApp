@@ -36,7 +36,7 @@ document.addEventListener('alpine:init', () => {
         selectedItems: [],
         selectAll: false,
 
-        initializeRows(items) {
+        initializeElements(items) {
             this.rowElements = items.map(item => ({
                 ...item,
                 editing: false, 
@@ -216,7 +216,7 @@ document.addEventListener('alpine:init', () => {
             })
                 .then(response => {
                     console.log('Data fetched:', response);
-                    this.initializeRows(response);
+                    this.initializeElements(response);
                     createToast("success", `Data sorted by ${sortBy} in ${sortOrder} order`);
                 })
                 .catch(error => {

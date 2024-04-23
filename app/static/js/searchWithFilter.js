@@ -7,14 +7,30 @@ document.addEventListener('alpine:init', () => {
         searchTerm: '',
         mapper: 'Search by',
         selectedOption: null,
-        options: currentPage === 'goods' ? [{'Name' : 'Name'}, {'Category' : 'Category'}] : [{'Promotional Product' : 'prom_product'}],
+        options: null,
+        storeName: null,
 
+        init(){
+            if (currentPage == 'goods'){
+                this.options = [{'Name' : 'Name'}, {'Category' : 'Category'}];
+                this.storeName = 'tableState';
+            } else if (currentPage == 'goods_in_store'){
+                this.options = [{'Promotional Product' : 'prom_product'}, {'UPC' : 'upc'}];
+                this.storeName = 'tableState';
+            } else if (currentPage == 'workers'){
+                this.options = [{'Surname' : 'Surname'}, {'Role' : 'Role'}];
+                this.storeName = 'workersState';
+            } else if (currentPage == 'clients'){
+                this.options = [{'Surname' : 'Surname'}, {'Percent' : 'Percent'}];
+                this.storeName = 'workersState';
+            }
+        },
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
         },
         selectOption(option) {
             this.selectedOption = Object.values(option)[0];
-            this.mapper = Object.values(option)[0];
+            this.mapper = Object.keys(option)[0];
             this.showDropdown = false;
         },
         search() {
@@ -26,8 +42,8 @@ document.addEventListener('alpine:init', () => {
             const dropdownValue = encodeURIComponent(this.selectedOption);
             const textSearchValue = encodeURIComponent(this.searchTerm);
 
-            Alpine.store('tableState').currentFilters.searchColumn = dropdownValue;
-            Alpine.store('tableState').currentFilters.searchValue = textSearchValue;
+            Alpine.store(this.storeName).currentFilters.searchColumn = dropdownValue;
+            Alpine.store(this.storeName).currentFilters.searchValue = textSearchValue;
 
             sendRequest({
                 action: 'get',
@@ -38,7 +54,7 @@ document.addEventListener('alpine:init', () => {
                 .then(response => {
                     console.log('Search successful:', response);
                     createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
-                    Alpine.store('tableState').initializeRows(response);
+                    Alpine.store(this.storeName).initializeElements(response);
                 })
                 .catch(error => {
                     console.error('Search error:', error);
