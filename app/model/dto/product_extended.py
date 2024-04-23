@@ -29,7 +29,7 @@ class ProductExtendedDTO:
     def serialize(self):
         return {
             'ID': self.__id_product,
-            'Category ID': self.__category_number,
+            'Category_ID': self.__category_number,
             'Name': self.__product_name,
             'Description': self.__p_characteristics,
             'Category': self.__category_name

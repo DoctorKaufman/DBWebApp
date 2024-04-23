@@ -69,9 +69,9 @@ class EmployeeDTO:
             'Patronymic': self.__empl_patronymic,
             'Role': self.__empl_role,
             'Salary': str(self.__salary),
-            'Birth Date': str(self.__date_of_birth),
-            'Start Date': str(self.__date_of_start),
-            'Phone Number': self.__phone_number,
+            'Birth_Date': str(self.__date_of_birth),
+            'Start_Date': str(self.__date_of_start),
+            'Phone_Number': self.__phone_number,
             'City': self.__city,
             'Street': self.__street,
             'Zip': self.__zip_code

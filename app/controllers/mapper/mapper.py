@@ -25,7 +25,7 @@ class CategoryMapper:
 class ProductMapper:
     column_mapping = {
         'id_product': 'ID',
-        'category_number': 'Category ID',
+        'category_number': 'Category_ID',
         'category_name': 'Category',
         'product_name': 'Name',
         'p_characteristics': 'Description'
@@ -34,7 +34,7 @@ class ProductMapper:
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, ProductMapper.column_mapping)
-        prettier_column['Category ID'] = ColumnType.HIDDEN.serialize()
+        prettier_column['Category_ID'] = ColumnType.HIDDEN.serialize()
         prettier_column['Category'] = ColumnType.FK.serialize()
         return prettier_column
 
@@ -79,26 +79,26 @@ class CustomerCardMapper:
 class StoreProductMapper:
     column_mapping = {
         'upc': 'UPC',
-        'upc_prom': 'UPC Prom',
-        'id_product': 'Product ID',
+        'upc_prom': 'UPC_Prom',
+        'id_product': 'Product_ID',
         'selling_price': 'Price',
         'products_number': 'Amount',
-        'promotional_product': 'Promotional Product',
-        'product_name': 'Product Name',
+        'promotional_product': 'Promotional_Product',
+        'product_name': 'Product_Name',
     }
 
     @staticmethod
     def map_columns(columns):
         prettier_column = ColumnType.map_columns(columns, StoreProductMapper.column_mapping)
-        prettier_column['UPC Prom'] = ColumnType.FK.serialize()
-        prettier_column['Product ID'] = ColumnType.HIDDEN.serialize()
-        prettier_column['Product Name'] = ColumnType.FK.serialize()
+        prettier_column['UPC_Prom'] = ColumnType.FK.serialize()
+        prettier_column['Product_ID'] = ColumnType.HIDDEN.serialize()
+        prettier_column['Product_Name'] = ColumnType.FK.serialize()
         return prettier_column
 
     @staticmethod
     def map_to_db_column(column):
         keys = [key for key, val in StoreProductMapper.column_mapping.items() if val == column]
-        return next(iter(keys), 'promotional_product' if column == 'prom_product' else 'upc')
+        return next(iter(keys), 'upc')
 
     @staticmethod
     def map_to_front_column(column):
@@ -113,9 +113,9 @@ class EmployeeMapper:
         'empl_patronymic': 'Patronymic',
         'empl_role': 'Role',
         'salary': 'Salary',
-        'date_of_birth': 'Birth Date',
-        'date_of_start': 'Start Date',
-        'phone_number': 'Phone Number',
+        'date_of_birth': 'Birth_Date',
+        'date_of_start': 'Start_Date',
+        'phone_number': 'Phone_Number',
         'city': 'City',
         'street': 'Street',
         'zip_code': 'Zip',
@@ -133,7 +133,7 @@ class EmployeeMapper:
     @staticmethod
     def map_to_db_column(column):
         keys = [key for key, val in EmployeeMapper.column_mapping.items() if val == column]
-        return next(iter(keys), 'upc')
+        return next(iter(keys), 'id_employee')
 
     @staticmethod
     def map_to_front_column(column):

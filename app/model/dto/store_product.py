@@ -34,11 +34,11 @@ class StoreProductDTO:
     def serialize(self):
         return {
             'UPC': self.__upc,
-            'UPC Prom': self.__upc_prom,
-            'Product ID': self.__id_product,
+            'UPC_Prom': self.__upc_prom,
+            'Product_ID': self.__id_product,
             'Price': str(self.__selling_price),
             'Amount': self.__products_number,
-            'Promotional Product': self.__promotional_product
+            'Promotional_Product': self.__promotional_product
             # 'upc': self.__upc,
             # 'upc_prom': self.__upc_prom,
             # 'id_product': self.__id_product,
