@@ -38,7 +38,6 @@ document.addEventListener('alpine:init', () => {
                 createToast('error', 'Please select a search option.');
                 return;
             }
-            const baseUrl = "http://127.0.0.1:5000"; // You'll need to replace this with your actual base URL
             const dropdownValue = encodeURIComponent(this.selectedOption);
             const textSearchValue = encodeURIComponent(this.searchTerm);
 
