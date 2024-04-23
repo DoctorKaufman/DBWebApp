@@ -10,7 +10,7 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.$store.workersState.currentTab = currentTab;
-            this.$store.workersState.initializeCards(people);
+            this.$store.workersState.initializeElements(people);
             this.$store.workersState.columns = this.rawColumns;
             this.$store.workersState.fields = this.fields;
             this.$store.workersState.keyColumn = keyColumn;

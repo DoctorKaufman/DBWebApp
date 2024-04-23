@@ -8,7 +8,7 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.$store.tableState.currentTab = currentTab;
-            this.$store.tableState.initializeRows(items);
+            this.$store.tableState.initializeElements(items);
             this.$store.tableState.columns = this.rawColumns;
             this.$store.tableState.fields = this.fields;
             this.$store.tableState.keyColumn = keyColumn;

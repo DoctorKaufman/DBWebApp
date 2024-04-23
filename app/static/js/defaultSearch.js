@@ -23,7 +23,7 @@ document.addEventListener('alpine:init', () => {
             })
             .then(response => {
                 console.log('Search successful:', response);
-                Alpine.store('tableState').initializeRows(response);
+                Alpine.store('tableState').initializeElements(response);
                 createToast('success', `Search for input ${searchColumn}: ${this.searchTerm} was successful.`);
             })
             .catch(error => {
