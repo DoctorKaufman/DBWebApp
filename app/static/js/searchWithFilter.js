@@ -15,7 +15,7 @@ document.addEventListener('alpine:init', () => {
                 this.options = [{'Name' : 'Name'}, {'Category' : 'Category'}];
                 this.storeName = 'tableState';
             } else if (currentPage == 'goods_in_store'){
-                this.options = [{'Promotional Product' : 'prom_product'}, {'UPC' : 'upc'}];
+                this.options = [{'Promotional Product' : 'Promotional_Product'}, {'UPC' : 'upc'}];
                 this.storeName = 'tableState';
             } else if (currentPage == 'workers'){
                 this.options = [{'Surname' : 'Surname'}, {'Role' : 'Role'}];
