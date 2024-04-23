@@ -10,7 +10,7 @@ document.addEventListener('alpine:init', () => {
 
             init() {
                 console.log("fields: ", fields)
-                this.options = fields
+                this.options = fields.filter(field => Object.values(field)[0] !== 'HIDDEN')
             },
             toggleDropdown() {
                 this.showDropdown = !this.showDropdown;
@@ -28,28 +28,6 @@ document.addEventListener('alpine:init', () => {
                 console.log('Current filters:', Alpine.store(this.storeName).currentFilters);
                 Alpine.store(this.storeName).refetchData(dropdownValue);
             },
-            sort() {
-                if (!this.selectedOption) {
-                    createToast('error', 'Please select a sorting option.');
-                    return;
-                }
-                
-
-                sendRequest({
-                    action: 'get',
-                    currentPage: currentPage,
-                    sortColumn: dropdownValue
-                })
-                    .then(response => {
-                        console.log('Sort successful:', response);
-                        createToast('success', `Sort for input ${this.selectedOption} was successful.`);
-                        Alpine.store(this.storeName).initializeElements(response);
-                    })
-                    .catch(error => {
-                        console.error('Sort error:', error);
-                        createToast('error', `Sort for input ${this.selectedOption} failed.`);
-                    });
-            }
         };
     });
 });
