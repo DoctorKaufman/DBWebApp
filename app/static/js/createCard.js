@@ -9,24 +9,17 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.currentTab = Alpine.store('workersState').currentTab;
-            let parsedFields = JSON.stringify(fields);
-            parsedFields = JSON.parse(parsedFields);
-            this.fillableFields = parsedFields.reduce((acc, curr) => {
-                const [key, value] = Object.entries(curr)[0];
-                if (value !== 'PK') {
-                    acc.push(key);
-                }
-                return acc;
-            }, []);
+            this.fillableFields = fields.filter(field => Object.values(field)[0] !== 'PK').map(field => Object.keys(field)[0]);
         },
 
         saveCreatedCard() {
             this.fillableFields.forEach(field => {
+                console.log(field);
                 if (field.toLowerCase().includes('date')) {
                     const dateString = document.getElementById(field).value;
                     Alpine.store('workersState').currentPerson[field] = this.reformatDateToDB(dateString);
                 } else {
-                    Alpine.store('workersState').currentPerson[field] = document.getElementById(field).value;
+                    Alpine.store('workersState').currentPerson[field] = document.getElementById(String(field)).value;
                 }
             });
 

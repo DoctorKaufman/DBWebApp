@@ -158,7 +158,6 @@ document.addEventListener('alpine:init', () => {
                 sortOrder = 'asc';
             }
 
-            // Update the sortState with the new sortOrder
             this.sortState[sortBy] = sortOrder;
 
             sendRequest({
