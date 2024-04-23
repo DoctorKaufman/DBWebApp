@@ -33,6 +33,13 @@ class StoreProductRepository:
                                              "ON sp.id_product = p.id_product "
                                              "WHERE sp.promotional_product = %s "
                                              "ORDER BY {0} {1}")
+    SELECT_QUERY_TEMPLATE_EXT_BY_COL = sql.SQL("SELECT sp.upc, sp.upc_prom, sp.id_product, p.product_name, "
+                                             "sp.selling_price, sp.products_number, sp.promotional_product "
+                                             "FROM store_product AS sp "
+                                             "INNER JOIN product AS p "
+                                             "ON sp.id_product = p.id_product "
+                                             "WHERE {0} = %s "
+                                             "ORDER BY {1} {2}")
     SELECT_STORE_PRODUCT_DROP_LIST_QUERY = sql.SQL("SELECT spr.upc, pr.product_name "
                                                    "FROM store_product as spr "
                                                    "INNER JOIN product as pr "
@@ -82,6 +89,8 @@ class StoreProductRepository:
                                          "WHERE cols.table_name = 'store_product' "
                                          "AND tc.constraint_type = 'PRIMARY KEY'")
 
+    non_string_columns = {'upc', 'upc_prom', 'id_product', 'selling_price', 'products_number', 'promotional_product'}
+
     def __init__(self, conn):
         """
         Initialize StoreProductRepository with a database connection.
@@ -124,7 +133,7 @@ class StoreProductRepository:
         """
         with self.conn.cursor() as cursor:
             if pageable.search_column and pageable.search_value:
-                if pageable.search_column != 'promotional_product':
+                if pageable.search_column not in self.non_string_columns:
                     search_query = self.SELECT_QUERY_TEMPLATE_EXT.format(
                         sql.Identifier(pageable.search_column),
                         sql.SQL(pageable.column),
@@ -132,7 +141,8 @@ class StoreProductRepository:
                     )
                     cursor.execute(search_query, (pageable.search_value,))
                 else:
-                    search_query = self.SELECT_QUERY_TEMPLATE_EXT_BOOL.format(
+                    search_query = self.SELECT_QUERY_TEMPLATE_EXT_BY_COL.format(
+                        sql.Identifier(pageable.search_column),
                         sql.SQL(pageable.column),
                         sql.SQL(pageable.order)
                     )
