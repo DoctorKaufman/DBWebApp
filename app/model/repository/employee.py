@@ -14,6 +14,9 @@ class EmployeeRepository:
     SEARCH_QUERY_TEMPLATE = sql.SQL("SELECT * FROM employee WHERE "
                                     "SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
+    SEARCH_QUERY_TEMPLATE_BY_COL = sql.SQL("SELECT * FROM employee WHERE "
+                                    "{0} = %s "
+                                    "ORDER BY {1} {2}")
     SELECT_EMPLOYEE_QUERY = sql.SQL("SELECT * FROM employee WHERE id_employee = %s")
     SELECT_EMPLOYEES_DROP_LIST_QUERY = sql.SQL("SELECT id_employee, empl_surname FROM employee")
     INSERT_EMPLOYEE_QUERY = sql.SQL("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, empl_role, "
@@ -46,6 +49,8 @@ class EmployeeRepository:
                                          "WHERE cols.table_name = 'employee' "
                                          "AND tc.constraint_type = 'PRIMARY KEY'")
 
+    non_string_columns = {'id_employee', 'salary', 'date_of_birth', 'date_of_start'}
+
     def __init__(self, conn):
         """
         Initialize EmployeeRepository with a database connection.
@@ -67,12 +72,20 @@ class EmployeeRepository:
         """
         with self.conn.cursor() as cursor:
             if pageable.search_column and pageable.search_value:
-                search_query = self.SEARCH_QUERY_TEMPLATE.format(
-                    sql.Identifier(pageable.search_column),
-                    sql.Identifier(pageable.column),
-                    sql.SQL(pageable.order)
-                )
-                cursor.execute(search_query, (pageable.search_value,))
+                if pageable.search_column not in self.non_string_columns:
+                    search_query = self.SEARCH_QUERY_TEMPLATE.format(
+                        sql.Identifier(pageable.search_column),
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order)
+                    )
+                    cursor.execute(search_query, (pageable.search_value,))
+                else:
+                    search_query = self.SEARCH_QUERY_TEMPLATE_BY_COL.format(
+                        sql.Identifier(pageable.search_column),
+                        sql.Identifier(pageable.column),
+                        sql.SQL(pageable.order)
+                    )
+                    cursor.execute(search_query, (pageable.search_value,))
             else:
                 cursor.execute(
                     EmployeeRepository.SELECT_ALL_EMPLOYEES_QUERY.format(
