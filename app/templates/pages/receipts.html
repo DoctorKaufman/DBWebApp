@@ -116,8 +116,9 @@
                                     </div>
                                     <hr class="mt-4">
                                     <div class="dark:text-gray-200">
-                                    <ul class="h-auto max-h-52 pr-1.5 overflow-y-scroll custom-scrollbar space-y-3 my-4 print:!h-fit print:!overflow-clip">
-                                        <button @click="addSale()" id="add-sale-button"
+                                    <ul id="sales-list" class="h-auto max-h-52 pr-1.5 overflow-y-scroll custom-scrollbar space-y-3 my-4 print:!h-fit print:!overflow-clip">
+                                        
+                                        <button @click.prevent="addSale()" id="add-sale-button"
                                         class="text-gray-900 text-lg w-full gap-2 px-7 py-2.5 me-2focus:outline-none bg-white font-medium  rounded-lg border
                                         border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
                                         dark:focus:ring-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white

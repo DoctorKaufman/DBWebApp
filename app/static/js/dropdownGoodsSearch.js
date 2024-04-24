@@ -1,12 +1,12 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('dropdownGoodsSearch', (options) => ({
+    Alpine.data('dropdownGoodsSearch', () => ({
       isOpen: false,
       searchTerm: '',
       selectedOption: null,
-      options: options,
+      options: null,
 
       init() {
-        
+        this.options = Alpine.store('receiptsState').dropdownOptions;
       },
 
       toggleDropdown() {
@@ -24,9 +24,25 @@ document.addEventListener('alpine:init', () => {
 
       filteredOptions() {
         if (!this.options) return [];
-        return this.options.filter((option) =>
-          option['Name'].toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
+        console.log('Search Term:', this.searchTerm);
+
+        let filtered =  this.options.filter(option => {
+
+            // Ensure option['Name'] is a string and is not undefined
+            const name = option['Name'] || '';
+            // console.log('Name:', name);
+            console.log(name + 'inclueds' + this.searchTerm + '=' +name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+            return name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        });
+        let result = (filtered.map(option => {
+            return {
+                Name: option.Name,
+                Price: option.Price,
+                UPC: option.UPC
+            };
+        }));
+        console.log('Filtered:', result);
+        return result;
       },
     }));
   });
