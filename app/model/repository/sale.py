@@ -1,6 +1,8 @@
 import psycopg2
 from psycopg2 import sql
 from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
+
+from app.model.dto.product_receipt import ProductReceiptDTO
 from app.model.dto.sale import SaleDTO
 
 
@@ -11,6 +13,10 @@ class SaleRepository:
 
     SELECT_SALE_QUERY = sql.SQL("SELECT * FROM sale WHERE UPC = %s AND check_number = %s")
     SELECT_CHECK_SALES_QUERY = sql.SQL("SELECT * FROM sale WHERE check_number = %s")
+    SELECT_CHECK_SALES_QUERY_EXT = sql.SQL("SELECT product_name, sale.product_number, sale.selling_price FROM sale "
+                                           "INNER JOIN store_product sp on sp.upc = sale.upc "
+                                           "INNER JOIN product p on p.id_product = sp.id_product "
+                                           "WHERE check_number = %s")
     SELECT_ALL_SALES_QUERY = sql.SQL("SELECT * FROM sale")
     INSERT_SALE_QUERY = sql.SQL("INSERT INTO sale (UPC, check_number, product_number, selling_price) "
                                 "VALUES (%s, %s, %s, %s)")
@@ -67,6 +73,12 @@ class SaleRepository:
         with self.conn.cursor() as cursor:
             cursor.execute(SaleRepository.SELECT_CHECK_SALES_QUERY, (check_number,))
             sales = [SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3]) for sale_data in cursor.fetchall()]
+        return tuple(sales)
+
+    def select_check_sale_ext(self, check_number):
+        with self.conn.cursor() as cursor:
+            cursor.execute(SaleRepository.SELECT_CHECK_SALES_QUERY_EXT, (check_number,))
+            sales = [ProductReceiptDTO(sale_data[0], sale_data[1], sale_data[2]) for sale_data in cursor.fetchall()]
         return tuple(sales)
 
     def select_all_sales(self):

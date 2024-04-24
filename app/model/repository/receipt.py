@@ -4,6 +4,7 @@ from psycopg2.errors import InFailedSqlTransaction, ForeignKeyViolation
 
 from app.model.dto.cashier_sales import CashierSalesDTO
 from app.model.dto.receipt import ReceiptDTO
+from app.model.dto.receipt_ext import ReceiptExtDTO
 
 
 class ReceiptRepository:
@@ -12,6 +13,11 @@ class ReceiptRepository:
     """
 
     SELECT_ALL_RECEIPTS_QUERY = sql.SQL("SELECT * FROM receipt ORDER BY {} {}")
+    SELECT_ALL_RECEIPTS_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
+                                            "c.c_percent, print_date, sum_total, vat "
+                                            "FROM receipt "
+                                            "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                            "ORDER BY {} {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                "WHERE DATE(print_date) >= %s "
@@ -81,6 +87,13 @@ class ReceiptRepository:
             cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY.format(sql.Identifier(pageable.column),
                                                                               sql.SQL(pageable.order)))
             receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
+        return tuple(receipts)
+
+    def select_all_receipts_ext(self, pageable):
+        with self.conn.cursor() as cursor:
+            cursor.execute(ReceiptRepository.SELECT_ALL_RECEIPTS_QUERY_EXT.format(sql.Identifier(pageable.column),
+                                                                                  sql.SQL(pageable.order)))
+            receipts = [ReceiptExtDTO(*receipt_data) for receipt_data in cursor.fetchall()]
         return tuple(receipts)
 
     def select_cashier_receipts(self, receipts_input):

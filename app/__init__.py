@@ -49,6 +49,7 @@ def create_app(config_filename=None):
     from app.controllers.check_controller import check
     from app.controllers.store_product_controller import store_product
     from app.controllers.authentication_controller import auth
+    from app.controllers.receipt_controller import receipt
 
     app.register_blueprint(employee)
     app.register_blueprint(category)
@@ -57,6 +58,7 @@ def create_app(config_filename=None):
     app.register_blueprint(check)
     app.register_blueprint(store_product)
     app.register_blueprint(auth)
+    app.register_blueprint(receipt)
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')

@@ -138,3 +138,30 @@ class EmployeeMapper:
     @staticmethod
     def map_to_front_column(column):
         return EmployeeMapper.column_mapping[column]
+
+
+class ReceiptMapper:
+    column_mapping = {
+            'check_number': 'Check_Num',
+            'id_employee': 'Employee_ID',
+            'card_number': 'Customer_Card',
+            'print_date': 'Print_Date',
+            'sum_total': 'Sum_Total',
+            'vat': 'Vat'
+        }
+
+    @staticmethod
+    def map_columns(columns):
+        prettier_column = ColumnType.map_columns(columns, ReceiptMapper.column_mapping)
+        prettier_column['Employee_ID'] = ColumnType.FK.serialize()
+        prettier_column['Customer_Card'] = ColumnType.FK.serialize()
+        return prettier_column
+
+    @staticmethod
+    def map_to_db_column(column):
+        keys = [key for key, val in StoreProductMapper.column_mapping.items() if val == column]
+        return next(iter(keys), 'check_number')
+
+    @staticmethod
+    def map_to_front_column(column):
+        return StoreProductMapper.column_mapping[column]
