@@ -29,8 +29,9 @@
                         This meticulous approach showcases our commitment to transparency and operational excellence, setting new standards in the retail industry.   
                     </p>
                 </template>
-                <div class="flex py-5 bg-white dark:bg-gray-800 justify-center">
+                <div class="flex py-5 bg-white dark:bg-gray-800 justify-center gap-5">
                     {% include 'components/_default_search_input.html' %}
+                    {% include 'components/_print_button.html' %}
                 </div>
             </div>
             <div x-show="user.Role === 'Cashier'" class="w-1/4 flex flex-col justify-center items-center">

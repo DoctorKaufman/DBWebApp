@@ -65,6 +65,13 @@ export const plugins = [
         backgroundRepeat: 'repeat-x',
         backgroundImage: `radial-gradient(circle, ${theme('colors.gray.500')} 20%, transparent 20%)`,
       },
+
+      '@media print': {
+        'body *, .dark': {
+          background: `${theme('colors.white')} !important`, // Using !important to override any other styles
+          color: `${theme('colors.black')} !important`,
+        },
+      },
     });
   }),
 ];
