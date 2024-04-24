@@ -15,7 +15,7 @@ def checks():
             "percent": f"{random.randint(1, 100)}%",
             "phone_number": generate_phone_number(),
             "address": f"City, Street, {random.randint(1, 100)}",
-        } for i in range(1, 5)
+        } for i in range(1, 9)
     ]
     active_tab = 'receipts'
     return render_template('pages/receipts.html', receipts=receipts, active_tab=active_tab)

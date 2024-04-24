@@ -68,7 +68,7 @@ export const plugins = [
 
       '@media print': {
         'body *, .dark': {
-          background: `${theme('colors.white')} !important`, // Using !important to override any other styles
+          background: `${theme('colors.white')} !important`,
           color: `${theme('colors.black')} !important`,
         },
       },
