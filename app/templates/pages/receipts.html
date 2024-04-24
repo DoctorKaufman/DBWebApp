@@ -3,21 +3,181 @@
 {% block title %}Staff and clients{% endblock %}
 
 {% block content %}
-<div class="flex flex-col" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
+<div class="flex flex-col" x-data="receiptsInteractions('{{active_tab}}', {{session['user']}})">
     
     <div class="flex flex-col w-full pt-5 pb-8 items-center justify-center">
         <div class="fixed print:!hidden inset-x-6 top-[-5rem] -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
         <div class="relative left-1/6 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-400 via-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem] bg-[length:300%_auto] animate-blobs" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
         </div>
 
-        <div class="w-4/5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center print:w-full print:portrait:!grid-cols-3">
+        <div class="w-4/5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center print:w-full print:portrait:!grid-cols-1">
             <div class="col-span-full">
                 {% include 'components/_receipts_topbar.html' %}
             </div>        
 
-            {% include 'components/_receipt.html' %}
+
+            {% for receipt in receipts %}
+            <div class="w-full max-w-lg">
+                <div class="rounded-lg shadow-lg p-12 text-xs sm:mx-0 bg-white border border-gray-200 dark:bg-custom-gradient dark:border-gray-700">
+                <div>
+                    <div class="flex flex-col">
+                        <p class="text-gray-600 dark:text-gray-200 text-xs">30.03.24</p>
+
+                        <h1 class="text-gray-800 dark:text-white text-xl font-medium mb-2 flex flex-wrap items-center justify-between">
+                            <span>
+                                Receipt
+                            </span>
+                            <span>
+                                #123456789
+                            </span>
+                        </h1>
+                    
+                        <div class="flex flex-row justify-between">
+                            <span class="text-gray-600 dark:text-gray-200 text-xs">Cashier ID: 000001</span>
+                            <span class="text-gray-600 dark:text-gray-200 text-xs">Customer ID: 000001</span>
+                        </div>
+
+                    </div>
+                    <hr class="mt-4">
+                    <div class="dark:text-gray-200">
+                    <ul class="h-52 pr-1.5 overflow-y-scroll custom-scrollbar space-y-3 my-4 print:!h-fit print:!overflow-clip">
+                        {% for i in range(19) %}
+                        <li>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium text-base">Potatoes</span>
+                            <span class="text-base font-medium">$2.69</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>*Quantity:</span>
+                            <span>2 kg</span>
+                        </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <hr class="mb-4">
+
+                    <div class="flex justify-between items-center">
+                        <span>Customer card reduction:</span><span class="">-$0.00</span>
+                    </div>
+                    <div class="mb-2 flex justify-between items-center">
+                        <span>Taxes & Fees</span><span class="">$0.36</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-medium">Total</span><span class="text-lg font-medium">$12.95</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+            <!-- {% include 'components/_receipt.html' %} -->
             
         </div>
+
+        <div x-data="addReceipt(user)" id="add-receipt-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-xl max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            New receipt
+                        </h3>
+                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="add-receipt-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <div class="p-4 md:p-5">
+                        <form>
+                            <div class="w-full max-w-lg">
+                                <div class="rounded-lg shadow-lg p-12 text-xs sm:mx-0 bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                <div>
+                                    <div class="flex flex-col">
+                                        <p class="text-gray-600 dark:text-gray-200 text-xs" x-text="currentDate"></p>
+                
+                                        <h1 class="text-gray-800 dark:text-white text-xl font-medium mb-2 flex flex-wrap items-center justify-between">
+                                            <span>
+                                                Receipt
+                                            </span>
+                                            <span>
+                                                #123456789
+                                            </span>
+                                        </h1>
+                                    
+                                        <div class="flex flex-row justify-between">
+                                            <span class="text-gray-600 dark:text-gray-200 text-xs">Cashier ID: 000001</span>
+                                            <span class="text-gray-600 dark:text-gray-200 text-xs">Customer ID: 000001</span>
+                                        </div>
+                
+                                    </div>
+                                    <hr class="mt-4">
+                                    <div class="dark:text-gray-200">
+                                    <ul class="h-auto max-h-52 pr-1.5 overflow-y-scroll custom-scrollbar space-y-3 my-4 print:!h-fit print:!overflow-clip">
+                                        <button @click="addSale()" id="add-sale-button"
+                                        class="text-gray-900 text-lg w-full gap-2 px-7 py-2.5 me-2focus:outline-none bg-white font-medium  rounded-lg border
+                                        border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
+                                        dark:focus:ring-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
+                                        dark:hover:bg-gray-700">
+                                            Add item
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        
+                                        <!-- {% for i in range(19) %}
+                                        <li>
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-base">Potatoes</span>
+                                            <span class="text-base font-medium">$2.69</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span>*Quantity:</span>
+                                            <span>2 kg</span>
+                                        </div>
+                                        </li>
+                                        {% endfor %} -->
+                                    </ul>
+                                    
+                                    <hr class="mb-4">
+                
+                                    <div class="flex justify-between items-center">
+                                        <span>Customer card reduction:</span><span class="">-$0.00</span>
+                                    </div>
+                                    <div class="mb-2 flex justify-between items-center">
+                                        <span>Taxes & Fees</span><span class="">$0.36</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-lg font-medium">Total</span><span class="text-lg font-medium">$12.95</span>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="flex mt-3 py-4 justify-between">
+                                <button data-modal-hide="add-receipt-modal"
+                                class="text-gray-900 text-lg w-1/3 gap-2 px-7 py-2.5 me-2focus:outline-none bg-white font-medium rounded-lg border
+                                border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
+                                dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
+                                dark:hover:bg-gray-700">
+                                    Cancel
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <button @click=""
+                                class="text-white text-lg w-1/3 gap-2 bg-cyan-600 hover:bg-sky-600 
+                                focus:ring-4 focus:ring-blue-300 font-medium rounded-lg
+                                px-7 py-2.5 me-2 dark:bg-cyan-800 dark:hover:bg-cyan-900 
+                                focus:outline-none dark:focus:ring-cyan-950">
+                                    Save
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
 
         <div class="fixed print:!hidden inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl " aria-hidden="true">
             <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-purple-400 via-[#2bb3d3] to-[#0aaa9d] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem] bg-[length:300%_auto] animate-blobs" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
