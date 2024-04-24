@@ -1,4 +1,4 @@
-<div class="flex flex-row" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
+<div class="flex flex-row print:!hidden" x-data="{ activeTab: '{{active_tab}}', user: {{session['user']}} }">
     <div class="text-xl w-3/4" :class="{ 'flex content-center justify-center flex-col w-full text-center': user.Role !== 'Manager' }">
         
         <span x-text="activeTab === 'categories' ? 'Our categories' : 'Our products'"></span>
