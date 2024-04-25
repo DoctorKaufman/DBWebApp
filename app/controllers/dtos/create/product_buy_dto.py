@@ -18,4 +18,4 @@ class ProductBuyDTO:
 
     @staticmethod
     def deserialize(data):
-        return ProductBuyDTO(data['upc'], data['amount'], data['price'])
+        return ProductBuyDTO(int(data['upc']), int(data['amount']), float(data['price']))
