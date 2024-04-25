@@ -5,6 +5,7 @@ from app.controllers.connector.db_connector import get_connection
 from app.controllers.dtos.Pageable import Pageable, ReceptPageable
 from app.controllers.dtos.create.check_creation import ReceiptCreationDTO
 from app.controllers.mapper.mapper import ReceiptMapper
+from app.model.dto import receipts_input
 from app.model.repository.customer_card import CustomerCardRepository
 from app.model.repository.receipt import ReceiptRepository
 from app.model.repository.sale import SaleRepository
@@ -59,3 +60,9 @@ def create_receipt():
     receipt_dto = ReceiptCreationDTO.deserialize(request.get_json())
     receipt_service.create_receipt(receipt_dto)
     return '', 201
+
+
+@receipt.route('/<int:check_num>', methods=['DELETE'])
+def delete_receipt(check_num):
+    receipt_service.delete_receipt(check_num)
+    return '', 204

@@ -51,10 +51,13 @@ class ReceiptService:
         receipt_dto = ReceiptDTO(0, receipt_creation_dto.id_employee, receipt_creation_dto.card_number,
                                  date, total_price, vat)
         receipt = self.receipt_repository.insert_receipt(receipt_dto)
-        for prod in receipt_creation_dto.bought_products:
-            self.write_off_products(prod.upc, prod.amount)
-            self.sales_repository.insert_sale(SaleDTO(prod.upc, receipt.check_number, prod.amount, prod.price))
-
+        try:
+            for prod in receipt_creation_dto.bought_products:
+                self.write_off_products(prod.upc, prod.amount)
+                self.sales_repository.insert_sale(SaleDTO(prod.upc, receipt.check_number, prod.amount, prod.price))
+        except CheckCreationException as e:
+            self.delete_receipt(receipt.check_number)
+            raise e
     #     TODO what to return
 
     def write_off_products(self, upc, amount):
@@ -66,8 +69,6 @@ class ReceiptService:
             raise CheckCreationException("Can't write off too much product from storage")
         store_product.set_products_number(store_product.products_number - amount)
         self.store_product_repository.update_store_product(store_product)
-
-    #             TODO check for correct work & додати списання + spring таски
 
     def calculate_total_price(self, bought_products, card_number):
         total_price = 0
@@ -81,3 +82,6 @@ class ReceiptService:
     def find_check_products(self, receipt: ReceiptExtDTO):
         products = self.sales_repository.select_check_sale_ext(receipt.check_number)
         receipt.set_sales_info(products)
+
+    def delete_receipt(self, check_num):
+        self.receipt_repository.delete_receipt(check_num)
