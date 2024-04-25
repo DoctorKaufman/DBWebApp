@@ -11,6 +11,7 @@ from app.model.repository.receipt import ReceiptRepository
 from app.model.repository.sale import SaleRepository
 from app.model.repository.store_product import StoreProductRepository
 from app.services.receipt_service import ReceiptService
+from app.services.store_product_service import StoreProductService
 
 receipt = Blueprint('receipt', __name__, url_prefix='/receipt')
 
@@ -21,6 +22,9 @@ customer_card_repository = CustomerCardRepository(get_connection())
 
 receipt_service = ReceiptService(receipt_repository, sales_repository, store_product_repository,
                                  customer_card_repository)
+
+store_product_repository = StoreProductRepository(get_connection())
+store_product_service = StoreProductService(store_product_repository)
 
 
 # @receipt.route('/', methods=['POST'])
@@ -53,6 +57,15 @@ def get_receipt_sum():
     args = request.args
     sum_pageable = SearchPageable.get_pageable(args)
     return {'sum': receipt_service.get_sum_of_checks_period(sum_pageable)}
+
+
+@receipt.route('/product', methods=["GET"])
+def get_sum():
+    args = request.args
+    return {
+        'Total Sales':
+            store_product_service.get_sales_of_product(SearchPageable.get_pageable(args))
+    }
 
 
 @receipt.route('/', methods=['POST'])
