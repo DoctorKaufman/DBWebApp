@@ -37,11 +37,12 @@ class ReceiptRepository:
                                                        "WHERE id_employee = %s "
                                                        "AND DATE(print_date) >= %s "
                                                        "AND DATE(print_date) <= %s ")
-    SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
+    SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, r.id_employee, r.card_number, "
                                                            "c.c_percent, print_date, sum_total, vat "
-                                                           "FROM receipt "
-                                                           "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
-                                                           "WHERE id_employee = %s "
+                                                           "FROM receipt r "
+                                                           "INNER JOIN customer_card c ON r.card_number = c.card_number "
+                                                           "INNER JOIN employee e ON e.id_employee = r.id_employee "
+                                                           "WHERE SIMILARITY(e.empl_surname, %s) > 0.2 "
                                                            "AND DATE(print_date) >= %s "
                                                            "AND DATE(print_date) <= %s ")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
@@ -54,10 +55,11 @@ class ReceiptRepository:
                             "WHERE DATE(print_date) >= %s "
                             "AND DATE(print_date) <= %s")
     GET_SALES_SUM_BY_CASHIER = sql.SQL("SELECT SUM(sum_total) "
-                                       "FROM receipt "
-                                       "WHERE DATE(print_date) >= %s "
-                                       "AND DATE(print_date) <= %s "
-                                       "AND id_employee = %s")
+                                       "FROM receipt r "
+                                       "INNER JOIN employee e ON e.id_employee = r.id_employee "
+                                       "WHERE SIMILARITY(e.empl_surname, %s) > 0.2 "
+                                       "AND DATE(print_date) >= %s "
+                                       "AND DATE(print_date) <= %s ")
     GET_CASHIER_SALES_PRICE = sql.SQL("SELECT COALESCE(SUM(r.sum_total), 0) AS total_sales,"
                                       " e.id_employee, e.empl_surname, e.empl_name "
                                       "FROM employee e "
@@ -145,9 +147,9 @@ class ReceiptRepository:
 
     def select_cashier_receipts_ext(self, stat_pageable):
         with self.conn.cursor() as cursor:
-            if stat_pageable.id:
+            if stat_pageable.value:
                 cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT,
-                               (stat_pageable.id, stat_pageable.start_date, stat_pageable.end_date))
+                               (stat_pageable.value, stat_pageable.start_date, stat_pageable.end_date))
             else:
                 cursor.execute(ReceiptRepository.SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT,
                                (stat_pageable.start_date, stat_pageable.end_date))
@@ -245,9 +247,9 @@ class ReceiptRepository:
             CashierSalesDTO object representing the result.
         """
         with self.conn.cursor() as cursor:
-            if receipts_input.id:
+            if receipts_input.value:
                 cursor.execute(ReceiptRepository.GET_SALES_SUM_BY_CASHIER,
-                               (receipts_input.start_date, receipts_input.end_date, receipts_input.id))
+                               (receipts_input.value, receipts_input.start_date, receipts_input.end_date))
             else:
                 cursor.execute(ReceiptRepository.GET_SALES_SUM,
                                (receipts_input.start_date, receipts_input.end_date))

@@ -63,7 +63,7 @@ class StoreProductRepository:
                                       "INNER JOIN Store_Product sp ON s.UPC = sp.UPC "
                                       "INNER JOIN Product p ON sp.id_product = p.id_product "
                                       "INNER JOIN Receipt r ON s.check_number = r.check_number "
-                                      "WHERE sp.upc = %s "
+                                      "WHERE SIMILARITY(p.product_name, %s) > 0.2 "
                                       "AND DATE(r.print_date) >= %s "
                                       "AND DATE(r.print_date) <= %s "
                                       "GROUP BY sp.UPC, p.product_name")
@@ -273,13 +273,13 @@ class StoreProductRepository:
         Returns:
             ProductSalesDTO object containing the UPC, product name, and total quantity sold over the period.
         """
-        product_id = pageable.id
+        value = pageable.value
         start_date = pageable.start_date
         end_date = pageable.end_date
 
         with self.conn.cursor() as cursor:
             cursor.execute(StoreProductRepository.GET_PRODUCT_SALES_QUERY, (
-                product_id,
+                value,
                 start_date,
                 end_date
             ))

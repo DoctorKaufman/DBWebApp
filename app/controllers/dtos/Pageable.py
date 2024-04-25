@@ -37,7 +37,6 @@ class SearchPageable:
     def __init__(self, start_date, end_date, value):
         self.__start_date = start_date
         self.__end_date = end_date
-        self.__id = id
         self.__value = value
 
     @property
@@ -49,8 +48,8 @@ class SearchPageable:
         return self.__end_date
 
     @property
-    def id(self):
-        return self.__id
+    def value(self):
+        return self.__value
 
     @staticmethod
     def get_pageable(args):
