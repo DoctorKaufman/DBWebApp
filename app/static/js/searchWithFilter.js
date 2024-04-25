@@ -23,6 +23,9 @@ document.addEventListener('alpine:init', () => {
             } else if (currentPage == 'clients'){
                 this.options = [{'Surname' : 'Surname'}, {'Percent' : 'Percent'}];
                 this.storeName = 'workersState';
+            } else if (currentPage == 'receipts'){
+                this.options = [{'Surname' : 'Surname'}, {'ID' : 'ID'}];
+                this.storeName = 'receiptsState';
             }
         },
         toggleDropdown() {
