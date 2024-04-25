@@ -5,10 +5,7 @@ document.addEventListener('alpine:init', () => {
         user: user,
 
         init() {
-            this.$watch('Alpine.store("receiptsState").receipts', value => {
-                this.receipts = value;
-                console.log('Receipts:', this.receipts);
-            });
+            Alpine.store('receiptsState').receipts = receipts;
         }
     }));
 });

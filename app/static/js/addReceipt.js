@@ -197,13 +197,7 @@ document.addEventListener('alpine:init', () => {
                 console.log('Receipt created:', response);
                 createToast('success', 'Receipt created successfully.');
 
-                // let salesList = document.getElementById('sales-list');
-                // salesList.childNodes.forEach(child => {
-                //     if (child.id !== 'add-sale-button') {
-                //         child.remove();
-                //     }
-                // });
-                this.init();
+                Alpine.store('receiptsState').refetchData();
                 window.location.href = '/receipts';
             })
             .catch(error => {

@@ -16,11 +16,7 @@
                         database that ensures every transaction is accurately recorded and 
                         closely monitored. This state-of-the-art system exemplifies our 
                         dedication to precision and accountability, underpinning our 
-                        commitment to transparency in all our operations. By implementing 
-                        such meticulous data management practices, we set new standards in 
-                        the retail industry, demonstrating operational excellence at every 
-                        turn. Our approach not only builds trust with our customers but also 
-                        enhances our overall efficiency, making us a leader in the marketplace.
+                        commitment to transparency in all our operations. 
                     </p>
                 </template>
                 <template x-if="user.Role === 'Cashier'">
@@ -34,19 +30,54 @@
                     {% include 'components/_print_button.html' %}
                 </div>
             </div>
-            <div x-show="user.Role === 'Cashier'" class="w-1/4 flex flex-col justify-center items-center gap-y-4">
-                <button class="text-white w-3/4 h-1/3 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
+            <div x-cloak x-show="$store.receiptsState.receiptsState !== GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center items-center gap-y-4">
+                <button x-cloak x-show="user.Role === 'Cashier'" class="text-white w-3/4 h-1/2 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
                 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-cyan-800 dark:hover:bg-cyan-900 focus:outline-none
                 dark:focus:ring-cyan-950" data-modal-target="add-receipt-modal" data-modal-toggle="add-receipt-modal">
                     Add receipt
                 </button>
-                <button  class=" w-3/4 h-1/3 py-2.5 px-5 me-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
+                <button x-cloak x-show="user.Role === 'Manager'" 
+                @click="$store.receiptsState.startSelecting()"
+                class=" w-3/4 h-1/2 py-2.5 px-5 me-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
                 border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
                 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
                 dark:hover:bg-gray-700">
                     Remove receipt
                 </button>
+                
             </div>
+
+            <div x-cloak x-show="user.Role === 'Manager' && $store.receiptsState.receiptsState === GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center items-center gap-y-5">
+                <button 
+                  @click="$store.receiptsState.deleteSelected()"
+                  class="w-3/4 h-1/3 py-2.5 px-5 me-2 inline-flex items-center justify-center
+                  bg-red-600 hover:bg-red-700 text-white text-sm font-medium
+                  focus:outline-none rounded-lg border
+                  border-red-400 focus:z-10 focus:ring-4 focus:ring-red-200
+                  dark:focus:ring-red-700 dark:bg-red-800 dark:text-white dark:border-red-800
+                  dark:hover:bg-red-700"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+              
+                  Delete
+              </button>
+  
+              <button 
+                  @click="$store.receiptsState.receiptsState = GlobalStates.NONE"
+                  class=" w-3/4 h-1/3 py-2.5 px-5 me-2 inline-flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
+                  border-gray-200 hover:bg-gray-100 hover:text-cyan-700 focus:z-10 focus:ring-4 focus:ring-gray-100 
+                  dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
+                  dark:hover:bg-gray-700"
+              >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+            
+                  Cancel
+              </button>
+          </div>
         </div>  
     </div>
 </div>
