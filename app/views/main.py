@@ -26,3 +26,11 @@ def home():
 @main.route('/login')
 def login():
     return render_template('pages/login.html')
+
+@main.route('/request1')
+def request1():
+    return render_template('pages/request1.html')
+
+@main.route('/request2')
+def request2():
+    return render_template('pages/request2.html')

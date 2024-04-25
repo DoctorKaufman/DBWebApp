@@ -25,11 +25,11 @@
                         This meticulous approach showcases our commitment to transparency and operational excellence, setting new standards in the retail industry.   
                     </p>
                 </template>
-                    <div class="flex py-5 bg-white dark:bg-gray-800 justify-center gap-5">
-                        {% include 'components/_span_datepicker.html' %}
-                        {% include 'components/_search_input_with_filter.html' %}
-                        {% include 'components/_print_button.html' %}
-                    </div>
+                <div class="flex py-5 bg-white dark:bg-gray-800 justify-center gap-5">
+                    {% include 'components/_span_datepicker.html' %}
+                    {% include 'components/_search_input_with_filter.html' %}
+                    {% include 'components/_print_button.html' %}
+                </div>
             </div>
             <div x-cloak x-show="$store.receiptsState.receiptsState !== GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center items-center gap-y-4">
                 <button x-cloak x-show="user.Role === 'Cashier'" class="text-white w-3/4 h-1/2 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300
