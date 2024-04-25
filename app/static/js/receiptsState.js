@@ -9,6 +9,12 @@ document.addEventListener('alpine:init', () => {
         receiptSales: [],
         currentSale: null,
         currentCustomer: null,
+        currentFilters: {
+            searchFrom: null,
+            searchTo: null,
+            searchColumn: null,
+            searchValue: null,
+        },
         selectedItems: [],
         maxAmount: 0,
 

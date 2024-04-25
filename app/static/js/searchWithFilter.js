@@ -24,7 +24,7 @@ document.addEventListener('alpine:init', () => {
                 this.options = [{'Surname' : 'Surname'}, {'Percent' : 'Percent'}];
                 this.storeName = 'workersState';
             } else if (currentPage == 'receipts'){
-                this.options = [{'Surname' : 'Surname'}, {'ID' : 'ID'}];
+                this.options = [{'Cashier Surname' : 'Surname'}, {'Product Name' : 'Product'}];
                 this.storeName = 'receiptsState';
             }
         },

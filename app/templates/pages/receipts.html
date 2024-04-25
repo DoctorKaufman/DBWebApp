@@ -67,7 +67,7 @@
                     <hr class="mb-4">
 
                     <div class="flex justify-between items-center">
-                        <span>Customer card reduction:</span><span class="">-$0.00</span>
+                        <span>Customer card reduction:</span><span x-text="'-$' + parseFloat(receipt.Card_Reduction)"></span>
                     </div>
                     <div class="mb-2 flex justify-between items-center">
                         <span>Taxes & Fees</span><span x-text="'$' + parseFloat(receipt.Vat)"></span>

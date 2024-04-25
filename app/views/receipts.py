@@ -15,6 +15,7 @@ def checks():
 
     if data.status_code == 200:
         receipts = data.json()
+        receipts = json.dumps(receipts)
 
     else:
         receipts = []
