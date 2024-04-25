@@ -34,10 +34,11 @@ class Pageable:
 
 
 class SearchPageable:
-    def __init__(self, start_date, end_date, cashier_id):
+    def __init__(self, start_date, end_date, value):
         self.__start_date = start_date
         self.__end_date = end_date
-        self.__cashier_id = cashier_id
+        self.__id = id
+        self.__value = value
 
     @property
     def start_date(self):
@@ -49,11 +50,11 @@ class SearchPageable:
 
     @property
     def id(self):
-        return self.__cashier_id
+        return self.__id
 
     @staticmethod
     def get_pageable(args):
         start_date = args.get('start-date', type=str)
         end_date = args.get('end-date', type=str)
-        cashier_id = args.get('id', type=str)
-        return SearchPageable(start_date, end_date, cashier_id)
+        value = args.get('value', type=str)
+        return SearchPageable(start_date, end_date, value)
