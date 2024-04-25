@@ -1,3 +1,4 @@
+from app.controllers.dtos.Pageable import SearchPageable
 from app.controllers.mapper.mapper import StoreProductMapper
 from app.model.dto.store_product import StoreProductDTO
 
@@ -33,6 +34,9 @@ class StoreProductService:
     def get_store_product_columns(self):
         # return StoreProductMapper.map_columns(self.store_product_repository.get_column_names())
         return StoreProductMapper.map_columns(self.store_product_repository.get_column_names_extended())
+
+    def get_sales_of_product(self, pageable: SearchPageable):
+        return self.store_product_repository.get_product_sales_over_period(pageable)
 
     def get_drop_list(self):
         return self.store_product_repository.select_store_products_drop_list()

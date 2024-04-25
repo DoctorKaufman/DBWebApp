@@ -3,7 +3,7 @@ import json
 from flask import Blueprint, request
 
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.Pageable import Pageable
+from app.controllers.dtos.Pageable import Pageable, SearchPageable
 from app.controllers.dtos.create.store_product_creation import StoreProductCreationDTO
 from app.controllers.mapper.mapper import StoreProductMapper
 from app.model.repository.store_product import StoreProductRepository
@@ -53,6 +53,15 @@ def get_columns():
 def get_drop_list():
     drop_list = store_product_service.get_drop_list()
     return json.dumps([c.serialize() for c in drop_list]), 200
+
+
+@store_product.route('/sum', methods=["GET"])
+def get_sum():
+    args = request.args
+    return {
+        'Total Sales':
+        store_product_service.get_sales_of_product(SearchPageable.get_pageable(args))
+    }
 
 
 @store_product.route('/pk', methods=['GET'])

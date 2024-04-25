@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.Pageable import Pageable, ReceptPageable
+from app.controllers.dtos.Pageable import Pageable, SearchPageable
 from app.controllers.dtos.create.check_creation import ReceiptCreationDTO
 from app.controllers.mapper.mapper import ReceiptMapper
 from app.model.dto import receipts_input
@@ -43,7 +43,7 @@ def get_receipt(check_num):
 @receipt.route('/statistic', methods=['GET'])
 def get_receipt_statistic():
     args = request.args
-    statistic_pageable = ReceptPageable.get_pageable(args)
+    statistic_pageable = SearchPageable.get_pageable(args)
     receipts = receipt_service.get_all_receipts_with_condition(statistic_pageable)
     return json.dumps([r.serialize() for r in receipts]), 200
 
@@ -51,7 +51,7 @@ def get_receipt_statistic():
 @receipt.route('/sum', methods=['GET'])
 def get_receipt_sum():
     args = request.args
-    sum_pageable = ReceptPageable.get_pageable(args)
+    sum_pageable = SearchPageable.get_pageable(args)
     return {'sum': receipt_service.get_sum_of_checks_period(sum_pageable)}
 
 

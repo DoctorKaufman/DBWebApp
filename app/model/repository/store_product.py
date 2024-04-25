@@ -63,7 +63,7 @@ class StoreProductRepository:
                                       "INNER JOIN Store_Product sp ON s.UPC = sp.UPC "
                                       "INNER JOIN Product p ON sp.id_product = p.id_product "
                                       "INNER JOIN Receipt r ON s.check_number = r.check_number "
-                                      "WHERE sp.id_product = %s "
+                                      "WHERE sp.upc = %s "
                                       "AND DATE(r.print_date) >= %s "
                                       "AND DATE(r.print_date) <= %s "
                                       "GROUP BY sp.UPC, p.product_name")
@@ -263,19 +263,19 @@ class StoreProductRepository:
                 return False
         return True
 
-    def get_product_sales_over_period(self, product_sales_input_dto):
+    def get_product_sales_over_period(self, pageable):
         """
         Get the total quantity of a product sold over a certain period.
 
         Parameters:
-            product_sales_input_dto: The ProductSalesInputDTO containing product ID, start date, and end date.
+            pageable: The ProductSalesInputDTO containing product ID, start date, and end date.
 
         Returns:
             ProductSalesDTO object containing the UPC, product name, and total quantity sold over the period.
         """
-        product_id = product_sales_input_dto.product_id
-        start_date = product_sales_input_dto.start_date
-        end_date = product_sales_input_dto.end_date
+        product_id = pageable.id
+        start_date = pageable.start_date
+        end_date = pageable.end_date
 
         with self.conn.cursor() as cursor:
             cursor.execute(StoreProductRepository.GET_PRODUCT_SALES_QUERY, (
@@ -286,9 +286,10 @@ class StoreProductRepository:
             row = cursor.fetchone()
             if row:
                 upc, product_name, total_quantity_sold = row
-                return StoreProductSalesDTO(upc, product_name, total_quantity_sold)
+                # return StoreProductSalesDTO(upc, product_name, total_quantity_sold)
+                return total_quantity_sold
             else:
-                return None
+                return 0
 
     def get_column_names(self):
         """

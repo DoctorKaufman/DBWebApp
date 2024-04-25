@@ -33,7 +33,7 @@ class Pageable:
         return Pageable(db_column, sort_order, search_column, search_val)
 
 
-class ReceptPageable:
+class SearchPageable:
     def __init__(self, start_date, end_date, cashier_id):
         self.__start_date = start_date
         self.__end_date = end_date
@@ -48,12 +48,12 @@ class ReceptPageable:
         return self.__end_date
 
     @property
-    def cashier_id(self):
+    def id(self):
         return self.__cashier_id
 
     @staticmethod
     def get_pageable(args):
         start_date = args.get('start-date', type=str)
         end_date = args.get('end-date', type=str)
-        cashier_id = args.get('cashier-id', type=str)
-        return ReceptPageable(start_date, end_date, cashier_id)
+        cashier_id = args.get('id', type=str)
+        return SearchPageable(start_date, end_date, cashier_id)

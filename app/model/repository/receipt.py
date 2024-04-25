@@ -134,9 +134,9 @@ class ReceiptRepository:
             Tuple of ReceiptDTO objects representing cashier's receipts for specified period.
         """
         with self.conn.cursor() as cursor:
-            if receipts_input.cashier_id:
+            if receipts_input.id:
                 cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY,
-                               (receipts_input.cashier_id, receipts_input.start_date, receipts_input.end_date))
+                               (receipts_input.id, receipts_input.start_date, receipts_input.end_date))
             else:
                 cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY,
                                (receipts_input.start_date, receipts_input.end_date))
@@ -145,9 +145,9 @@ class ReceiptRepository:
 
     def select_cashier_receipts_ext(self, stat_pageable):
         with self.conn.cursor() as cursor:
-            if stat_pageable.cashier_id:
+            if stat_pageable.id:
                 cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT,
-                               (stat_pageable.cashier_id, stat_pageable.start_date, stat_pageable.end_date))
+                               (stat_pageable.id, stat_pageable.start_date, stat_pageable.end_date))
             else:
                 cursor.execute(ReceiptRepository.SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT,
                                (stat_pageable.start_date, stat_pageable.end_date))
@@ -245,9 +245,9 @@ class ReceiptRepository:
             CashierSalesDTO object representing the result.
         """
         with self.conn.cursor() as cursor:
-            if receipts_input.cashier_id:
+            if receipts_input.id:
                 cursor.execute(ReceiptRepository.GET_SALES_SUM_BY_CASHIER,
-                               (receipts_input.start_date, receipts_input.end_date, receipts_input.cashier_id))
+                               (receipts_input.start_date, receipts_input.end_date, receipts_input.id))
             else:
                 cursor.execute(ReceiptRepository.GET_SALES_SUM,
                                (receipts_input.start_date, receipts_input.end_date))
