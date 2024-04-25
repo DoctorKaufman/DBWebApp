@@ -16,7 +16,7 @@ class ReceiptRepository:
     SELECT_ALL_RECEIPTS_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
                                             "c.c_percent, print_date, sum_total, vat "
                                             "FROM receipt "
-                                            "LEFT JOIN customer_card c ON receipt.card_number = c.card_number "
+                                            "LEFT OUTER JOIN customer_card c ON receipt.card_number = c.card_number "
                                             "ORDER BY {} {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     SELECT_RECEIPT_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "

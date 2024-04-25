@@ -45,8 +45,12 @@ class ReceiptService:
         return self.receipt_repository.calculate_total_sales_by_cashier(recept_pageable)
 
     def create_receipt(self, receipt_creation_dto: ReceiptCreationDTO):
-        total_price = self.calculate_total_price(receipt_creation_dto.bought_products, receipt_creation_dto.card_number)
+        total_price = self.calculate_total_price(receipt_creation_dto.bought_products)
         vat = total_price * 0.2
+        if receipt_creation_dto.card_number:
+            c_percent = self.customer_repository.get_customer_percent(receipt_creation_dto.card_number)
+            total_price *= (100.0 - c_percent) / 100.0
+        total_price += vat
         date = datetime.now()
         receipt_dto = ReceiptDTO(0, receipt_creation_dto.id_employee, receipt_creation_dto.card_number,
                                  date, total_price, vat)
@@ -70,13 +74,10 @@ class ReceiptService:
         store_product.set_products_number(store_product.products_number - amount)
         self.store_product_repository.update_store_product(store_product)
 
-    def calculate_total_price(self, bought_products, card_number):
+    def calculate_total_price(self, bought_products):
         total_price = 0
         for elem in bought_products:
             total_price += elem.amount * elem.price
-        if card_number:
-            c_percent = self.customer_repository.get_customer_percent(card_number)
-            total_price *= (100.0 - c_percent) / 100.0
         return total_price
 
     def find_check_products(self, receipt: ReceiptExtDTO):

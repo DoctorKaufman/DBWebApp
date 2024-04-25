@@ -45,11 +45,16 @@ class ReceiptExtDTO:
         self.__products = info_list
 
     def serialize(self):
+        card_reduction = 0
+        if self.c_percent is not None:
+            card_reduction = float(self.sum_total) - float(self.vat)
+            card_reduction = card_reduction * float(self.c_percent) / (100.0 - float(self.c_percent))
         return {
             'Check_Num': self.check_number,
             'Employee_ID': self.id_employee,
             'Customer_Card': self.card_number,
-            'Percent': float(self.c_percent),
+            'Percent': float(0 if self.c_percent is None else self.c_percent),
+            'Card_Reduction': card_reduction,
             'Print_Date': str(self.print_date),
             'Sum_Total': str(self.sum_total),
             'Vat': str(self.vat),
