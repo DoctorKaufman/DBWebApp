@@ -2,14 +2,14 @@ import { sendRequest } from "./sendRequest.js";
 import { createToast, removeToast } from './toastNotifications.js';
 
 document.addEventListener('alpine:init', () => {
-    Alpine.data('dropdownGoodsSearch', () => ({
+    Alpine.data('dropdownCustomerSearch', () => ({
       isOpen: false,
       searchTerm: '',
       selectedOption: null,
       options: null,
 
       async init() {
-        await this.prepareGoods();
+        await this.prepareCustomers();
       },
 
       toggleDropdown() {
@@ -21,9 +21,7 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        Alpine.store('receiptsState').currentSale = option;
-        Alpine.store('receiptsState').maxAmount = option['Amount'];
-        Alpine.store('receiptsState').currentSale['Amount'] = 0;
+        Alpine.store('receiptsState').currentCustomer = option;
       },
 
       filteredOptions() {
@@ -31,34 +29,34 @@ document.addEventListener('alpine:init', () => {
         console.log('Search Term:', this.searchTerm);
 
         let filtered =  this.options.filter(option => {
-            const name = option['Produnt_Name'] || '';
+            const name = option['Name'] + option['Surname'] || '';
             return name.toLowerCase().includes(this.searchTerm.toLowerCase());
         });
         let result = (filtered.map(option => {
             return {
-                Name: option.Product_Name,
-                Price: option.Price,
-                UPC: option.UPC,
-                Amount: option.Amount,
+                ID: option.ID,
+                Name: option.Name,
+                Surname: option.Surname,
+                Percent: option.Percent,
             };
         }));
-        console.log('Filtered:', result);
         return result;
       },
 
-      async prepareGoods(){
+      async prepareCustomers(){
         await sendRequest({
             action: 'get',
-            currentPage: 'goods_in_store'
+            currentPage: 'clients'
         })
             .then(response => {
                 this.options = response;
+                console.log('Customers fetched:', this.options);
             })
             .catch(error => {
-                console.error('Error fetching goods from store:', error);
-                createToast('error', `Error fetching goods from store: ${error}`);
+                console.error('Error fetching customers:', error);
+                createToast('error', `Error fetching customers: ${error}`);
             });
-    },
+    }
     }));
   });
   

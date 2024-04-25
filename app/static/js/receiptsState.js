@@ -4,7 +4,7 @@ document.addEventListener('alpine:init', () => {
         receiptsState: null,
         receiptSales: [],
         currentSale: null,
-        dropdownOptions: [],
+        currentCustomer: null,
         maxAmount: 0,
     });
 });

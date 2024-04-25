@@ -8,7 +8,7 @@ document.addEventListener('alpine:init', () => {
 
             this.$watch('currentQuantity', (newQuantity) => {
                 console.log('Current quantity changed to:', newQuantity);
-                Alpine.store('receiptsState').currentSale['Amount'] = newQuantity;
+                Alpine.store('receiptsState').currentSale['Amount'] = Number(newQuantity);
             });
 
             this.$watch('Alpine.store("receiptsState").maxAmount', (newAmount) => {
@@ -34,7 +34,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         validateQuantity() {
-            if (this.currentQuantity < 0) {
+            if (this.currentQuantity < 0 || !Number.isInteger(Number(this.currentQuantity))) {
                 this.currentQuantity = 0;
             } else if (this.currentQuantity > this.max) {
                 this.currentQuantity = this.max;
