@@ -10,8 +10,6 @@ document.addEventListener('alpine:init', () => {
         currentSale: null,
         currentCustomer: null,
         currentFilters: {
-            searchFrom: null,
-            searchTo: null,
             searchColumn: null,
             searchValue: null,
         },
@@ -35,6 +33,10 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error fetching data:', error);
                     createToast("error", "Error fetching data");
                 });
+        },
+
+        searchRequest(){
+
         },
 
         startSelecting() {
