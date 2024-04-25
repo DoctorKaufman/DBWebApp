@@ -32,10 +32,10 @@ document.addEventListener('alpine:init', () => {
         if (columnName == "Category"){
             request = '/category/'
             this.correspondingAttributeName = 'Category ID';
-        } else if (columnName == "UPC Prom"){
+        } else if (columnName == "UPC_Prom"){
             request = '/store-product/'
             this.correspondingAttributeName = 'UPC Prom';
-        } else if (columnName == "Product Name"){
+        } else if (columnName == "Product_Name"){
             request = '/product/'
             this.correspondingAttributeName = 'Product ID';
         }
