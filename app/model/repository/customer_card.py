@@ -15,8 +15,10 @@ class CustomerCardRepository:
                                     "WHERE SIMILARITY({0}, %s) > 0.2 "
                                     "ORDER BY {1} {2}")
     SEARCH_QUERY_TEMPLATE_BY_COL = sql.SQL("SELECT * FROM customer_card "
-                                    "WHERE {0} = %s "
-                                    "ORDER BY {1} {2}")
+                                           "WHERE {0} = %s "
+                                           "ORDER BY {1} {2}")
+    SEARCH_C_PERCENT_QUERY = sql.SQL("SELECT c_percent FROM customer_card "
+                                     "WHERE card_number = %s")
     SELECT_CUSTOMER_CARD_QUERY = sql.SQL("SELECT * FROM customer_card WHERE card_number = %s")
     SELECT_CUSTOMER_CARDS_DROP_LIST_QUERY = sql.SQL("SELECT card_number, cust_surname FROM customer_card")
     INSERT_CUSTOMER_CARD_QUERY = sql.SQL("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, "
@@ -126,6 +128,11 @@ class CustomerCardRepository:
                         cursor.fetchall()]
         return tuple(employee)
 
+    def get_customer_percent(self, card_number):
+        with self.conn.cursor() as cursor:
+            cursor.execute(CustomerCardRepository.SEARCH_C_PERCENT_QUERY, (card_number,))
+            return float(cursor.fetchone()[0])
+
     def insert_customer_card(self, customer_card):
         """
         Insert a new customer card into the database.
@@ -209,4 +216,3 @@ class CustomerCardRepository:
                 return row[0]
             else:
                 return None
-

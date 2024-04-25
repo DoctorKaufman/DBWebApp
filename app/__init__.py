@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.controllers.handler.exceptions import DataDuplicateException, ValidationException
+from app.controllers.handler.exceptions import DataDuplicateException, ValidationException, CheckCreationException
 from app.controllers.handler.error_handler import handle_data_duplicate_exception
 
 SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
@@ -89,6 +89,7 @@ def create_app(config_filename=None):
 
     app.errorhandler(DataDuplicateException)(handle_data_duplicate_exception)
     app.errorhandler(ValidationException)(handle_data_duplicate_exception)
+    app.errorhandler(CheckCreationException)(handle_data_duplicate_exception)
     return app
 
 

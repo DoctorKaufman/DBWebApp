@@ -19,6 +19,11 @@ class ReceiptRepository:
                                             "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
                                             "ORDER BY {} {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
+    SELECT_RECEIPT_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
+                                        "c.c_percent, print_date, sum_total, vat "
+                                        "FROM receipt "
+                                        "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                        "WHERE check_number = %s")
     SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                "WHERE DATE(print_date) >= %s "
                                                "AND DATE(print_date) <= %s")
@@ -131,6 +136,15 @@ class ReceiptRepository:
             receipt_data = cursor.fetchone()
         if receipt_data:
             return ReceiptDTO(*receipt_data)
+        return None
+
+    def select_receipt_ext(self, check_number):
+        with self.conn.cursor() as cursor:
+            cursor.execute(ReceiptRepository.SELECT_RECEIPT_QUERY_EXT, (check_number,))
+            receipt_data = cursor.fetchone()
+        if receipt_data:
+            # receipts = [ReceiptExtDTO(*receipt_data) for receipt_data in cursor.fetchall()]
+            return ReceiptExtDTO(*receipt_data)
         return None
 
     def insert_receipt(self, receipt):

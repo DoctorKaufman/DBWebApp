@@ -5,6 +5,7 @@ from app.controllers.handler.exceptions import CheckCreationException
 from app.controllers.mapper.mapper import ReceiptMapper
 from app.model.dto.receipt import ReceiptDTO
 from app.model.dto.sale import SaleDTO
+from app.model.repository.customer_card import CustomerCardRepository
 from app.model.repository.receipt import ReceiptRepository
 from app.model.repository.sale import SaleRepository
 from app.model.repository.store_product import StoreProductRepository
@@ -12,13 +13,20 @@ from app.model.repository.store_product import StoreProductRepository
 
 class ReceiptService:
     def __init__(self, receipt_repository: ReceiptRepository, sales_repository: SaleRepository,
-                 store_product_repository: StoreProductRepository):
+                 store_product_repository: StoreProductRepository, customer_repository: CustomerCardRepository):
         self.receipt_repository = receipt_repository
         self.sales_repository = sales_repository
         self.store_product_repository = store_product_repository
+        self.customer_repository = customer_repository
 
     def get_receipt_columns(self):
         return ReceiptMapper.map_columns(self.receipt_repository.get_column_names())
+
+    def select_by_check_num(self, check_number):
+        receipt = self.receipt_repository.select_receipt_ext(check_number)
+        products = self.sales_repository.select_check_sale_ext(receipt.check_number)
+        receipt.set_sales_info(products)
+        return receipt
 
     def get_all_receipts(self, pageable):
         receipts = self.receipt_repository.select_all_receipts_ext(pageable)
@@ -28,7 +36,7 @@ class ReceiptService:
         return receipts
 
     def create_receipt(self, receipt_creation_dto: ReceiptCreationDTO):
-        total_price = calculate_total_price(receipt_creation_dto.bought_products)
+        total_price = self.calculate_total_price(receipt_creation_dto.bought_products, receipt_creation_dto.card_number)
         vat = total_price * 0.2
         date = datetime.now()
         receipt_dto = ReceiptDTO(0, receipt_creation_dto.id_employee, receipt_creation_dto.card_number,
@@ -37,6 +45,8 @@ class ReceiptService:
         for prod in receipt_creation_dto.bought_products:
             self.write_off_products(prod.upc, prod.amount)
             self.sales_repository.insert_sale(SaleDTO(prod.upc, receipt.check_number, prod.amount, prod.price))
+
+    #     TODO what to return
 
     def write_off_products(self, upc, amount):
         store_product = self.store_product_repository.select_store_product(upc)
@@ -47,11 +57,14 @@ class ReceiptService:
             raise CheckCreationException("Can't write off too much product from storage")
         store_product.set_products_number(store_product.products_number - amount)
         self.store_product_repository.update_store_product(store_product)
-#             TODO check for correct work & додати списання + spring таски
 
+    #             TODO check for correct work & додати списання + spring таски
 
-def calculate_total_price(bought_products):
-    total_price = 0
-    for elem in bought_products:
-        total_price += elem.amount * elem.price
-    return total_price
+    def calculate_total_price(self, bought_products, card_number):
+        total_price = 0
+        for elem in bought_products:
+            total_price += elem.amount * elem.price
+        if card_number:
+            c_percent = self.customer_repository.get_customer_percent(card_number)
+            total_price *= (100.0 - c_percent) / 100.0
+        return total_price
