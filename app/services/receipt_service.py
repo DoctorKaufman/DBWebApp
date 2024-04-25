@@ -4,6 +4,7 @@ from app.controllers.dtos.create.check_creation import ReceiptCreationDTO
 from app.controllers.handler.exceptions import CheckCreationException
 from app.controllers.mapper.mapper import ReceiptMapper
 from app.model.dto.receipt import ReceiptDTO
+from app.model.dto.receipt_ext import ReceiptExtDTO
 from app.model.dto.sale import SaleDTO
 from app.model.repository.customer_card import CustomerCardRepository
 from app.model.repository.receipt import ReceiptRepository
@@ -31,8 +32,13 @@ class ReceiptService:
     def get_all_receipts(self, pageable):
         receipts = self.receipt_repository.select_all_receipts_ext(pageable)
         for receipt in receipts:
-            products = self.sales_repository.select_check_sale_ext(receipt.check_number)
-            receipt.set_sales_info(products)
+            self.find_check_products(receipt)
+        return receipts
+
+    def get_all_receipts_with_condition(self, recept_pageable):
+        receipts = self.receipt_repository.select_cashier_receipts_ext(recept_pageable)
+        for receipt in receipts:
+            self.find_check_products(receipt)
         return receipts
 
     def create_receipt(self, receipt_creation_dto: ReceiptCreationDTO):
@@ -68,3 +74,7 @@ class ReceiptService:
             c_percent = self.customer_repository.get_customer_percent(card_number)
             total_price *= (100.0 - c_percent) / 100.0
         return total_price
+
+    def find_check_products(self, receipt: ReceiptExtDTO):
+        products = self.sales_repository.select_check_sale_ext(receipt.check_number)
+        receipt.set_sales_info(products)

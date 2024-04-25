@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request
 from app.controllers.connector.db_connector import get_connection
-from app.controllers.dtos.Pageable import Pageable
+from app.controllers.dtos.Pageable import Pageable, ReceptPageable
 from app.controllers.dtos.create.check_creation import ReceiptCreationDTO
 from app.controllers.mapper.mapper import ReceiptMapper
 from app.model.repository.customer_card import CustomerCardRepository
@@ -37,6 +37,14 @@ def get_all_receipts():
 @receipt.route('/<int:check_num>', methods=['GET'])
 def get_receipt(check_num):
     return json.dumps(receipt_service.select_by_check_num(check_num).serialize())
+
+
+@receipt.route('/statistic', methods=['GET'])
+def get_receipt_statistic():
+    args = request.args
+    statistic_pageable = ReceptPageable.get_pageable(args)
+    receipts = receipt_service.get_all_receipts_with_condition(statistic_pageable)
+    return json.dumps([r.serialize() for r in receipts]), 200
 
 
 @receipt.route('/', methods=['POST'])

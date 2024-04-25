@@ -27,10 +27,23 @@ class ReceiptRepository:
     SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                "WHERE DATE(print_date) >= %s "
                                                "AND DATE(print_date) <= %s")
+    SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
+                                                    "c.c_percent, print_date, sum_total, vat "
+                                                    "FROM receipt "
+                                                    "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                    "WHERE DATE(print_date) >= %s "
+                                                    "AND DATE(print_date) <= %s")
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                        "WHERE id_employee = %s "
                                                        "AND DATE(print_date) >= %s "
                                                        "AND DATE(print_date) <= %s ")
+    SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
+                                                   "c.c_percent, print_date, sum_total, vat "
+                                                   "FROM receipt "
+                                                   "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                   "WHERE id_employee = %s "
+                                                   "AND DATE(print_date) >= %s "
+                                                   "AND DATE(print_date) <= %s ")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
     UPDATE_RECEIPT_QUERY = sql.SQL("UPDATE receipt SET id_employee = %s, card_number = %s, print_date = %s, "
@@ -119,6 +132,17 @@ class ReceiptRepository:
                 cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY,
                                (receipts_input.start_date, receipts_input.end_date))
             receipts = [ReceiptDTO(*receipt_data) for receipt_data in cursor.fetchall()]
+        return tuple(receipts)
+
+    def select_cashier_receipts_ext(self, stat_pageable):
+        with self.conn.cursor() as cursor:
+            if stat_pageable.cashier_id:
+                cursor.execute(ReceiptRepository.SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT,
+                               (stat_pageable.cashier_id, stat_pageable.start_date, stat_pageable.end_date))
+            else:
+                cursor.execute(ReceiptRepository.SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT,
+                               (stat_pageable.start_date, stat_pageable.end_date))
+            receipts = [ReceiptExtDTO(*receipt_data) for receipt_data in cursor.fetchall()]
         return tuple(receipts)
 
     def select_receipt(self, check_number):
