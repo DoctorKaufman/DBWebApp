@@ -1,5 +1,5 @@
 class SaleDTO:
-    def __init(self, upc, check_number, product_number, selling_price):
+    def __init__(self, upc, check_number, product_number, selling_price):
         self.__upc = upc
         self.__check_number = check_number
         self.__product_number = product_number

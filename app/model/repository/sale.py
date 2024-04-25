@@ -106,10 +106,10 @@ class SaleRepository:
         with self.conn.cursor() as cursor:
             cursor.execute(SaleRepository.INSERT_SALE_QUERY,
                            (sale.upc, sale.check_number, sale.product_number, sale.selling_price))
-            sale_data = cursor.fetchone()
+            # sale_data = cursor.fetchone()
             self.conn.commit()
-        if sale_data:
-            return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
+        # if sale_data:
+        #     return SaleDTO(sale_data[0], sale_data[1], sale_data[2], sale_data[3])
         return None
 
     def delete_sale(self, upc, check_number):

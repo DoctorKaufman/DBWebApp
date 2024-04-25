@@ -27,6 +27,9 @@ class StoreProductDTO:
     def products_number(self):
         return self.__products_number
 
+    def set_products_number(self, products_number):
+        self.__products_number = products_number
+
     @property
     def promotional_product(self):
         return self.__promotional_product

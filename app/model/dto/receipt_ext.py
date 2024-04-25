@@ -41,7 +41,7 @@ class ReceiptExtDTO:
     def products(self):
         return self.__products
 
-    def set_additional_info(self, info_list):
+    def set_sales_info(self, info_list):
         self.__products = info_list
 
     def serialize(self):
