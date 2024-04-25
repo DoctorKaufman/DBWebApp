@@ -18,9 +18,9 @@ document.addEventListener('alpine:init', () => {
         this.isOpen = false;
         this.$dispatch('input', option); 
 
-        Alpine.store('receiptsState').receiptSales.push(option);
+        Alpine.store('receiptsState').currentSale = option;
         Alpine.store('receiptsState').maxAmount = option['Amount'];
-        console.log( Alpine.store('receiptsState').receiptSales);
+        Alpine.store('receiptsState').currentSale['Amount'] = 0;
       },
 
       filteredOptions() {

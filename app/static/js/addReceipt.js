@@ -7,6 +7,8 @@ document.addEventListener('alpine:init', () => {
         user: null,
         storeProducts: [],
         dropdownOptions: [],
+        totalPrice: 0,
+        taxesSum: 0,
 
         init(){
             this.user = user;
@@ -17,6 +19,7 @@ document.addEventListener('alpine:init', () => {
             Alpine.store('receiptsState').receiptsState = GlobalStates.ADDING;
             const salesList = document.getElementById('sales-list');
             const row = document.createElement("li"); 
+            row.setAttribute('id', 'current-sale');
 
             await sendRequest({
                 action: 'get',
@@ -67,7 +70,7 @@ document.addEventListener('alpine:init', () => {
                                 <a @click.prevent="selectOption(option)" href="javascript:void(0);" class="px-4 py-2 text-gray-700 dark:text-white 
                                 cursor-pointer rounded-md inline-flex w-full hover:bg-gray-100 dark:hover:bg-gray-600 
                                 dark:hover:text-white">
-                                    <span class="text-sm" x-text="option['Name'] +' : '+ option['Price'].slice(0, -3) + '$'"></span>
+                                    <span class="text-sm" x-text="option['Name'] +' : $'+ parseFloat(option['Price'])"></span>
                                 </a>
                             </template>
                         </div>
@@ -101,11 +104,11 @@ document.addEventListener('alpine:init', () => {
                     </div>
 
                     <div class="gap-5">
-                        <button class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 aspect-square focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        <button @click.prevent="cancelSale" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 aspect-square focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                         <i class="fa-solid fa-ban"></i>
                         </button>
 
-                        <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <button @click.prevent="saveSale" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
@@ -116,6 +119,51 @@ document.addEventListener('alpine:init', () => {
             const lastElement = salesList.lastElementChild;
             salesList.insertBefore(row, lastElement);
         },
+
+        cancelSale(){
+            const currentSale = document.getElementById('current-sale');
+            currentSale.remove();
+            Alpine.store('receiptsState').receiptsState = GlobalStates.NONE;
+        },
+
+        saveSale(){
+            console.log("Current sale: ", Alpine.store('receiptsState').currentSale);
+            
+            if(Alpine.store('receiptsState').currentSale === null){
+                createToast('error', 'Please select a product before saving.');
+                return;
+            } else if ( Alpine.store('receiptsState').currentSale['Amount'] === 0){
+                createToast('error', 'Please select a quantity greater than 0.');
+                return;
+            }
+            Alpine.store('receiptsState').receiptSales.push(Alpine.store('receiptsState').currentSale);
+            console.log("ALL Sales: ", Alpine.store('receiptsState').receiptSales);
+            
+            const sale = Alpine.store('receiptsState').currentSale;
+            const salesList = document.getElementById('sales-list');
+            const row = document.createElement("li"); 
+
+            let innerHTML = `
+            <div class="flex justify-between items-center">
+                <span class="font-medium text-base">${sale.Name}</span>
+                <span class="text-base font-medium">$${parseFloat(sale.Price)}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span>*Quantity:</span>
+                <span>${sale.Amount} pieces</span>
+            </div>
+            `;
+
+            row.innerHTML = innerHTML;
+            this.totalPrice += parseFloat(sale.Price) * sale.Amount;
+            this.taxesSum = this.totalPrice * 0.2;
+            this.totalPrice += this.taxesSum;
+            this.cancelSale();
+            const lastElement = salesList.lastElementChild;
+            salesList.insertBefore(row, lastElement);
+        },
+
+
 
         createReceipt(){
             const data = JSON.stringify(Alpine.store('workersState').currentPerson);

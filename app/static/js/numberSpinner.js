@@ -4,8 +4,12 @@ document.addEventListener('alpine:init', () => {
         max: Alpine.store('receiptsState').maxAmount,
 
         init(){
-            this.currentQuantity = 0;
             this.max = Alpine.store('receiptsState').maxAmount;
+
+            this.$watch('currentQuantity', (newQuantity) => {
+                console.log('Current quantity changed to:', newQuantity);
+                Alpine.store('receiptsState').currentSale['Amount'] = newQuantity;
+            });
 
             this.$watch('Alpine.store("receiptsState").maxAmount', (newAmount) => {
                 this.max = newAmount;

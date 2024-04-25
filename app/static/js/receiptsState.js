@@ -3,6 +3,7 @@ document.addEventListener('alpine:init', () => {
 
         receiptsState: null,
         receiptSales: [],
+        currentSale: null,
         dropdownOptions: [],
         maxAmount: 0,
     });
