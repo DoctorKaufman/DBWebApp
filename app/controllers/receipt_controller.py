@@ -47,6 +47,13 @@ def get_receipt_statistic():
     return json.dumps([r.serialize() for r in receipts]), 200
 
 
+@receipt.route('/sum', methods=['GET'])
+def get_receipt_sum():
+    args = request.args
+    sum_pageable = ReceptPageable.get_pageable(args)
+    return {'sum': receipt_service.get_sum_of_checks_period(sum_pageable)}
+
+
 @receipt.route('/', methods=['POST'])
 def create_receipt():
     receipt_dto = ReceiptCreationDTO.deserialize(request.get_json())

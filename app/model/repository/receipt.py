@@ -20,37 +20,46 @@ class ReceiptRepository:
                                             "ORDER BY {} {}")
     SELECT_RECEIPT_QUERY = sql.SQL("SELECT * FROM receipt WHERE check_number = %s")
     SELECT_RECEIPT_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
-                                        "c.c_percent, print_date, sum_total, vat "
-                                        "FROM receipt "
-                                        "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
-                                        "WHERE check_number = %s")
+                                       "c.c_percent, print_date, sum_total, vat "
+                                       "FROM receipt "
+                                       "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                       "WHERE check_number = %s")
     SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                "WHERE DATE(print_date) >= %s "
                                                "AND DATE(print_date) <= %s")
     SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
-                                                    "c.c_percent, print_date, sum_total, vat "
-                                                    "FROM receipt "
-                                                    "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
-                                                    "WHERE DATE(print_date) >= %s "
-                                                    "AND DATE(print_date) <= %s")
+                                                   "c.c_percent, print_date, sum_total, vat "
+                                                   "FROM receipt "
+                                                   "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                   "WHERE DATE(print_date) >= %s "
+                                                   "AND DATE(print_date) <= %s")
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                        "WHERE id_employee = %s "
                                                        "AND DATE(print_date) >= %s "
                                                        "AND DATE(print_date) <= %s ")
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
-                                                   "c.c_percent, print_date, sum_total, vat "
-                                                   "FROM receipt "
-                                                   "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
-                                                   "WHERE id_employee = %s "
-                                                   "AND DATE(print_date) >= %s "
-                                                   "AND DATE(print_date) <= %s ")
+                                                           "c.c_percent, print_date, sum_total, vat "
+                                                           "FROM receipt "
+                                                           "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                           "WHERE id_employee = %s "
+                                                           "AND DATE(print_date) >= %s "
+                                                           "AND DATE(print_date) <= %s ")
     INSERT_RECEIPT_QUERY = sql.SQL("INSERT INTO receipt (id_employee, card_number, print_date, sum_total, vat) "
                                    "VALUES (%s, %s, %s, %s, %s) RETURNING check_number")
     UPDATE_RECEIPT_QUERY = sql.SQL("UPDATE receipt SET id_employee = %s, card_number = %s, print_date = %s, "
                                    "sum_total = %s, vat = %s WHERE check_number = %s")
     DELETE_RECEIPT_QUERY = sql.SQL("DELETE FROM receipt WHERE check_number = %s")
-    GET_CASHIER_SALES_PRICE = sql.SQL("SELECT e.id_employee, e.empl_surname, e.empl_name, "
-                                      "COALESCE(SUM(r.sum_total), 0) AS total_sales "
+    GET_SALES_SUM = sql.SQL("SELECT SUM(sum_total) "
+                            "FROM receipt "
+                            "WHERE DATE(print_date) >= %s "
+                            "AND DATE(print_date) <= %s")
+    GET_SALES_SUM_BY_CASHIER = sql.SQL("SELECT SUM(sum_total) "
+                                       "FROM receipt "
+                                       "WHERE DATE(print_date) >= %s "
+                                       "AND DATE(print_date) <= %s "
+                                       "AND id_employee = %s")
+    GET_CASHIER_SALES_PRICE = sql.SQL("SELECT COALESCE(SUM(r.sum_total), 0) AS total_sales,"
+                                      " e.id_employee, e.empl_surname, e.empl_name "
                                       "FROM employee e "
                                       "LEFT JOIN receipt r ON e.id_employee = r.id_employee "
                                       "WHERE e.id_employee = %s "
@@ -236,13 +245,14 @@ class ReceiptRepository:
             CashierSalesDTO object representing the result.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute(ReceiptRepository.GET_CASHIER_SALES_PRICE,
-                           (receipts_input.start_date, receipts_input.end_date, receipts_input.cashier_id))
-            result = cursor.fetchone()
-            if result:
-                return CashierSalesDTO(result[0], result[1], result[2], result[3])
+            if receipts_input.cashier_id:
+                cursor.execute(ReceiptRepository.GET_SALES_SUM_BY_CASHIER,
+                               (receipts_input.start_date, receipts_input.end_date, receipts_input.cashier_id))
             else:
-                return None
+                cursor.execute(ReceiptRepository.GET_SALES_SUM,
+                               (receipts_input.start_date, receipts_input.end_date))
+
+            return cursor.fetchone()[0]
 
     def calculate_total_sales_all_cashiers(self, sales_input):
         """

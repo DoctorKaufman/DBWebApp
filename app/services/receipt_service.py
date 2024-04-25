@@ -41,6 +41,9 @@ class ReceiptService:
             self.find_check_products(receipt)
         return receipts
 
+    def get_sum_of_checks_period(self, recept_pageable):
+        return self.receipt_repository.calculate_total_sales_by_cashier(recept_pageable)
+
     def create_receipt(self, receipt_creation_dto: ReceiptCreationDTO):
         total_price = self.calculate_total_price(receipt_creation_dto.bought_products, receipt_creation_dto.card_number)
         vat = total_price * 0.2
