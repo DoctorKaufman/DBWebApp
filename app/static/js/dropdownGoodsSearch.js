@@ -19,6 +19,7 @@ document.addEventListener('alpine:init', () => {
         this.$dispatch('input', option); 
 
         Alpine.store('receiptsState').receiptSales.push(option);
+        Alpine.store('receiptsState').maxAmount = option['Amount'];
         console.log( Alpine.store('receiptsState').receiptSales);
       },
 
@@ -27,18 +28,15 @@ document.addEventListener('alpine:init', () => {
         console.log('Search Term:', this.searchTerm);
 
         let filtered =  this.options.filter(option => {
-
-            // Ensure option['Name'] is a string and is not undefined
             const name = option['Name'] || '';
-            // console.log('Name:', name);
-            console.log(name + 'inclueds' + this.searchTerm + '=' +name.toLowerCase().includes(this.searchTerm.toLowerCase()))
             return name.toLowerCase().includes(this.searchTerm.toLowerCase());
         });
         let result = (filtered.map(option => {
             return {
                 Name: option.Name,
                 Price: option.Price,
-                UPC: option.UPC
+                UPC: option.UPC,
+                Amount: option.Amount,
             };
         }));
         console.log('Filtered:', result);
