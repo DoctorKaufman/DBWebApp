@@ -19,6 +19,6 @@ class ProductReceiptDTO:
     def serialize(self):
         return {
             'Product_Name': self.product_name,
-            'Product_Number': int(self.product_number),
+            'Amount': int(self.product_number),
             'Product_Price': float(self.product_price)
         }

@@ -12,6 +12,13 @@ document.addEventListener('alpine:init', () => {
 
         init(){
             this.user = user;
+            this.totalPrice = 0;
+            this.customerDiscount = 0;
+            this.taxesSum = 0;
+            Alpine.store('receiptsState').receiptSales = [];
+            Alpine.store('receiptsState').currentSale = null;
+            Alpine.store('receiptsState').currentCustomer = null;
+            Alpine.store('receiptsState').receiptsState = GlobalStates.NONE;
 
             this.$watch('Alpine.store("receiptsState").currentCustomer', (newCustomer) => {
                 if (newCustomer !== null){
@@ -168,23 +175,41 @@ document.addEventListener('alpine:init', () => {
         },
 
         createReceipt(){
-            const data = JSON.stringify(Alpine.store('workersState').currentPerson);
-            console.log(data);
-            let allFilled = true;
-            for (let field in Alpine.store('workersState').currentPerson) {
-                if (Alpine.store('workersState').currentPerson[field] === '') {
-                    allFilled = false;
-                    break;
-                }
+            console.log('Current customer:', Alpine.store('receiptsState').currentCustomer);
+            let data = {
+                "id_employee" : this.user['ID'],
+                "card_number" : Alpine.store('receiptsState').currentCustomer? Alpine.store('receiptsState').currentCustomer['ID'] : null,
+                "products" : Alpine.store('receiptsState').receiptSales.map(sale => {
+                    return {
+                        "upc" : sale['UPC'],
+                        "amount" : sale['Amount'],
+                        "price" : sale['Price']
+                    };
+                })
             }
-        
-            if (allFilled) {
-                Alpine.store('workersState').globalState = GlobalStates.NONE;
-                this.createRequest(data);
-                this.selfDelete();
-            } else {
-                createToast("error", "Please fill in all fields before saving.");
-            }
+            console.log("Receipt data: ", data);
+            sendRequest({
+                action: 'post',
+                currentPage: 'receipts',
+                data: data
+            })
+            .then(response => {
+                console.log('Receipt created:', response);
+                createToast('success', 'Receipt created successfully.');
+
+                // let salesList = document.getElementById('sales-list');
+                // salesList.childNodes.forEach(child => {
+                //     if (child.id !== 'add-sale-button') {
+                //         child.remove();
+                //     }
+                // });
+                this.init();
+                window.location.href = '/receipts';
+            })
+            .catch(error => {
+                console.error('Error creating receipt:', error);
+                createToast('error', 'Error creating receipt.');
+            });
         },
 
     }));

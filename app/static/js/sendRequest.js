@@ -27,6 +27,9 @@ export async function sendRequest({
         case 'workers':
             endpoint = '/employee/';
             break;
+        case 'receipts':
+            endpoint = '/receipt/';
+            break;
         default:
             throw new Error(`Unknown currentPage: ${currentPage}`);
     }
