@@ -1,26 +1,55 @@
-<table class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+<table x-data="requests('{{active_tab}}')" class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
-    <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-            {% for header in headers %}
-                <th scope="col" class="p-4">
-                    {{ header }}
-                </th>
-            {% endfor %}
+    <caption x-cloak class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+        <h3 class="m-2">Description of the query:</h3>
+        <template x-if="activeTab == 'request1'">
+            <p class="m-2 text-base text-gray-900 dark:text-gray-300">Display data about the category, 
+                the total price of goods in this category in the warehouse, the number of goods in this category for categories in which the total cost of goods exceeds the set number.
+            </p>
+        </template>
+        <template x-if="activeTab == 'request2'">
+            <p class="m-2 text-base text-gray-900 dark:text-gray-300">
+                Display data about workers who served all customers with cards (issued at least one check to each).
+            </p>
+        </template>
+        <form class="w-1/2 m-2 mb-0" x-cloak x-show="activeTab == 'request1'">
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="text" x-model="value" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-cyan-700 focus:border-cyan-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-blue-500" placeholder="Input parameter here..." required />
+                <button @click.prevent="sendRequest" class="text-white absolute end-2.5 bottom-2.5 bg-cyan-600 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-600 font-medium rounded-lg text-sm px-4 py-2 dark:bg-cyan-800 dark:hover:bg-cyan-900 dark:focus:ring-cyan-950">Search</button>
+            </div>
+        </form>
+    </caption>
 
-        </tr>
-    </thead>
-
-
-    <tbody class="table-body align-middle justify-center content-center">
-
-            <tr class="dark:border-gray-700 border-b dark:bg-gray-800 bg-white">
-
-                <td class="px-6 py-4">
-                    <span>Value</span>
-                </td>
-
+    <template x-colak x-if="result != null">
+        <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <template x-for="key in Object.keys(result[0])" :key="key">
+                    <th scope="col" class="p-4" x-text="key"></th>
+                </template>
             </tr>
-    </tbody>
+        </thead>
+    </template>
+
+    <template x-colak x-if="result != null">
+        <tbody class="table-body align-middle justify-center content-center">
+
+            <template x-for="(item, index) in result" :key="index">
+                <tr class="dark:border-gray-700 border-b dark:bg-gray-800 bg-white">
+                    <template x-for="value in Object.values(item)">
+                        <td class="px-6 py-4">
+                            <span x-text="value"></span>
+                        </td>
+                    </template>
+                </tr>
+            </template>
+
+        </tbody>
+    </template>
         
 </table>
