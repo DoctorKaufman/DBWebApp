@@ -49,21 +49,12 @@
               </a>
             </li>
             <li x-cloak x-show="signedIn">
-              <a href="{{ url_for('main.request1') }}" 
+              <a href="{{ url_for('requests.request1') }}" 
               class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 
               md:hover:bg-transparent md:border-0 md:hover:text-cyan-600 dark:text-white
               md:dark:hover:text-cyan-600 dark:hover:bg-gray-700  
               md:dark:hover:bg-transparent">
-                Request 1
-              </a>
-            </li>
-            <li x-cloak x-show="signedIn">
-              <a href="{{ url_for('main.request2') }}" 
-              class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 
-              md:hover:bg-transparent md:border-0 md:hover:text-cyan-600 dark:text-white
-              md:dark:hover:text-cyan-600 dark:hover:bg-gray-700  
-              md:dark:hover:bg-transparent">
-                Request 2
+                Requests
               </a>
             </li>
           </ul>

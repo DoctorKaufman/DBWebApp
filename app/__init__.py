@@ -42,6 +42,7 @@ def create_app(config_filename=None):
     from .views.goods_and_categories import goods_and_categories as goods_and_categories_blueprint
     from .views.staff_and_clients import staff_and_clients as staff_and_clients_blueprint
     from .views.receipts import receipts as receipts
+    from .views.requests import requests as requests_blueprint
 
     from app.controllers.employee_controller import employee
     from app.controllers.category_controller import category
@@ -66,6 +67,7 @@ def create_app(config_filename=None):
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
     app.register_blueprint(staff_and_clients_blueprint, url_prefix='/staff-and-clients')
     app.register_blueprint(receipts)
+    app.register_blueprint(requests_blueprint, url_prefix='/requests')
 
     app.context_processor(inject_user)
 
