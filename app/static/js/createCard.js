@@ -16,8 +16,7 @@ document.addEventListener('alpine:init', () => {
             this.fillableFields.forEach(field => {
                 console.log(field);
                 if (field.toLowerCase().includes('date')) {
-                    const dateString = document.getElementById(field).value;
-                    Alpine.store('workersState').currentPerson[field] = this.reformatDateToDB(dateString);
+                    Alpine.store('workersState').currentPerson[field] = document.getElementById(field).value;
                 } else {
                     Alpine.store('workersState').currentPerson[field] = document.getElementById(String(field)).value;
                 }
@@ -69,11 +68,6 @@ document.addEventListener('alpine:init', () => {
 
         selfDelete(){
             document.getElementById('card-creation-form').remove();
-        },
-
-        reformatDateToDB(dateString) {
-            const date = new Date(dateString);
-            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
     }));
 });

@@ -70,11 +70,13 @@ document.addEventListener('alpine:init', () => {
             if (rowIndex !== -1) {
                 this.fields.forEach(fieldObject => {
                     const fieldName = Object.keys(fieldObject)[0];
-                    if (fieldObject[fieldName] !== 'PK') {
+                    if (fieldObject[fieldName] !== 'PK' && fieldObject[fieldName] !== 'HIDDEN') {
                         if (fieldName.toLowerCase().includes('date')) {
-                            const dateString = document.getElementById(`${id}-${fieldName}-input`).value;
-                            this.currentPerson[fieldName] = this.reformatDateToDB(dateString)
+
+                            this.currentPerson[fieldName] = document.getElementById(`${id}-${fieldName}-input`).value;
                         } else {
+                            console.log('searching id:', `${id}-${fieldName}-input`);
+                            console.log('searching value:', document.getElementById(`${id}-${fieldName}-input`).value);
                             this.currentPerson[fieldName] = document.getElementById(`${id}-${fieldName}-input`).value;
                         }
                     }
@@ -177,15 +179,6 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error fetching data:', error);
                     createToast("error", "Error fetching data");
                 });
-        },
-
-        reformatDate(dateString) {
-            return new Date(dateString).toLocaleDateString();
-        },
-
-        reformatDateToDB(dateString) {
-            const date = new Date(dateString);
-            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
     });
 
