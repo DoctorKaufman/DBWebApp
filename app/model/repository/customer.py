@@ -26,7 +26,7 @@ class CustomerRepository:
             cc.cust_surname,
             cc.cust_name,
             cc.phone_number,
-            COUNT(DISTINCT r.check_number) AS total_purchases,
+            COUNT(r.check_number) AS total_purchases,
             COALESCE(SUM(r.sum_total), 0) AS total_amount_spent,
             ROUND(COALESCE(AVG(r.sum_total), 0), 2) AS average_purchase_amount,
             mcp.most_common_product_UPC,
@@ -35,8 +35,6 @@ class CustomerRepository:
             Customer_Card cc
         LEFT JOIN
             Receipt r ON cc.card_number = r.card_number
-        LEFT JOIN
-            Sale s ON r.check_number = s.check_number
         LEFT JOIN
             MostCommonProduct mcp ON cc.card_number = mcp.card_number AND mcp.rn = 1
         GROUP BY
