@@ -16,6 +16,7 @@ class CategoryRepository:
                                     "ORDER BY {1} {2}")
     SELECT_CATEGORY_DROP_LIST_QUERY = sql.SQL("SELECT category_number, category_name FROM category")
     SELECT_CATEGORY_QUERY = sql.SQL("SELECT * FROM category WHERE category_number = %s")
+    SELECT_CATEGORY_BY_NAME = sql.SQL("SELECT * FROM category WHERE category_name ILIKE %s")
     INSERT_CATEGORY_QUERY = sql.SQL("INSERT INTO category (category_name) VALUES (%s) RETURNING category_number")
     UPDATE_CATEGORY_QUERY = sql.SQL("UPDATE category SET category_name = %s WHERE category_number = %s")
     DELETE_CATEGORY_QUERY = sql.SQL("DELETE FROM category WHERE category_number = %s")
@@ -106,6 +107,14 @@ class CategoryRepository:
         """
         with self.conn.cursor() as cursor:
             cursor.execute(CategoryRepository.SELECT_CATEGORY_QUERY, (category_number,))
+            category_data = cursor.fetchone()
+        if category_data:
+            return CategoryDTO(category_data[0], category_data[1])
+        return None
+
+    def select_category_by_name(self, category_name):
+        with self.conn.cursor() as cursor:
+            cursor.execute(CategoryRepository.SELECT_CATEGORY_BY_NAME, (category_name,))
             category_data = cursor.fetchone()
         if category_data:
             return CategoryDTO(category_data[0], category_data[1])
