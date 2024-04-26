@@ -30,7 +30,7 @@ class ReceiptRepository:
     SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
                                                    "c.c_percent, print_date, sum_total, vat "
                                                    "FROM receipt "
-                                                   "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                   "LEFT JOIN customer_card c ON receipt.card_number = c.card_number "
                                                    "WHERE DATE(print_date) >= %s "
                                                    "AND DATE(print_date) <= %s")
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
