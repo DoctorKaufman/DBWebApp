@@ -12,23 +12,11 @@ requests = Blueprint('requests', __name__)
 def request1():
     active_tab = 'request1'
 
-    if all(response.status_code == 200 for response in [data]):
-        data = data.json()
-        print(data)
-    else: 
-        data = []
-
-    return render_template('pages/requests.html', data=data, active_tab=active_tab)
+    return render_template('pages/requests.html', active_tab=active_tab)
 
 
 @requests.route('/request2')
 def request2():
     active_tab = 'request2'
 
-    if all(response.status_code == 200 for response in [data]):
-        data = data.json()
-        print(data)
-    else: 
-        data = []
-
-    return render_template('pages/requests.html', data=data, active_tab=active_tab)
+    return render_template('pages/requests.html', active_tab=active_tab)
