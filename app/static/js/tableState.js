@@ -217,7 +217,6 @@ document.addEventListener('alpine:init', () => {
                 .then(response => {
                     console.log('Data fetched:', response);
                     this.initializeElements(response);
-                    createToast("success", `Data sorted by ${sortBy} in ${sortOrder} order`);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);

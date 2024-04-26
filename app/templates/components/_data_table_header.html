@@ -88,7 +88,7 @@
 
             </button>
         </div>
-        <div x-cloak x-show="tableState === GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center items-center">
+        <div x-cloak x-show="tableState === GlobalStates.SELECTING" class="w-1/4 flex flex-col justify-center gap-y-5 items-center">
               <button 
                 @click="$store.tableState.deleteSelected()"
                 class="w-3/4 h-1/3 py-2.5 px-5 me-2 inline-flex items-center justify-center
