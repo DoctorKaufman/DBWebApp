@@ -152,7 +152,9 @@ document.addEventListener('alpine:init', () => {
             
             this.totalPrice += parseFloat(sale.Price) * sale.Amount;
             this.customerDiscount = this.totalPrice * this.customerPercent / 100;
+            this.customerDiscount = parseFloat(this.customerDiscount.toFixed(2));
             this.taxesSum = this.totalPrice * 0.2;
+            this.taxesSum = parseFloat(this.taxesSum.toFixed(2));
             this.totalPrice += this.taxesSum;
             this.totalPrice -= this.customerDiscount;
             console.log("Total price: ", this.totalPrice);
@@ -162,16 +164,35 @@ document.addEventListener('alpine:init', () => {
             salesList.insertBefore(row, lastElement);
         },
 
+        cancelReceipt(){
+            Alpine.store('receiptsState').receiptSales = [];
+            Alpine.store('receiptsState').currentSale = null;
+            Alpine.store('receiptsState').currentCustomer = null;
+            this.totalPrice = 0;
+            this.customerDiscount = 0;
+            this.taxesSum = 0;
+            this.customerPercent = 0;
+
+            let list = document.getElementById('sales-list');
+            while (list.firstChild && list.firstChild.id !== 'add-sale-button') {
+                list.removeChild(list.firstChild);
+            }
+
+            createToast('success', 'Receipt canceled successfully.');
+        },
+
         reEvaluateTotal(){
             this.totalPrice = 0;
             Alpine.store('receiptsState').receiptSales.forEach(sale => {
                 this.totalPrice += parseFloat(sale.Price) * sale.Amount;
-                this.customerDiscount = this.totalPrice * this.customerPercent / 100;
-                this.taxesSum = this.totalPrice * 0.2;
-                this.totalPrice += this.taxesSum;
-                this.totalPrice -= this.customerDiscount;
-                console.log("Total price: ", this.totalPrice);
             });
+            this.customerDiscount = this.totalPrice * this.customerPercent / 100;
+            this.customerDiscount = parseFloat(this.customerDiscount.toFixed(2));
+            this.taxesSum = this.totalPrice * 0.2;
+            this.taxesSum = parseFloat(this.taxesSum.toFixed(2));
+            this.totalPrice += this.taxesSum;
+            this.totalPrice -= this.customerDiscount;
+            console.log("Total price: ", this.totalPrice);
         },
 
         createReceipt(){

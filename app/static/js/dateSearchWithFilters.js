@@ -7,13 +7,10 @@ document.addEventListener('alpine:init', () => {
         searchTerm: '',
         mapper: 'Search by',
         selectedOption: null,
-        options: null,
-        storeName: null,
+        options: [{'Cashier (sum)' : 'sum'}, {'Cashier (checks)' : 'statistic'}, {'Product Name' : 'product'}],
+        storeName: 'receiptsState',
 
-        init(){
-            this.options = [{'Cashier Surname (sum)' : 'sum'}, {'Cashier Surname (checks)' : 'statistic'}, {'Product Name' : 'product'}];
-            this.storeName = 'receiptsState';
-        },
+       
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
         },
@@ -32,12 +29,19 @@ document.addEventListener('alpine:init', () => {
             const dropdownValue = encodeURIComponent(this.selectedOption);
             const textSearchValue = encodeURIComponent(this.searchTerm);
 
-            Alpine.store(this.storeName).currentFilters.searchColumn = dropdownValue;
-            Alpine.store(this.storeName).currentFilters.searchValue = textSearchValue;
-
             const fromDate = encodeURIComponent(document.getElementById('dateFrom').value);
             const toDate = encodeURIComponent(document.getElementById('dateTo').value);
             console.log(fromDate, toDate);
+
+            if (!fromDate || !toDate) {
+                createToast('error', 'Please select a date range.');
+                return;
+            }
+
+            if (dropdownValue == 'product' && !textSearchValue) {
+                createToast('error', 'Please enter a product name.');
+                return;
+            }
 
             let url = `${baseUrl}/receipt/${dropdownValue}?start-date=${fromDate}&end-date=${toDate}`;
 
@@ -50,8 +54,23 @@ document.addEventListener('alpine:init', () => {
             axios.get(url)
                 .then(response => {
                     console.log('Search successful:', response);
-                    createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
                     console.log('Response data:', response.data);
+                    if (this.selectedOption == 'statistic'){
+                        Alpine.store(this.storeName).receipts = response.data;
+                        createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
+                    } else if (this.selectedOption == 'sum') {
+                        let sum = Object.values(response.data)[0];
+                        if (!sum) {
+                            sum = 0;
+                        }
+                        createToast('success', `Sum of the sales = $${sum}`);
+                    } else {
+                        let amount = Object.values(response.data)[0];
+                        if (!amount) {
+                            amount = 0;
+                        }
+                        createToast('success', `Sales of ${this.searchTerm} = ${amount}`);
+                    }
                 })
                 .catch(error => {
                     console.error('Search error:', error);
