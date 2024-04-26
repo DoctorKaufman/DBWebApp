@@ -32,7 +32,7 @@ class CustomerRepository:
         JOIN
             Product p ON sp.id_product = p.id_product
         GROUP BY
-            r.card_number, p.id_product, p.product_name
+            r.card_number, sp.UPC, p.id_product, p.product_name
     )
     SELECT
         cc.card_number,
