@@ -5,7 +5,6 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.controllers.custom_query_controller import query
 from app.controllers.handler.exceptions import DataDuplicateException, ValidationException, CheckCreationException
 from app.controllers.handler.error_handler import handle_data_duplicate_exception
 
@@ -60,7 +59,6 @@ def create_app(config_filename=None):
     app.register_blueprint(store_product)
     app.register_blueprint(auth)
     app.register_blueprint(receipt)
-    app.register_blueprint(query)
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
