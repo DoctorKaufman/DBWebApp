@@ -12,6 +12,9 @@ class ProductBuyDTO:
     def amount(self):
         return self.__amount
 
+    def set_amount(self, amount):
+        self.__amount = amount
+
     @property
     def price(self):
         return self.__price

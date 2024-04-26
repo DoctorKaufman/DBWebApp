@@ -56,13 +56,24 @@ class ReceiptService:
                                  date, total_price, vat)
         receipt = self.receipt_repository.insert_receipt(receipt_dto)
         try:
-            for prod in receipt_creation_dto.bought_products:
+            bought_products = self.merge_items(receipt_creation_dto.bought_products)
+            for prod in bought_products:
                 self.write_off_products(prod.upc, prod.amount)
                 self.sales_repository.insert_sale(SaleDTO(prod.upc, receipt.check_number, prod.amount, prod.price))
         except CheckCreationException as e:
             self.delete_receipt(receipt.check_number)
             raise e
     #     TODO what to return
+
+    def merge_items(self, bought_products):
+        merged_items = {}
+        for product in bought_products:
+            upc = product.upc
+            if upc in merged_items:
+                merged_items[upc].set_amount(merged_items[upc].amount + product.amount)
+            else:
+                merged_items[upc] = product
+        return list(merged_items.values())
 
     def write_off_products(self, upc, amount):
         store_product = self.store_product_repository.select_store_product(upc)
