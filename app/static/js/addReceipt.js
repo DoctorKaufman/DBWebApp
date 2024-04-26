@@ -102,7 +102,7 @@ document.addEventListener('alpine:init', () => {
                         <i class="fa-solid fa-ban"></i>
                         </button>
 
-                        <button @click.prevent="saveSale" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <button @click.prevent="saveSale" class="text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-blue-800">
                         <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
