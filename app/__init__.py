@@ -66,8 +66,8 @@ def create_app(config_filename=None):
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
     app.register_blueprint(staff_and_clients_blueprint, url_prefix='/staff-and-clients')
-    app.register_blueprint(receipts)
     app.register_blueprint(requests_blueprint, url_prefix='/requests')
+    app.register_blueprint(receipts)
 
     app.context_processor(inject_user)
 

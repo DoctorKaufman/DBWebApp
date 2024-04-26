@@ -3,13 +3,13 @@
     <caption x-cloak class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
         <h3 class="m-2">Description of the query:</h3>
         <template x-if="activeTab == 'request1'">
-            <p class="m-2 text-base text-gray-900 dark:text-gray-300">Display data about categories and the number of 
-                promotional and non-promotional products in them.
+            <p class="m-2 text-base text-gray-900 dark:text-gray-300">Display data about the category, 
+                the total price of goods in this category in the warehouse, the number of goods in this category for categories in which the total cost of goods exceeds the set number.
             </p>
         </template>
         <template x-if="activeTab == 'request2'">
             <p class="m-2 text-base text-gray-900 dark:text-gray-300">
-                Display the data of buyers with a customer card who purchased each product from a given product category.
+                Display data about workers who served all customers with cards (issued at least one check to each).
             </p>
         </template>
         <form class="w-1/2 m-2 mb-0" x-cloak x-show="activeTab == 'request1'">
