@@ -74,5 +74,5 @@ class EmployeeCreationDTO:
             raise ValidationException('Phone number must be valid. Should contain 13 symbols (with +)')
         return EmployeeCreationDTO(data.get('Surname'), data.get('Name'),
                                    data.get('Patronymic'), data.get('Role'), data.get('Salary'),
-                                   data.get('Birth Date'), data.get('Start Date'), data.get('Phone Number'),
+                                   data.get('Birth_Date'), data.get('Start_Date'), data.get('Phone_Number'),
                                    data.get('City'), data.get('Street'), data.get('Zip'))
