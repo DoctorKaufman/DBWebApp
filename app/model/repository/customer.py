@@ -26,7 +26,7 @@ class CustomerRepository:
             cc.cust_surname,
             cc.cust_name,
             cc.phone_number,
-            COUNT(r.check_number) AS total_purchases,
+            COUNT(DISTINCT r.check_number) AS total_purchases,
             COALESCE(SUM(r.sum_total), 0) AS total_amount_spent,
             ROUND(COALESCE(AVG(r.sum_total), 0), 2) AS average_purchase_amount,
             mcp.most_common_product_UPC,
