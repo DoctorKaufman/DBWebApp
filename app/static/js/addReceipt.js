@@ -102,7 +102,7 @@ document.addEventListener('alpine:init', () => {
                         <i class="fa-solid fa-ban"></i>
                         </button>
 
-                        <button @click.prevent="saveSale" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <button @click.prevent="saveSale" class="text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-blue-800">
                         <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
@@ -152,7 +152,9 @@ document.addEventListener('alpine:init', () => {
             
             this.totalPrice += parseFloat(sale.Price) * sale.Amount;
             this.customerDiscount = this.totalPrice * this.customerPercent / 100;
+            this.customerDiscount = parseFloat(this.customerDiscount.toFixed(2));
             this.taxesSum = this.totalPrice * 0.2;
+            this.taxesSum = parseFloat(this.taxesSum.toFixed(2));
             this.totalPrice += this.taxesSum;
             this.totalPrice -= this.customerDiscount;
             console.log("Total price: ", this.totalPrice);
@@ -162,16 +164,35 @@ document.addEventListener('alpine:init', () => {
             salesList.insertBefore(row, lastElement);
         },
 
+        cancelReceipt(){
+            Alpine.store('receiptsState').receiptSales = [];
+            Alpine.store('receiptsState').currentSale = null;
+            Alpine.store('receiptsState').currentCustomer = null;
+            this.totalPrice = 0;
+            this.customerDiscount = 0;
+            this.taxesSum = 0;
+            this.customerPercent = 0;
+
+            let list = document.getElementById('sales-list');
+            while (list.firstChild && list.firstChild.id !== 'add-sale-button') {
+                list.removeChild(list.firstChild);
+            }
+
+            createToast('success', 'Receipt canceled successfully.');
+        },
+
         reEvaluateTotal(){
             this.totalPrice = 0;
             Alpine.store('receiptsState').receiptSales.forEach(sale => {
                 this.totalPrice += parseFloat(sale.Price) * sale.Amount;
-                this.customerDiscount = this.totalPrice * this.customerPercent / 100;
-                this.taxesSum = this.totalPrice * 0.2;
-                this.totalPrice += this.taxesSum;
-                this.totalPrice -= this.customerDiscount;
-                console.log("Total price: ", this.totalPrice);
             });
+            this.customerDiscount = this.totalPrice * this.customerPercent / 100;
+            this.customerDiscount = parseFloat(this.customerDiscount.toFixed(2));
+            this.taxesSum = this.totalPrice * 0.2;
+            this.taxesSum = parseFloat(this.taxesSum.toFixed(2));
+            this.totalPrice += this.taxesSum;
+            this.totalPrice -= this.customerDiscount;
+            console.log("Total price: ", this.totalPrice);
         },
 
         createReceipt(){

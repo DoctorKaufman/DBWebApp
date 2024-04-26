@@ -9,10 +9,6 @@ document.addEventListener('alpine:init', () => {
         receiptSales: [],
         currentSale: null,
         currentCustomer: null,
-        currentFilters: {
-            searchColumn: null,
-            searchValue: null,
-        },
         selectedItems: [],
         maxAmount: 0,
 
@@ -21,8 +17,6 @@ document.addEventListener('alpine:init', () => {
             sendRequest({
                 action: 'get', 
                 currentPage: 'receipts', 
-                // searchColumn: this.currentFilters.searchColumn,
-                // searchValue: this.currentFilters.searchValue
             })
                 .then(response => {
                     console.log('Data fetched:', response);
@@ -33,10 +27,6 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error fetching data:', error);
                     createToast("error", "Error fetching data");
                 });
-        },
-
-        searchRequest(){
-
         },
 
         startSelecting() {
