@@ -34,6 +34,9 @@ class StoreProductDTO:
     def promotional_product(self):
         return self.__promotional_product
 
+    def set_product_number(self, product_number):
+        self.__products_number = product_number
+
     def serialize(self):
         return {
             'UPC': self.__upc,
