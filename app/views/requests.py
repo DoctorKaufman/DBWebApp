@@ -11,7 +11,6 @@ requests = Blueprint('requests', __name__)
 @requests.route('/request1')
 def request1():
     active_tab = 'request1'
-    data = requestsLib.get('http://127.0.0.1:5000/query/1?min-amount=1')
 
     if all(response.status_code == 200 for response in [data]):
         data = data.json()
@@ -25,7 +24,6 @@ def request1():
 @requests.route('/request2')
 def request2():
     active_tab = 'request2'
-    data = requestsLib.get('http://127.0.0.1:5000/query/2')
 
     if all(response.status_code == 200 for response in [data]):
         data = data.json()
