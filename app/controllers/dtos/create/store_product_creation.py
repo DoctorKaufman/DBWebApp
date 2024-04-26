@@ -31,11 +31,11 @@ class StoreProductCreationDTO:
 
     @staticmethod
     def deserialize(data):
-        upc_prom = data.get("UPC Prom")
-        id_product = data.get("Product ID")
+        upc_prom = data.get("UPC_Prom")
+        id_product = data.get("Product_ID")
         selling_price = float(data.get("Price"))
         products_number = float(data.get("Amount"))
-        promotional_product = bool(data.get("Promotional Product"))
+        promotional_product = bool(data.get("Promotional_Product"))
         if id_product is None:
             raise ValidationException("ID is not provided")
         if selling_price <= 0:
