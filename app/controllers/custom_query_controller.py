@@ -17,7 +17,7 @@ customer_service = CustomQueryService(customer_repository, category_repository)
 @query.route('/1', methods=['GET'])
 def get_customers():
     args = request.args
-    min_amount = float(args['min-amount'])
+    min_amount = float(args['value'])
     return json.dumps([c.serialize() for c in customer_service.get_customers_statistics(min_amount)])
 
 
