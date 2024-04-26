@@ -3,7 +3,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('requests',(active_tab) => ({
         activeTab: active_tab,
         value: '',
-        result: null,
+        result: [],
         query: 0,
 
         init() {
