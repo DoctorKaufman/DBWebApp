@@ -25,7 +25,7 @@
         </form>
     </caption>
 
-    <template x-colak x-if="result != null">
+    <template x-colak x-if="result.length > 0">
         <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <template x-for="key in Object.keys(result[0])" :key="key">
@@ -35,7 +35,7 @@
         </thead>
     </template>
 
-    <template x-colak x-if="result != null">
+    <template x-colak x-if="result.length > 0">
         <tbody class="table-body align-middle justify-center content-center">
 
             <template x-for="(item, index) in result" :key="index">
