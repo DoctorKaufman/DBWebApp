@@ -31,13 +31,13 @@ document.addEventListener('alpine:init', () => {
         let request = ''
         if (columnName == "Category"){
             request = '/category/'
-            this.correspondingAttributeName = 'Category ID';
+            this.correspondingAttributeName = 'Category_ID';
         } else if (columnName == "UPC_Prom"){
             request = '/store-product/'
-            this.correspondingAttributeName = 'UPC Prom';
+            this.correspondingAttributeName = 'UPC_Prom';
         } else if (columnName == "Product_Name"){
             request = '/product/'
-            this.correspondingAttributeName = 'Product ID';
+            this.correspondingAttributeName = 'Product_ID';
         }
         let url = `http://127.0.0.1:5000${request}droplist`;
         axios.get(url)

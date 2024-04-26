@@ -42,7 +42,6 @@ def create_app(config_filename=None):
     from .views.staff_and_clients import staff_and_clients as staff_and_clients_blueprint
     from .views.receipts import receipts as receipts
     from .views.requests import requests as blueprint_request
-
     from app.controllers.employee_controller import employee
     from app.controllers.category_controller import category
     from app.controllers.product_controller import product
