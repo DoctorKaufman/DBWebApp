@@ -66,10 +66,10 @@ class EmployeeCreationDTO:
         salary = float(data.get('Salary'))
         if salary <= 0:
             raise ValidationException('Salary must be greater than zero')
-        birth_date = data.get('Birth Date')
+        birth_date = data.get('Birth_Date')
         if not is_adult(birth_date):
             raise ValidationException('Employee age should be greater or equal to 18')
-        phone_num = data.get('Phone Number')
+        phone_num = data.get('Phone_Number')
         if not validate_phone_number(phone_num):
             raise ValidationException('Phone number must be valid. Should contain 13 symbols (with +)')
         return EmployeeCreationDTO(data.get('Surname'), data.get('Name'),

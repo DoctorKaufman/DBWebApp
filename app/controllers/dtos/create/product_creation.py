@@ -21,7 +21,7 @@ class ProductCreationDTO:
 
     @staticmethod
     def deserialize(data):
-        category_number = data.get('Category ID')
+        category_number = data.get('Category_ID')
         product_name = data.get('Name')
         p_characteristics = data.get('Description')
         if category_number is None:
