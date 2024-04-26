@@ -62,7 +62,7 @@ class CustomerRepository:
         mcp.most_common_product_UPC,
         mcpn.most_common_product_name
     HAVING
-        COALESCE(SUM(r.sum_total), 0) > %s
+        COALESCE(SUM(r.sum_total), 0) >= %s
     ORDER BY
         total_amount_spent DESC;
     """
