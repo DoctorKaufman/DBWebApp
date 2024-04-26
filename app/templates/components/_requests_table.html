@@ -1,0 +1,26 @@
+<table class="w-full text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+    <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+            {% for header in headers %}
+                <th scope="col" class="p-4">
+                    {{ header }}
+                </th>
+            {% endfor %}
+
+        </tr>
+    </thead>
+
+
+    <tbody class="table-body align-middle justify-center content-center">
+
+            <tr class="dark:border-gray-700 border-b dark:bg-gray-800 bg-white">
+
+                <td class="px-6 py-4">
+                    <span>Value</span>
+                </td>
+
+            </tr>
+    </tbody>
+        
+</table>
