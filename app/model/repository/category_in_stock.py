@@ -13,12 +13,12 @@ class CategoryInStockRepository:
     ) 
     AND NOT EXISTS (
         SELECT *
-        FROM Product p2
-        WHERE p2.category_number = c.category_number
+        FROM Product p
+        WHERE p.category_number = c.category_number
         AND NOT EXISTS (
             SELECT *
             FROM Store_Product sp
-            WHERE sp.id_product = p2.id_product
+            WHERE sp.id_product = p.id_product
             AND sp.products_number > 0
         )
     );
@@ -30,9 +30,8 @@ class CategoryInStockRepository:
     def get_categories(self):
         with self.conn.cursor() as cursor:
             cursor.execute(self.SELECT_CATEGORY_QUERY)
-            rows = cursor.fetchall()
             categories = [
                 CategoryDTO(row[0], row[1])
-                for row in rows
+                for row in cursor.fetchall()
             ]
         return categories
