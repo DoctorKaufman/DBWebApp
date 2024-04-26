@@ -14,10 +14,10 @@
         </div>
 
         
-        <table class="w-3/5 h-auto text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table x-data="request2()" class="w-3/5 h-auto text-pretty text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-400">
                 <div class="flex flex-row">
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 
+                    <button type="button" @click="request2()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
                     focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 
                     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                     button 1
@@ -33,17 +33,17 @@
             <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="p-4">
-                        col1
+                        ID
                     </th>
                     
                     <th scope="col" class="px-6 py-3">
-                        col2
+                        Category_Name
                     </th>
                 </tr>
             </thead>
-        
-        
-            <tbody class="table-body align-middle justify-center content-center text-gray-500 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
+
+
+           <!-- <tbody class="table-body align-middle justify-center content-center text-gray-500 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
                 <tr>
                     <td class="p-4">
                         cell1
@@ -54,8 +54,20 @@
                     </td>
                 </tr>
                 
-            </tbody>
-                
+            </tbody> -->
+            <template x-if="result && result.length > 0">
+                <template x-for="item in result" :key="result.ID">
+                    <tr>
+                        <td class="p-4" x-text="item.ID"></td>
+                        <td class="px-6 py-3" x-text="item.Name"></td>
+                    </tr>
+                </template>
+            </template>
+            <template x-if="!result || result.length === 0">
+                <tr>
+                    <td colspan="2" class="p-4">No data available</td>
+                </tr>
+            </template>
         </table>
         
 
