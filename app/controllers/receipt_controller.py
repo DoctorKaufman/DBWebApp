@@ -41,7 +41,10 @@ def get_all_receipts():
 
 @receipt.route('/<int:check_num>', methods=['GET'])
 def get_receipt(check_num):
-    return json.dumps(receipt_service.select_by_check_num(check_num).serialize())
+    receipt_found = receipt_service.select_by_check_num(check_num)
+    if receipt_found is None:
+        return "", 404
+    return json.dumps(receipt_found.serialize())
 
 
 @receipt.route('/statistic', methods=['GET'])
