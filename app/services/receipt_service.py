@@ -25,6 +25,8 @@ class ReceiptService:
 
     def select_by_check_num(self, check_number):
         receipt = self.receipt_repository.select_receipt_ext(check_number)
+        if receipt is None:
+            return None
         products = self.sales_repository.select_check_sale_ext(receipt.check_number)
         receipt.set_sales_info(products)
         return receipt

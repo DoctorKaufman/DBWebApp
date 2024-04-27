@@ -5,7 +5,6 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.controllers.custom_query_controller import query
 from app.controllers.handler.exceptions import DataDuplicateException, ValidationException, CheckCreationException
 from app.controllers.handler.error_handler import handle_data_duplicate_exception
 
@@ -42,8 +41,7 @@ def create_app(config_filename=None):
     from .views.goods_and_categories import goods_and_categories as goods_and_categories_blueprint
     from .views.staff_and_clients import staff_and_clients as staff_and_clients_blueprint
     from .views.receipts import receipts as receipts
-    from .views.requests import requests as requests_blueprint
-
+    from .views.requests import requests as blueprint_request
     from app.controllers.employee_controller import employee
     from app.controllers.category_controller import category
     from app.controllers.product_controller import product
@@ -52,6 +50,7 @@ def create_app(config_filename=None):
     from app.controllers.store_product_controller import store_product
     from app.controllers.authentication_controller import auth
     from app.controllers.receipt_controller import receipt
+    from app.controllers.custom_query_controller import query
 
     app.register_blueprint(employee)
     app.register_blueprint(category)
@@ -67,7 +66,7 @@ def create_app(config_filename=None):
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')
     app.register_blueprint(staff_and_clients_blueprint, url_prefix='/staff-and-clients')
     app.register_blueprint(receipts)
-    app.register_blueprint(requests_blueprint, url_prefix='/requests')
+    app.register_blueprint(blueprint_request, url_prefix='/requests')
 
     app.context_processor(inject_user)
 

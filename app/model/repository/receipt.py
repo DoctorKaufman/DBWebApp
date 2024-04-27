@@ -22,7 +22,7 @@ class ReceiptRepository:
     SELECT_RECEIPT_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
                                        "c.c_percent, print_date, sum_total, vat "
                                        "FROM receipt "
-                                       "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                       "LEFT JOIN customer_card c ON receipt.card_number = c.card_number "
                                        "WHERE check_number = %s")
     SELECT_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
                                                "WHERE DATE(print_date) >= %s "
@@ -30,7 +30,7 @@ class ReceiptRepository:
     SELECT_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, id_employee, receipt.card_number, "
                                                    "c.c_percent, print_date, sum_total, vat "
                                                    "FROM receipt "
-                                                   "INNER JOIN customer_card c ON receipt.card_number = c.card_number "
+                                                   "LEFT JOIN customer_card c ON receipt.card_number = c.card_number "
                                                    "WHERE DATE(print_date) >= %s "
                                                    "AND DATE(print_date) <= %s")
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY = sql.SQL("SELECT * FROM receipt "
@@ -40,8 +40,8 @@ class ReceiptRepository:
     SELECT_CASHIER_RECEIPTS_FOR_PERIOD_QUERY_EXT = sql.SQL("SELECT check_number, r.id_employee, r.card_number, "
                                                            "c.c_percent, print_date, sum_total, vat "
                                                            "FROM receipt r "
-                                                           "INNER JOIN customer_card c ON r.card_number = c.card_number "
-                                                           "INNER JOIN employee e ON e.id_employee = r.id_employee "
+                                                           "LEFT JOIN customer_card c ON r.card_number = c.card_number "
+                                                           "LEFT JOIN employee e ON e.id_employee = r.id_employee "
                                                            "WHERE SIMILARITY(e.empl_surname, %s) > 0.2 "
                                                            "AND DATE(print_date) >= %s "
                                                            "AND DATE(print_date) <= %s ")
@@ -63,7 +63,7 @@ class ReceiptRepository:
     GET_CASHIER_SALES_PRICE = sql.SQL("SELECT COALESCE(SUM(r.sum_total), 0) AS total_sales,"
                                       " e.id_employee, e.empl_surname, e.empl_name "
                                       "FROM employee e "
-                                      "LEFT JOIN receipt r ON e.id_employee = r.id_employee "
+                                      "INNER JOIN receipt r ON e.id_employee = r.id_employee "
                                       "WHERE e.id_employee = %s "
                                       "AND DATE(r.print_date) >= %s "
                                       "AND DATE(r.print_date) <= %s "

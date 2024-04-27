@@ -35,7 +35,7 @@ class StoreProductCreationDTO:
         id_product = data.get("Product_ID")
         selling_price = float(data.get("Price"))
         products_number = float(data.get("Amount"))
-        promotional_product = bool(data.get("Promotional_Product"))
+        promotional_product = parse_bool(data.get("Promotional_Product"))
         if id_product is None:
             raise ValidationException("ID is not provided")
         if selling_price <= 0:
@@ -43,3 +43,7 @@ class StoreProductCreationDTO:
         if products_number <= 0:
             raise ValidationException("Product number must be greater than 0")
         return StoreProductCreationDTO(upc_prom, id_product, selling_price, products_number, promotional_product)
+
+
+def parse_bool(value):
+    return str(value).lower() == "true"
