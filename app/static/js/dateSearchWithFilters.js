@@ -7,7 +7,7 @@ document.addEventListener('alpine:init', () => {
         searchTerm: '',
         mapper: 'Search by',
         selectedOption: null,
-        options: [{'Cashier (sum)' : 'sum'}, {'Cashier (checks)' : 'statistic'}, {'Product Name' : 'product'}],
+        options: [{'Cashier (sum)' : 'sum'}, {'Cashier (checks)' : 'statistic'}, {'Product Name' : 'product'}, {'Receipt ID' : 'receipt'}],
         storeName: 'receiptsState',
 
        
@@ -33,20 +33,32 @@ document.addEventListener('alpine:init', () => {
             const toDate = encodeURIComponent(document.getElementById('dateTo').value);
             console.log(fromDate, toDate);
 
-            if (!fromDate || !toDate) {
-                createToast('error', 'Please select a date range.');
+            if ((['product', 'receipt'].includes(dropdownValue)) && !textSearchValue) {
+                axios.get(`${baseUrl}/receipt/`)
+                    .then(response => {
+                        Alpine.store(this.storeName).receipts = response.data;
+                        createToast('success', `Search for all checks was successful.`);
+                    })
+                    .catch(error => {
+                        console.error('Search error:', error);
+                        createToast('error', `Search for all checks failed.`);
+                    });
                 return;
             }
 
-            if (dropdownValue == 'product' && !textSearchValue) {
-                createToast('error', 'Please enter a product name.');
-                return;
-            }
+            let url = `${baseUrl}/receipt/`;
 
-            let url = `${baseUrl}/receipt/${dropdownValue}?start-date=${fromDate}&end-date=${toDate}`;
-
-            if (textSearchValue){
-                url += `&value=${textSearchValue}`;
+            if (dropdownValue == 'receipt') {
+                url += textSearchValue
+            } else {
+                if (!fromDate || !toDate) {
+                    createToast('error', 'Please select a date range.');
+                    return;
+                }
+                url += `${dropdownValue}?start-date=${fromDate}&end-date=${toDate}`;
+                if (textSearchValue){
+                    url += `&value=${textSearchValue}`;
+                }
             }
 
             console.log('URL:', url);
@@ -57,6 +69,9 @@ document.addEventListener('alpine:init', () => {
                     console.log('Response data:', response.data);
                     if (this.selectedOption == 'statistic'){
                         Alpine.store(this.storeName).receipts = response.data;
+                        createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
+                    } else if (this.selectedOption == 'receipt'){
+                        Alpine.store(this.storeName).receipts = [response.data];
                         createToast('success', `Search for input ${this.selectedOption}: ${this.searchTerm} was successful.`);
                     } else if (this.selectedOption == 'sum') {
                         let sum = Object.values(response.data)[0];
@@ -74,6 +89,9 @@ document.addEventListener('alpine:init', () => {
                 })
                 .catch(error => {
                     console.error('Search error:', error);
+                    if (error.response && error.response.status === 404) {
+                        Alpine.store(this.storeName).receipts = []
+                    }
                     createToast('error', `Search for input ${this.selectedOption}: ${this.searchTerm} failed.`);
                 });
         }
