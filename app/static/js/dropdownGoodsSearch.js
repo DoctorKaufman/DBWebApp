@@ -28,10 +28,8 @@ document.addEventListener('alpine:init', () => {
 
       filteredOptions() {
         if (!this.options) return [];
-        console.log('Search Term:', this.searchTerm);
-
         let filtered =  this.options.filter(option => {
-            const name = option['Produnt_Name'] || '';
+            const name = option['Product_Name'] || '';
             return name.toLowerCase().includes(this.searchTerm.toLowerCase());
         });
         let result = (filtered.map(option => {

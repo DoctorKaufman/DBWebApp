@@ -19,13 +19,13 @@ document.addEventListener('alpine:init', () => {
                 currentPage: 'receipts', 
             })
                 .then(response => {
-                    console.log('Data fetched:', response);
+                    console.log('Receipts fetched:', response);
                     this.receipts = response;
                     createToast("success", `Data refetched successfully`);
                 })
                 .catch(error => {
-                    console.error('Error fetching data:', error);
-                    createToast("error", "Error fetching data");
+                    console.error('Error fetching receipts:', error);
+                    createToast("error", "Error fetching receipts");
                 });
         },
 
