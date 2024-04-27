@@ -29,8 +29,11 @@ def update_product(id_product):
 
 @product.route('/<int:product_id>/', methods=['DELETE'])
 def delete_product(product_id):
-    product_service.delete_product(product_id)
-    return '', 204
+    successful = product_service.delete_product(product_id)
+    if successful:
+        return '', 204
+    else:
+        return '', 400
 
 
 @product.route('/<int:product_id>', methods=["GET"])
