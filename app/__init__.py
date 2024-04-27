@@ -60,6 +60,7 @@ def create_app(config_filename=None):
     app.register_blueprint(store_product)
     app.register_blueprint(auth)
     app.register_blueprint(receipt)
+    app.register_blueprint(query)
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(goods_and_categories_blueprint, url_prefix='/goods-and-categories')

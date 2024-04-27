@@ -197,6 +197,11 @@ document.addEventListener('alpine:init', () => {
 
         createReceipt(){
             console.log('Current customer:', Alpine.store('receiptsState').currentCustomer);
+            if (Alpine.store('receiptsState').receiptSales.length < 1){
+                createToast('error', 'Please add at least one product before creating the receipt.');
+                return;
+            }
+
             let data = {
                 "id_employee" : this.user['ID'],
                 "card_number" : Alpine.store('receiptsState').currentCustomer? Alpine.store('receiptsState').currentCustomer['ID'] : null,
